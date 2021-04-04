@@ -1,2 +1,2 @@
 Game Name: Card Capsules
-Firebase URL: 
+Firebase URL: https://card-capsules.firebaseapp.com/benchmark1
