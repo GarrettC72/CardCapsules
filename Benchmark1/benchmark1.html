@@ -1,0 +1,194 @@
+<html>
+ <head>
+ </head>
+ <body>
+<img src="GameLogo.png" alt="Card Capsules logo">
+   <h1>Introduction</h1>
+
+<p>
+This document details the game Card Capsules, which is a 2D side scrolling platformer puzzle game made with the Wolfie2D engine.
+The core gameplay loop will focus on placing objects to help traverse an inhospitable alien planet.
+This game employs use of a physics engine, AI, collision detection, memory management, and especially precise time control.
+</p>
+
+   <h1>Technology</h1>
+
+<p>
+Card Capsules is a game created for the Windows platform using the Wolfie2D game engine.
+</p>
+
+   <h1>Backstory</h1>
+
+<p>
+After a terraforming operation went awry due to a space pirate assault, our protaganist must crash land on the inhospitable world that they
+were trying to rebuild. The player's newfound objective is to reach the wreckage of their ship and to repair it with the card capsules that
+they find from the remnants that scattered the planet when the ship crash landed.
+</p>
+   <h1>Objective</h1>
+
+<p>
+The player must progress through each platforming puzzle in a level to recover pieces of their destroyed spaceship. Once they have each part
+and reach the wreckage, they can repair their ship and escape the planet to safety.
+</p>
+
+   <h1>Gameplay</h1>
+<p>The player will travel through the level and collect cards along the way to help them traverse through traps and enemies. These cards are physical
+objects that can be placed in the game world. Whilst card placement is occurring, time will be slowed down to assist the player in their decision making. This will affect animations, sound, and moving objects.<br></br>
+The Cards that the player can receive are as follows:
+</p>
+<ul>
+  <li>Floating block: A block that floats</li>
+  <li>Spring: An object that gives the player momentum in the direction it is facing</li>
+  <li>Circular Rock: A rock that can roll down hills, dealing massive damage if it collides with an enemy</li>
+</ul>
+<p>
+Cards are distributed to the player based on the level. They will sometimes be provided with cards at the beginning of the level. Cards may also be found scattered throughout the level itself, or as a reward from defeating enemies.
+<br></br>
+While the player is placing a card, the in-game screen will be overlaid with a grid. This is a helpful tool for the player to place their card in the correct location.
+<br></br>
+There are also two regions currently planned, spanning multiple levels. They are as follows:
+<ul>
+  <li>A lava region where hot floors threaten to kill the player instead of the usual spikes. The lava will instantly kill the player if they touch it. There will additionally be
+	creatures made of lava, who will also kill the player if the player gets hit.
+</li>
+  <li>An arctic region which contains ice blocks for the player and enemies to slide across, and destructable terrain that the player must carefully progress through. </li>
+</ul>
+
+   <h1>Controls</h1>
+<ul>
+<li>A - Move Left</li>
+<li>D - Move Right</li>
+<li>W - Jump</li>
+<li>S - Duck</li>
+<li>Hold R - Quick Restart</li>
+<li>Click on a card capsule to begin placing it.
+<ul>
+ <li>Left click to place</li>
+ <li>Right click to cancel</li>
+</ul>
+</li>
+</ul>
+<img src="ControlsScreen.png" alt="Card Capsules Controls Screen">
+
+<h1>Graphical User Interface</h1>
+<img src="WireframeGUI.png" alt="Card Capsules Wireframe for the GUI">
+<p>
+Above is the Wireframe which illustrates the connections between each of the sections of our GUI. <br></br>
+Splash Screen - The splash screen presents a game logo, art, and a prompt telling the player to press any key to continue.
+<br></br>
+</p>
+<img src="SplashScreen.png" alt="Card Capsules Splash Screen">
+</br>
+<p>
+Home Screen - Screen accessed upon startup which contains the following options:
+<ul>
+<li>Play Game - Starts the game at level 1</li>
+<li>Level Select - Takes the player to the Level Select Screen</li>
+<li>Controls - Displays the controls for the game</li>
+<li>Help - Displays an info screen about the game and the developers, gives back story to the game, and contains the game's cheat codes.</li>
+</ul>
+
+<img src="MainMenu.png" alt="Card Capsules Main Menu Screen">
+</p>
+<p>
+In Game UI:
+<ul>
+<li>Cards are on the bottom left of the screen</li>
+<li>Pause button on the top left of the screen
+<ul>
+<li>Main Menu - Returns the player to the Main Menu</li>
+<li>Level Select - Allows the player to return to level select</li>
+<li>Back - Returns the player to the in game screen</li>
+</ul>
+</li>
+<img src="InGameScreen.png" alt="Card Capsules In Game UI">
+</ul>
+</p>
+
+<h1>Artwork</h1>
+<p>
+All artwork included in Card Capsules is original, and created with the help of the tools Gimp, Asprite, and Paint3D.<br></br>
+The following assets need to be created:
+<ul>
+<li>Main Menu Background</li>
+<li>Splash Screen Background</li>
+<li>Player Sprite
+<ul><li>Animations
+<ul>
+<li>Idle Animation</li>
+<li>Walk Animation</li>
+<li>Jump Animation</li>
+<li>Duck Animation</li>
+<li>Dying Animation</li>
+</ul>
+</ul>
+</li>
+</li>
+<li>Lava Region
+<ul>
+<li>Lava Background</li>
+<li>Lava Floor Tiles</li>
+<li>Lava Rock Tiles</li>
+</ul>
+</li>
+<li>Arctic Region
+<ul>
+<li>Arctic Background</li>
+<li>Ice Floor Tiles</li>
+<li>Ice Rock Tiles</li>
+</ul></li>
+<li>Cards
+<ul>
+<li>Block Card</li>
+<li>Spring Card</li>
+<li>Circular Rock Card</li>
+</ul>
+</li>
+<li>Block Sprite
+<ul>
+<li>Spawn Animation</li>
+</ul>
+</li>
+<li>Spring Sprite
+<ul>
+<li>Spawn Animation</li>
+<li>Activation Animation</li>
+</ul>
+</li>
+<li>Enemies
+<ul>
+<li>Rock Monster</li>
+<li>Cactus Monster</li>
+<li>Lava Worm</li>
+</ul>
+</li>
+</ul>
+
+   <h1> Sound Effects </h1>
+<p>All sound effects will be original. Sound effects will be created for the following events:
+</p>
+<ul>
+<li>Jumping</li>
+<li>Card Select</li>
+<li>Card Placement</li>
+<li>Player Death</li>
+<li>Enemy Death</li>
+<li>Navigating Menu Buttons</li>
+<li>Level Completion</li>
+<li>Monster Growling</li>
+</ul>
+
+   <h1> Music </h1>
+<p> Card Capsules will use original music for navigating both its menus and its game levels.
+<ul>
+<li>Menu Music</li>
+<li>Level Music
+<ul>
+<li>Lava Region</li>
+<li>Arctic Region</li>
+</ul>
+</li>
+</ul>
+
+ </body>
+</html>
