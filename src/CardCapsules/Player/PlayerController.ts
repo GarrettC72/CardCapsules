@@ -4,7 +4,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
-import { HW4_Events } from "../hw4_enums";
+//import { HW4_Events } from "../hw4_enums";
 import Fall from "./PlayerStates/Fall";
 import Idle from "./PlayerStates/Idle";
 import InAir from "./PlayerStates/InAir";
@@ -33,7 +33,7 @@ export default class PlayerController extends StateMachineAI {
 	MIN_SPEED: number = 200;
     MAX_SPEED: number = 300;
     tilemap: OrthogonalTilemap;
-    coin: Sprite;
+    //coin: Sprite;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
@@ -42,6 +42,7 @@ export default class PlayerController extends StateMachineAI {
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
 
+        //console.log("HELLOOOOOOOO");
         // HOMEWORK 4 - TODO
         /*
             Use this coin sprite to perform an animation when the player hits a coin block.
@@ -55,9 +56,9 @@ export default class PlayerController extends StateMachineAI {
             The coin block that the player collides with should then be set to be a dark coin block.
             Look at the tileset image for reference.
         */
-        this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
+        //this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
         //this.coin.position.set(-100, -100);
-        this.coin.scale.set(2, 2);
+        //this.coin.scale.set(2, 2);
     }
 
     initializePlatformer(): void {

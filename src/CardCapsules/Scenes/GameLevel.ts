@@ -12,9 +12,10 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import { CC_EVENTS } from "../CardCapsulesEnums";
 //import EnemyController from "../Enemies/EnemyController";
 //import { HW4_Events } from "../hw4_enums";
-//import PlayerController from "../Player/PlayerController";
+import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
 
 // HOMEWORK 4 - TODO
@@ -88,80 +89,80 @@ export default class GameLevel extends Scene {
         // Handle events and update the UI if needed
         while(this.receiver.hasNextEvent()){
             let event = this.receiver.getNextEvent();
-            /*
+            
             switch(event.type){
-                case HW4_Events.PLAYER_HIT_COIN:
-                    {
-                        // Hit a coin
-                        let coin;
-                        if(event.data.get("node") === this.player.id){
-                            // Other is coin, disable
-                            coin = this.sceneGraph.getNode(event.data.get("other"));
-                        } else {
-                            // Node is coin, disable
-                            coin = this.sceneGraph.getNode(event.data.get("node"));
-                        }
+                // case HW4_Events.PLAYER_HIT_COIN:
+                //     {
+                //         // Hit a coin
+                //         let coin;
+                //         if(event.data.get("node") === this.player.id){
+                //             // Other is coin, disable
+                //             coin = this.sceneGraph.getNode(event.data.get("other"));
+                //         } else {
+                //             // Node is coin, disable
+                //             coin = this.sceneGraph.getNode(event.data.get("node"));
+                //         }
                         
-                        // Remove coin
-                        coin.destroy();
+                //         // Remove coin
+                //         coin.destroy();
 
-                        // Increment our number of coins
-                        this.incPlayerCoins(1);
+                //         // Increment our number of coins
+                //         this.incPlayerCoins(1);
 
-                        // Play a coin sound
-                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
-                    }
-                    break;
+                //         // Play a coin sound
+                //         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                //     }
+                //     break;
 
-                case HW4_Events.PLAYER_HIT_COIN_BLOCK:
-                    {
-                        // Hit a coin block, so increment our number of coins
-                        this.incPlayerCoins(1);
-                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
-                    }
-                    break;
+                // case HW4_Events.PLAYER_HIT_COIN_BLOCK:
+                //     {
+                //         // Hit a coin block, so increment our number of coins
+                //         this.incPlayerCoins(1);
+                //         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                //     }
+                //     break;
 
-                case HW4_Events.PLAYER_HIT_ENEMY:
-                    {
-                        let node = this.sceneGraph.getNode(event.data.get("node"));
-                        let other = this.sceneGraph.getNode(event.data.get("other"));
+                // case HW4_Events.PLAYER_HIT_ENEMY:
+                //     {
+                //         let node = this.sceneGraph.getNode(event.data.get("node"));
+                //         let other = this.sceneGraph.getNode(event.data.get("other"));
 
-                        if(node === this.player){
-                            // Node is player, other is enemy
-                            this.handlePlayerEnemyCollision(<AnimatedSprite>node, <AnimatedSprite>other);
-                        } else {
-                            // Other is player, node is enemy
-                            this.handlePlayerEnemyCollision(<AnimatedSprite>other,<AnimatedSprite>node);
-                        }
-                    }
-                    break;
+                //         if(node === this.player){
+                //             // Node is player, other is enemy
+                //             this.handlePlayerEnemyCollision(<AnimatedSprite>node, <AnimatedSprite>other);
+                //         } else {
+                //             // Other is player, node is enemy
+                //             this.handlePlayerEnemyCollision(<AnimatedSprite>other,<AnimatedSprite>node);
+                //         }
+                //     }
+                //     break;
 
-                case HW4_Events.ENEMY_DIED:
-                    {
-                        // An enemy finished its dying animation, destroy it
-                        let node = this.sceneGraph.getNode(event.data.get("owner"));
-                        node.destroy();
-                    }
-                    break;
+                // case HW4_Events.ENEMY_DIED:
+                //     {
+                //         // An enemy finished its dying animation, destroy it
+                //         let node = this.sceneGraph.getNode(event.data.get("owner"));
+                //         node.destroy();
+                //     }
+                //     break;
                     
-                case HW4_Events.PLAYER_ENTERED_LEVEL_END:
-                    {
-                        if(!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()){
-                            // The player has reached the end of the level
-                            this.levelEndTimer.start();
-                            this.levelEndLabel.tweens.play("slideIn");
-                        }
-                    }
-                    break;
+                // case HW4_Events.PLAYER_ENTERED_LEVEL_END:
+                //     {
+                //         if(!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()){
+                //             // The player has reached the end of the level
+                //             this.levelEndTimer.start();
+                //             this.levelEndLabel.tweens.play("slideIn");
+                //         }
+                //     }
+                //     break;
 
-                case HW4_Events.LEVEL_START:
+                case CC_EVENTS.LEVEL_START:
                     {
                         // Re-enable controls
                         Input.enableInput();
                     }
                     break;
                 
-                case HW4_Events.LEVEL_END:
+                case CC_EVENTS.LEVEL_END:
                     {
                         // Go to the next level
                         if(this.nextLevel){
@@ -183,7 +184,6 @@ export default class GameLevel extends Scene {
                     break;
 
             }
-            */
         }
 
         // If player falls into a pit, kill them off and reset their position
@@ -226,6 +226,15 @@ export default class GameLevel extends Scene {
             // HW4_Events.PLAYER_ENTERED_LEVEL_END,
             // HW4_Events.LEVEL_START,
             // HW4_Events.LEVEL_END
+        ]);
+        this.receiver.subscribe([
+            CC_EVENTS.PLACE_BLOCK,
+            CC_EVENTS.TIME_RESUME,
+            CC_EVENTS.LEVEL_START,
+            CC_EVENTS.LEVEL_END,
+            CC_EVENTS.TIME_SLOW,
+            CC_EVENTS.SHOW_PLACEMENT_GRID,
+            CC_EVENTS.HIDE_PLACEMENT_GRID,
         ]);
     }
 
@@ -279,7 +288,7 @@ export default class GameLevel extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            //onEnd: HW4_Events.LEVEL_END
+            onEnd: CC_EVENTS.LEVEL_END
         });
 
         this.levelTransitionScreen.tweens.add("fadeOut", {
@@ -293,7 +302,7 @@ export default class GameLevel extends Scene {
                     ease: EaseFunctionType.IN_OUT_QUAD
                 }
             ],
-            //onEnd: HW4_Events.LEVEL_START
+            onEnd: CC_EVENTS.LEVEL_START
         });
     }
 
@@ -311,7 +320,7 @@ export default class GameLevel extends Scene {
         this.player.position.copy(this.playerSpawn);
         this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 28)));
         this.player.colliderOffset.set(0, 2);
-        //this.player.addAI(PlayerController, {playerType: "platformer", tilemap: "Main"});
+        this.player.addAI(PlayerController, {playerType: "platformer", tilemap: "Main"});
 
         // Add triggers on colliding with coins or coinBlocks
         this.player.setGroup("player");

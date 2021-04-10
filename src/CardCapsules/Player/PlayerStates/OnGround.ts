@@ -21,7 +21,9 @@ export default class OnGround extends PlayerState {
 			(<Sprite>this.owner).invertX = MathUtils.sign(direction.x) < 0;
 		}
 
+		//console.log("JUMP PRESSED");
 		if(Input.isJustPressed("jump")){
+			
 			this.finished("jump");
 			this.parent.velocity.y = -450;
 			if(this.parent.velocity.x !== 0){
