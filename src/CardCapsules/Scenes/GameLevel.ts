@@ -309,7 +309,7 @@ export default class GameLevel extends Scene {
             this.playerSpawn = Vec2.ZERO;
         }
         this.player.position.copy(this.playerSpawn);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 14)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 28)));
         this.player.colliderOffset.set(0, 2);
         //this.player.addAI(PlayerController, {playerType: "platformer", tilemap: "Main"});
 
@@ -319,15 +319,17 @@ export default class GameLevel extends Scene {
         // Add a tween animation for the player jump
         this.player.tweens.add("flip", {
             startDelay: 0,
-            duration: 500,
+            duration: 300,
             effects: [
                 {
                     property: "rotation",
+                    resetOnComplete: true,
                     start: 0,
-                    end: 2*Math.PI,
-                    ease: EaseFunctionType.IN_OUT_QUAD
+                    end: 3.14/8,
+                    ease: EaseFunctionType.IN_OUT_SINE
                 }
-            ]
+            ],
+            reverseOnComplete: true,
         });
 
         // Add a tween animation for the player death
