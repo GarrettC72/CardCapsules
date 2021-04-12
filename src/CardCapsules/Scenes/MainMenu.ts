@@ -39,6 +39,16 @@ export default class MainMenu extends Scene {
         playBtn.setPadding(new Vec2(50, 10));
         //playBtn.font = "PixelSimple";
         playBtn.onClickEventId = "play";
+        playBtn.onEnter = () => {
+            playBtn.borderColor = Color.BLACK;
+            playBtn.backgroundColor = Color.WHITE;
+            playBtn.textColor = Color.BLACK;
+        }
+        playBtn.onLeave = () => {
+            playBtn.borderColor = Color.WHITE;
+            playBtn.backgroundColor = Color.TRANSPARENT;
+            playBtn.textColor = Color.WHITE;
+        }
 
         //Create a level select button
         const levelBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y - 50), text: "Level Select"});
@@ -48,6 +58,16 @@ export default class MainMenu extends Scene {
         levelBtn.setPadding(new Vec2(50, 10));
         //levelBtn.font = "PixelSimple";
         levelBtn.onClickEventId = "level";
+        levelBtn.onEnter = () => {
+            levelBtn.borderColor = Color.BLACK;
+            levelBtn.backgroundColor = Color.WHITE;
+            levelBtn.textColor = Color.BLACK;
+        }
+        levelBtn.onLeave = () => {
+            levelBtn.borderColor = Color.WHITE;
+            levelBtn.backgroundColor = Color.TRANSPARENT;
+            levelBtn.textColor = Color.WHITE;
+        }
 
         //Create a controls button
         const controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y + 50), text: "Controls"});
@@ -57,6 +77,16 @@ export default class MainMenu extends Scene {
         controlsBtn.setPadding(new Vec2(50, 10));
         //controlsBtn.font = "PixelSimple";
         controlsBtn.onClickEventId = "controls";
+        controlsBtn.onEnter = () => {
+            controlsBtn.borderColor = Color.BLACK;
+            controlsBtn.backgroundColor = Color.WHITE;
+            controlsBtn.textColor = Color.BLACK;
+        }
+        controlsBtn.onLeave = () => {
+            controlsBtn.borderColor = Color.WHITE;
+            controlsBtn.backgroundColor = Color.TRANSPARENT;
+            controlsBtn.textColor = Color.WHITE;
+        }
 
         //Create a help button
         const helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y + 150), text: "Help"});
@@ -66,6 +96,16 @@ export default class MainMenu extends Scene {
         helpBtn.setPadding(new Vec2(50, 10));
         //helpBtn.font = "PixelSimple";
         helpBtn.onClickEventId = "help";
+        helpBtn.onEnter = () => {
+            helpBtn.borderColor = Color.BLACK;
+            helpBtn.backgroundColor = Color.WHITE;
+            helpBtn.textColor = Color.BLACK;
+        }
+        helpBtn.onLeave = () => {
+            helpBtn.borderColor = Color.WHITE;
+            helpBtn.backgroundColor = Color.TRANSPARENT;
+            helpBtn.textColor = Color.WHITE;
+        }
 
         //Create a level select screen
         this.levelSelect = this.addUILayer("LevelSelect");
@@ -126,6 +166,16 @@ export default class MainMenu extends Scene {
         levelBack.borderColor = Color.WHITE;
         levelBack.backgroundColor = Color.TRANSPARENT;
         levelBack.onClickEventId = "menu";
+        levelBack.onEnter = () => {
+            levelBack.borderColor = Color.BLACK;
+            levelBack.backgroundColor = Color.WHITE;
+            levelBack.textColor = Color.BLACK;
+        }
+        levelBack.onLeave = () => {
+            levelBack.borderColor = Color.WHITE;
+            levelBack.backgroundColor = Color.TRANSPARENT;
+            levelBack.textColor = Color.WHITE;
+        }
 
         //Create a controls screen
         this.controls = this.addUILayer("Controls");
@@ -164,6 +214,16 @@ export default class MainMenu extends Scene {
         controlsBack.borderColor = Color.WHITE;
         controlsBack.backgroundColor = Color.TRANSPARENT;
         controlsBack.onClickEventId = "menu";
+        controlsBack.onEnter = () => {
+            controlsBack.borderColor = Color.BLACK;
+            controlsBack.backgroundColor = Color.WHITE;
+            controlsBack.textColor = Color.BLACK;
+        }
+        controlsBack.onLeave = () => {
+            controlsBack.borderColor = Color.WHITE;
+            controlsBack.backgroundColor = Color.TRANSPARENT;
+            controlsBack.textColor = Color.WHITE;
+        }
 
         //Create a help screen
         this.help = this.addUILayer("Help");
@@ -202,6 +262,16 @@ export default class MainMenu extends Scene {
         helpBack.borderColor = Color.WHITE;
         helpBack.backgroundColor = Color.TRANSPARENT;
         helpBack.onClickEventId = "menu";
+        helpBack.onEnter = () => {
+            helpBack.borderColor = Color.BLACK;
+            helpBack.backgroundColor = Color.WHITE;
+            helpBack.textColor = Color.BLACK;
+        }
+        helpBack.onLeave = () => {
+            helpBack.borderColor = Color.WHITE;
+            helpBack.backgroundColor = Color.TRANSPARENT;
+            helpBack.textColor = Color.WHITE;
+        }
 
         //Subscribe to button events
         this.receiver.subscribe("play");

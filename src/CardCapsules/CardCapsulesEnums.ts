@@ -4,6 +4,7 @@ export enum CC_EVENTS {
     SHOW_PLACEMENT_GRID = "show_placement_grid",
     HIDE_PLACEMENT_GRID = "hide_placement_grid",
     PLACE_BLOCK = "place_block",
+    PLAYER_ENTERED_LEVEL_END = "PlayerEnteredLevelEnd",
     LEVEL_START = "level_start",
     LEVEL_END = "level_end",
 }

@@ -145,15 +145,15 @@ export default class GameLevel extends Scene {
                 //     }
                 //     break;
                     
-                // case HW4_Events.PLAYER_ENTERED_LEVEL_END:
-                //     {
-                //         if(!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()){
-                //             // The player has reached the end of the level
-                //             this.levelEndTimer.start();
-                //             this.levelEndLabel.tweens.play("slideIn");
-                //         }
-                //     }
-                //     break;
+                case CC_EVENTS.PLAYER_ENTERED_LEVEL_END:
+                    {
+                        if(!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()){
+                            // The player has reached the end of the level
+                            this.levelEndTimer.start();
+                            this.levelEndLabel.tweens.play("slideIn");
+                        }
+                    }
+                    break;
 
                 case CC_EVENTS.LEVEL_START:
                     {
@@ -231,6 +231,7 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLACE_BLOCK,
             CC_EVENTS.TIME_RESUME,
             CC_EVENTS.LEVEL_START,
+            CC_EVENTS.PLAYER_ENTERED_LEVEL_END,
             CC_EVENTS.LEVEL_END,
             CC_EVENTS.TIME_SLOW,
             CC_EVENTS.SHOW_PLACEMENT_GRID,
@@ -364,7 +365,7 @@ export default class GameLevel extends Scene {
     protected addLevelEnd(startingTile: Vec2, size: Vec2): void {
         this.levelEndArea = <Rect>this.add.graphic(GraphicType.RECT, "primary", {position: startingTile.add(size.scaled(0.5)).scale(32), size: size.scale(32)});
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
-        //this.levelEndArea.setTrigger("player", HW4_Events.PLAYER_ENTERED_LEVEL_END, null);
+        this.levelEndArea.setTrigger("player", CC_EVENTS.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(0, 0, 0, 0);
     }
 

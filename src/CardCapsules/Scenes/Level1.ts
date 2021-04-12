@@ -67,7 +67,7 @@ export default class Level1 extends GameLevel {
         // Do generic setup for a GameLevel
         super.startScene();
 
-        this.addLevelEnd(new Vec2(58, 17), new Vec2(2, 2));
+        this.addLevelEnd(new Vec2(57, 6), new Vec2(1, 1));
 
         //this.nextLevel = Level2;
 
