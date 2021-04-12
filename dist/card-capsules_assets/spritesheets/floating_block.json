@@ -1,0 +1,24 @@
+{
+    "name": "floating_block",
+    "spriteSheetImage": "floating_block.png",
+    "spriteWidth": 16,
+    "spriteHeight": 16,
+    "columns": 2,
+    "rows": 1,
+    "animations": [
+        {
+            "name": "IDLE",
+            "repeat": true,
+            "frames": [
+                {
+                    "index": 0,
+                    "duration": 5
+                },
+                {
+                    "index": 1,
+                    "duration": 5
+                }
+            ]
+        }
+    ]
+}

@@ -6,6 +6,7 @@ import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
+import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -13,6 +14,7 @@ import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import { CC_EVENTS } from "../CardCapsulesEnums";
+import GridNode from "../GameObjects/GridNode";
 //import EnemyController from "../Enemies/EnemyController";
 //import { HW4_Events } from "../hw4_enums";
 import PlayerController from "../Player/PlayerController";
@@ -47,11 +49,14 @@ export default class GameLevel extends Scene {
     protected levelTransitionTimer: Timer;
     protected levelTransitionScreen: Rect;
 
+    protected grid: GridNode;
+
     startScene(): void {
         // Do the game level standard initializations
         this.initLayers();
         this.initViewport();
         this.initPlayer();
+        this.initGrid();
         this.subscribeToEvents();
         this.addUI();
 
@@ -183,7 +188,39 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
+                case CC_EVENTS.PLACE_BLOCK:
+                    {
+                        let row = event.data.get("row");
+                        let col = event.data.get("col");
+                        console.log("row: ", row);
+                        console.log("col: ", col);
+                        let tilemap = <OrthogonalTilemap>this.getTilemap("Main");
+
+                        //tilemap.setTileAtRowCol(new Vec2(row, col), 18);
+                        //this.add
+                        //console.log(this.viewport.getOrigin());
+                        this.addBlock("floating_block", new Vec2(row, col));
+                    }
+                    break;
+
+                case CC_EVENTS.HIDE_PLACEMENT_GRID:
+                    {
+                        this.grid.setShowGrid(false);
+                    }
+                    break;
+
+                case CC_EVENTS.SHOW_PLACEMENT_GRID:
+                    {
+                        this.grid.setShowGrid(true);
+                    }
+                    break;
+
             }
+        }
+
+        if(Input.isJustPressed("grid"))
+        {
+            this.grid.setShowGrid(!this.grid.isShowGrid());
         }
 
         // If player falls into a pit, kill them off and reset their position
@@ -205,6 +242,16 @@ export default class GameLevel extends Scene {
 
         // Add a layer for players and enemies
         this.addLayer("primary", 1);
+
+        // Add grid layer.
+        this.addUILayer("grid");
+    }
+
+
+    protected initGrid(): void
+    {
+        this.grid = new GridNode(this.getLayer("grid"), 32, 32, this.viewport);
+        this.sceneGraph.addNode(this.grid);
     }
 
     /**
@@ -389,6 +436,16 @@ export default class GameLevel extends Scene {
         //enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
         //enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
+    }
+
+    protected addBlock(spriteKey: string, tilePos: Vec2)
+    {
+        let block = this.add.animatedSprite(spriteKey, "primary");
+        block.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
+        block.scale.set(2, 2);
+        block.addPhysics();
+        block.setGroup("ground");
+        block.animation.play("IDLE");
     }
 
     // HOMEWORK 4 - TODO
