@@ -7,4 +7,6 @@ export enum CC_EVENTS {
     PLAYER_ENTERED_LEVEL_END = "PlayerEnteredLevelEnd",
     LEVEL_START = "level_start",
     LEVEL_END = "level_end",
+    SPRING_TRIGGERED = "spring_triggered",
+    CARD_CLICKED = "card_clicked",
 }

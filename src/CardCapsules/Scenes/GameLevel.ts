@@ -7,6 +7,7 @@ import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
@@ -15,6 +16,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
 import { CC_EVENTS } from "../CardCapsulesEnums";
 import GridNode from "../GameObjects/GridNode";
+import SpringBlock, { SPRING_BLOCK_ENUMS } from "../GameObjects/SpringBlock";
 //import EnemyController from "../Enemies/EnemyController";
 //import { HW4_Events } from "../hw4_enums";
 import PlayerController from "../Player/PlayerController";
@@ -50,6 +52,9 @@ export default class GameLevel extends Scene {
     protected levelTransitionScreen: Rect;
 
     protected grid: GridNode;
+    protected selectedBlock: string = "floating_block"; //The current block that the player clicked on.
+    protected showGridTimer: Timer; //Timer to delay the show grid event.
+
 
     startScene(): void {
         // Do the game level standard initializations
@@ -59,8 +64,12 @@ export default class GameLevel extends Scene {
         this.initGrid();
         this.subscribeToEvents();
         this.addUI();
+        this.addCardGUI(); //add the card buttons on the bottom.
 
         // Initialize the timers
+        this.showGridTimer = new Timer(500, ()=> {
+            this.emitter.fireEvent(CC_EVENTS.SHOW_PLACEMENT_GRID);
+        });
         this.respawnTimer = new Timer(1000, () => {
             if(GameLevel.livesCount === 0){
                 this.sceneManager.changeToScene(MainMenu);
@@ -192,14 +201,15 @@ export default class GameLevel extends Scene {
                     {
                         let row = event.data.get("row");
                         let col = event.data.get("col");
-                        console.log("row: ", row);
-                        console.log("col: ", col);
+                        //console.log("row: ", row);
+                        //console.log("col: ", col);
                         let tilemap = <OrthogonalTilemap>this.getTilemap("Main");
 
                         //tilemap.setTileAtRowCol(new Vec2(row, col), 18);
                         //this.add
                         //console.log(this.viewport.getOrigin());
-                        this.addBlock("floating_block", new Vec2(row, col));
+                        this.addBlock(this.selectedBlock, new Vec2(row, col));
+                        this.grid.setShowGrid(false);
                     }
                     break;
 
@@ -214,6 +224,14 @@ export default class GameLevel extends Scene {
                         this.grid.setShowGrid(true);
                     }
                     break;
+
+                case CC_EVENTS.CARD_CLICKED:
+                {
+                    let cardName = event.data.get("cardName");
+                    this.selectedBlock = cardName;
+                    this.showGridTimer.start();
+                }
+                break;
 
             }
         }
@@ -283,6 +301,7 @@ export default class GameLevel extends Scene {
             CC_EVENTS.TIME_SLOW,
             CC_EVENTS.SHOW_PLACEMENT_GRID,
             CC_EVENTS.HIDE_PLACEMENT_GRID,
+            CC_EVENTS.CARD_CLICKED,
         ]);
     }
 
@@ -352,6 +371,47 @@ export default class GameLevel extends Scene {
             ],
             onEnd: CC_EVENTS.LEVEL_START
         });
+    }
+
+    protected addCardGUI(): void {
+        
+        let size = this.viewport.getHalfSize();
+
+        //adding a button for card one.
+        let c1Pos = new Vec2((size.x * 2) * 0.07, (size.y * 2) * 0.90);
+        let c1 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone(), text: "1"});
+        c1.backgroundColor = new Color(21, 163, 121);
+        c1.borderColor = new Color(230, 200, 11);
+        c1.borderRadius = 1;
+        c1.borderWidth = 5;
+        c1.size = new Vec2(100,120);
+        
+        //due to viewport sizing issues the actual button that can be clicked is here.
+        let c1C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone().mult(new Vec2(2, 2)), text: ""});
+        c1C.size = new Vec2(100,120);
+        c1C.onClick = () =>
+        {
+            this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "floating_block"});
+        }
+
+        //adding a button for card two.
+        let c2Pos = new Vec2((size.x * 2) * 0.18, (size.y * 2) * 0.90);
+        let c2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone(), text: "2"});
+        c2.backgroundColor = new Color(21, 163, 121);
+        c2.borderColor = new Color(230, 200, 11);
+        c2.borderRadius = 1;
+        c2.borderWidth = 5;
+        c2.size = new Vec2(100,120);
+        
+        //due to viewport sizing issues the actual button that can be clicked is here.
+        let c2C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone().mult(new Vec2(2, 2)), text: ""});
+        c2C.size = new Vec2(100,120);
+        c2C.onClick = () =>
+        {
+            this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "spring_block"});
+        }
+
+
     }
 
     /**
@@ -442,11 +502,23 @@ export default class GameLevel extends Scene {
     protected addBlock(spriteKey: string, tilePos: Vec2)
     {
         let block = this.add.animatedSprite(spriteKey, "primary");
+        //block.rotation = Math.PI;
         block.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
         block.scale.set(2, 2);
-        block.addPhysics();
-        block.setGroup("ground");
         block.animation.play("IDLE");
+        
+        if(spriteKey == "floating_block")
+        {
+            block.setGroup("ground");
+            block.addPhysics();
+        }
+        if(spriteKey == "spring_block")
+        {
+            block.addPhysics();
+            block.setGroup("enemy");
+            new SpringBlock(block, SPRING_BLOCK_ENUMS.FACING_TOP);
+        }
+        
     }
 
     // HOMEWORK 4 - TODO
