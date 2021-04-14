@@ -4,6 +4,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
+import { CC_EVENTS } from "../CardCapsulesEnums";
 //import { HW4_Events } from "../hw4_enums";
 import Fall from "./PlayerStates/Fall";
 import Idle from "./PlayerStates/Idle";
@@ -59,6 +60,7 @@ export default class PlayerController extends StateMachineAI {
         //this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
         //this.coin.position.set(-100, -100);
         //this.coin.scale.set(2, 2);
+        this.receiver.subscribe(CC_EVENTS.SPRING_TRIGGERED);
     }
 
     initializePlatformer(): void {

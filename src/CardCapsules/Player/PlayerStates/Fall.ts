@@ -9,7 +9,7 @@ export default class Fall extends InAir {
 		this.owner.animation.play("FALL", true);
 	}
 
-	handleInput(event: GameEvent): void {}
+	//handleInput(event: GameEvent): void {}
 
     onExit(): Record<string, any> {
 		this.owner.animation.stop();

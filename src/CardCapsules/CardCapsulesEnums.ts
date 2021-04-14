@@ -9,5 +9,7 @@ export enum CC_EVENTS {
     LEVEL_END = "level_end",
     PLAYER_HIT_FLOATING_BLOCK_CARD = "PlayerHitFloatingBlockCard",
     PLAYER_HIT_SPRING_BLOCK_CARD = "PlayerHitSpringBlockCard",
-    PLAYER_HIT_CIRCULAR_ROCK_CARD = "PlayerHitCircularRockCard"
+    PLAYER_HIT_CIRCULAR_ROCK_CARD = "PlayerHitCircularRockCard",
+    SPRING_TRIGGERED = "spring_triggered",
+    CARD_CLICKED = "card_clicked",
 }
