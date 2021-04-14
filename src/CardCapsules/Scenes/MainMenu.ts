@@ -129,6 +129,7 @@ export default class MainMenu extends Scene {
             level1Btn.backgroundColor = Color.TRANSPARENT;
             level1Btn.textColor = Color.WHITE;
         }
+        level1Btn.onClickEventId = "level1";
 
         const level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y - 100), text: "2"});
         level2Btn.size.set(100, 100);
@@ -276,6 +277,7 @@ export default class MainMenu extends Scene {
         //Subscribe to button events
         this.receiver.subscribe("play");
         this.receiver.subscribe("level");
+        this.receiver.subscribe("level1");
         this.receiver.subscribe("controls");
         this.receiver.subscribe("help");
         this.receiver.subscribe("menu");
@@ -295,7 +297,7 @@ export default class MainMenu extends Scene {
 
             console.log(event);
 
-            if(event.type === "play"){
+            if(event.type === "play" || event.type === "level1"){
                 /*
                     Init the next scene with physics collisions:
 
@@ -315,7 +317,7 @@ export default class MainMenu extends Scene {
 
                 let sceneOptions = {
                     physics: {
-                        groupNames: ["ground", "player", "enemy", "coin"],
+                        groupNames: ["ground", "player", "enemy", "card"],
                         collisions:
                         [
                             [0, 1, 1, 0],

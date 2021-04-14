@@ -37,10 +37,76 @@
          "width":64,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"Cards",
+         "objects":[
+                {
+                 "gid":33,
+                 "height":16,
+                 "id":3,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"Group",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"HasPhysics",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"IsCollidable",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"IsTrigger",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"TriggerGroup",
+                         "type":"string",
+                         "value":"player"
+                        }, 
+                        {
+                         "name":"TriggerOnEnter",
+                         "type":"string",
+                         "value":"PlayerHitFloatingBlockCard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":648,
+                 "y":64
+                }],
+         "opacity":1,
+         "properties":[
+                {
+                 "name":"Depth",
+                 "type":"int",
+                 "value":1
+                }],
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":3,
- "nextobjectid":1,
+ "nextlayerid":4,
+ "nextobjectid":4,
  "orientation":"orthogonal",
+ "properties":[
+        {
+         "name":"Group",
+         "type":"string",
+         "value":"coin"
+        }],
  "renderorder":"right-down",
  "tiledversion":"1.4.3",
  "tileheight":16,

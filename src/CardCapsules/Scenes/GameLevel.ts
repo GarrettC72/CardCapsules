@@ -34,6 +34,9 @@ export default class GameLevel extends Scene {
     protected respawnTimer: Timer;
 
     // Labels for the UI
+    protected static floatingBlockCardCount: number = 0;
+    protected static springBlockCardCount: number = 0;
+    protected static circularRockCount: number = 0;
     protected static coinCount: number = 0;
     protected coinCountLabel: Label;
     protected static livesCount: number = 3;
@@ -50,6 +53,9 @@ export default class GameLevel extends Scene {
     protected levelTransitionScreen: Rect;
 
     protected grid: GridNode;
+
+    // Every level will have a goal card, which will be an animated sprite
+    protected goal: AnimatedSprite;
 
     startScene(): void {
         // Do the game level standard initializations
@@ -96,28 +102,30 @@ export default class GameLevel extends Scene {
             let event = this.receiver.getNextEvent();
             
             switch(event.type){
-                // case HW4_Events.PLAYER_HIT_COIN:
-                //     {
-                //         // Hit a coin
-                //         let coin;
-                //         if(event.data.get("node") === this.player.id){
-                //             // Other is coin, disable
-                //             coin = this.sceneGraph.getNode(event.data.get("other"));
-                //         } else {
-                //             // Node is coin, disable
-                //             coin = this.sceneGraph.getNode(event.data.get("node"));
-                //         }
+                case CC_EVENTS.PLAYER_HIT_FLOATING_BLOCK_CARD:
+                    {
+                        console.log("card");
+                        // Hit a card
+                        let card;
+                        if(event.data.get("node") === this.player.id){
+                            // Other is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("other"));
+                        } else {
+                            // Node is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("node"));
+                        }
                         
-                //         // Remove coin
-                //         coin.destroy();
+                        // Remove card
+                        card.destroy();
 
-                //         // Increment our number of coins
-                //         this.incPlayerCoins(1);
 
-                //         // Play a coin sound
-                //         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
-                //     }
-                //     break;
+                        // Increment our number of cards
+                        this.incPlayerFloatingBlockCards(1);
+
+                        // Play a card sound
+                        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                    }
+                    break;
 
                 // case HW4_Events.PLAYER_HIT_COIN_BLOCK:
                 //     {
@@ -224,7 +232,7 @@ export default class GameLevel extends Scene {
         }
 
         // If player falls into a pit, kill them off and reset their position
-        if(this.player.position.y > 100*64){
+        if(this.player.position.y > 25*64){
             this.incPlayerLife(-1);
             this.respawnPlayer();
         }
@@ -283,6 +291,9 @@ export default class GameLevel extends Scene {
             CC_EVENTS.TIME_SLOW,
             CC_EVENTS.SHOW_PLACEMENT_GRID,
             CC_EVENTS.HIDE_PLACEMENT_GRID,
+            CC_EVENTS.PLAYER_HIT_FLOATING_BLOCK_CARD,
+            CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD,
+            CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD
         ]);
     }
 
@@ -414,6 +425,11 @@ export default class GameLevel extends Scene {
         this.levelEndArea.addPhysics(undefined, undefined, false, true);
         this.levelEndArea.setTrigger("player", CC_EVENTS.PLAYER_ENTERED_LEVEL_END, null);
         this.levelEndArea.color = new Color(0, 0, 0, 0);
+
+        this.goal = this.add.animatedSprite("goal_card","primary");
+        this.goal.position.set(startingTile.x, startingTile.y);
+        this.goal.scale.set(2,2);
+        this.goal.animation.play("IDLE");
     }
 
     // HOMEWORK 4 - TODO
@@ -529,12 +545,30 @@ export default class GameLevel extends Scene {
     }
 
     /**
-     * Increments the number of coins the player has
-     * @param amt The amount to add the the number of coins
+     * Increments the number of floating block cards the player has
+     * @param amt The amount to add the the number of floating block cards
      */
-    protected incPlayerCoins(amt: number): void {
-        GameLevel.coinCount += amt;
-        this.coinCountLabel.text = "Coins: " + GameLevel.coinCount;
+    protected incPlayerFloatingBlockCards(amt: number): void {
+        GameLevel.floatingBlockCardCount += amt;
+        this.coinCountLabel.text = "Coins: " + GameLevel.floatingBlockCardCount;
+    }
+
+    /**
+     * Increments the number of floating block cards the player has
+     * @param amt The amount to add the the number of floating block cards
+     */
+     protected incPlayerSpringBlockCards(amt: number): void {
+        GameLevel.springBlockCardCount += amt;
+        this.coinCountLabel.text = "Coins: " + GameLevel.springBlockCardCount;
+    }
+
+    /**
+     * Increments the number of floating block cards the player has
+     * @param amt The amount to add the the number of floating block cards
+     */
+     protected incPlayerCircularRockCards(amt: number): void {
+        GameLevel.circularRockCount += amt;
+        this.coinCountLabel.text = "Coins: " + GameLevel.circularRockCount;
     }
 
     /**
