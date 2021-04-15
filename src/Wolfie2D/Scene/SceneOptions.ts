@@ -11,6 +11,13 @@ export default class SceneOptions {
         collisions: Array<Array<number>>;
     }
 
+    inventory: {
+        lives: number,
+        floatingBlocks: number,
+        springBlocks: number,
+        circularRocks: number;
+    }
+
     static parse(options: Record<string, any>): SceneOptions{
         let sOpt = new SceneOptions();
 
@@ -18,6 +25,12 @@ export default class SceneOptions {
             sOpt.physics = {groups: undefined, collisions: undefined};
         } else {
             sOpt.physics = options.physics;
+        }
+
+        if(options.inventory === undefined){
+            sOpt.inventory = {lives: 3, floatingBlocks: 0, springBlocks: 0, circularRocks: 0};
+        }else{
+            sOpt.inventory = options.inventory;
         }
 
         return sOpt;

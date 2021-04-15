@@ -21,6 +21,7 @@ import SpringBlock, { SPRING_BLOCK_ENUMS } from "../GameObjects/SpringBlock";
 //import { HW4_Events } from "../hw4_enums";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
+import LevelSelect from "./LevelSelect";
 
 // HOMEWORK 4 - TODO
 /**
@@ -38,7 +39,7 @@ export default class GameLevel extends Scene {
     // Labels for the UI
     protected static floatingBlockCardCount: number = 0;
     protected static springBlockCardCount: number = 0;
-    protected static circularRockCount: number = 0;
+    protected static circularRockCardCount: number = 0;
     protected static coinCount: number = 0;
     protected coinCountLabel: Label;
     protected static livesCount: number = 3;
@@ -61,6 +62,15 @@ export default class GameLevel extends Scene {
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
+
+    initScene(): void{
+        if(GameLevel.livesCount === 0){
+            GameLevel.livesCount += this.sceneOptions.inventory.lives;
+        }
+        GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
+        GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
+        GameLevel.circularRockCardCount = this.sceneOptions.inventory.circularRocks;
+    }
 
     startScene(): void {
         // Do the game level standard initializations
@@ -201,6 +211,8 @@ export default class GameLevel extends Scene {
                                 }
                             }
                             this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
+                        }else{
+                            this.sceneManager.changeToScene(LevelSelect);
                         }
                     }
                     break;
@@ -249,7 +261,11 @@ export default class GameLevel extends Scene {
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
             this.incPlayerLife(-1);
-            this.respawnPlayer();
+            if(GameLevel.livesCount === 0){
+                this.sceneManager.changeToScene(MainMenu);
+            } else {
+                this.respawnPlayer();
+            }
         }
     }
 
@@ -658,8 +674,8 @@ export default class GameLevel extends Scene {
      * @param amt The amount to add the the number of floating block cards
      */
      protected incPlayerCircularRockCards(amt: number): void {
-        GameLevel.circularRockCount += amt;
-        this.coinCountLabel.text = "Coins: " + GameLevel.circularRockCount;
+        GameLevel.circularRockCardCount += amt;
+        this.coinCountLabel.text = "Coins: " + GameLevel.circularRockCardCount;
     }
 
     /**
