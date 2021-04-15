@@ -553,7 +553,7 @@ export default class GameLevel extends Scene {
                 block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
             }
         }
-        
+        this.grid.addBlockLocation(spriteKey, tilePos.clone()); //used to keep track of locations where blocks can be placed.
     }
 
     // HOMEWORK 4 - TODO

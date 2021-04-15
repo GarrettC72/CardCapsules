@@ -28,6 +28,8 @@ export default class GridNode extends CanvasNode
     colorGreen: Color = new Color(0, 255, 0, 0.3);
     colorRed: Color = new Color(191, 25, 78, 0.3);
 
+    blockLocations: Array<BlockData> = new Array<BlockData>(); //an array of row cols used to represent block locations.
+
     public constructor(layer: Layer, gridWidth: number, gridHeight: number, viewport: Viewport, tilemap:OrthogonalTilemap)
     {
         super();
@@ -112,6 +114,22 @@ export default class GridNode extends CanvasNode
         this.blockName = blockName;
     }
 
+    
+    /**
+     * Data used to keep track on where the block is being placed.
+     * Location is in row col.
+     */
+     public addBlockLocation(blockName:string, location:Vec2)
+     {
+         this.blockLocations.push(new BlockData(blockName, location));
+ 
+         this.blockLocations.forEach((block) =>
+         {  
+             console.log(block.name);
+         });
+     }
+ 
+
     update(deltaT: number)
     {
         if(!this.showGrid)
@@ -145,22 +163,22 @@ export default class GridNode extends CanvasNode
         {
             if(!this.isThereBlockAt(new Vec2(row, col)))
             {
-                if(this.isThereBlockAt(new Vec2(row, col + 1)))
+                if(this.isThereBlockAt(new Vec2(row, col + 1)) && this.getBlockAt(new Vec2(row, col + 1)) !== "spring_block")
                 {
                     faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
                     canPlace = true;
                 }
-                else if(this.isThereBlockAt(new Vec2(row, col - 1)))
+                else if(this.isThereBlockAt(new Vec2(row, col - 1)) && this.getBlockAt(new Vec2(row, col - 1)) !== "spring_block")
                 {
                     faceDirection = SPRING_BLOCK_ENUMS.FACING_BOTTOM;
                     canPlace = true;
                 }
-                else if(this.isThereBlockAt(new Vec2(row + 1, col)))
+                else if(this.isThereBlockAt(new Vec2(row + 1, col)) && this.getBlockAt(new Vec2(row + 1, col)) !== "spring_block")
                 {
                     faceDirection = SPRING_BLOCK_ENUMS.FACING_LEFT;
                     canPlace = true;
                 }
-                else if(this.isThereBlockAt(new Vec2(row - 1, col)))
+                else if(this.isThereBlockAt(new Vec2(row - 1, col)) && this.getBlockAt(new Vec2(row - 1, col)) !== "spring_block")
                 {
                     faceDirection = SPRING_BLOCK_ENUMS.FACING_RIGHT;
                     canPlace = true;
@@ -215,11 +233,28 @@ export default class GridNode extends CanvasNode
 
     private isThereBlockAt(rowCol: Vec2): boolean
     {
-        //console.log("Tile number: ", this.tilemap.getTileAtRowCol(rowCol));
         if(this.tilemap.getTileAtRowCol(rowCol) === 0)
-            return false;
+        {
+            let blockFound = false;
+            this.blockLocations.forEach((block) => {
+                if(block.location.x == rowCol.x && block.location.y == rowCol.y)
+                    blockFound = true; 
+            });
+            return blockFound;
+        }
         return true;
     }
+
+    private getBlockAt(rowCol: Vec2): string
+    {
+        let blockFound = "";
+        this.blockLocations.forEach((block) => {
+            if(block.location.x == rowCol.x && block.location.y == rowCol.y)
+                blockFound = block.name; 
+        });
+        return blockFound;
+    }
+
 
     public isShowGrid(): boolean
     {
@@ -241,4 +276,16 @@ export default class GridNode extends CanvasNode
         }
     }
 
+}
+
+
+class BlockData {
+    location:Vec2;
+    name:string;
+
+    constructor(name:string, location:Vec2)
+    {
+        this.name = name;
+        this.location = location;
+    }
 }
