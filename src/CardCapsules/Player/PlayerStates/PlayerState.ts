@@ -68,49 +68,51 @@ export default abstract class PlayerState extends State {
 		if(!(node === this.owner))
 		{
 			(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+			(<AnimatedSprite>node).animation.queue("IDLE", true);
 		}
 		else
 		{
 			(<AnimatedSprite>other).animation.play("ACTIVATED", false);
+			(<AnimatedSprite>other).animation.queue("IDLE", true);
 		}
 	}	
 
-	private springTriggerdHelper(node: AnimatedSprite, other:AnimatedSprite, dir: string)
-	{
-		if(node === this.owner || other === this.owner)
-		{
-			//node is springblock
-			this.finished("jump");
-			if(dir === SPRING_BLOCK_ENUMS.FACING_BOTTOM)
-			{
-				this.parent.velocity.y = 500;
-			}
-			if(dir === SPRING_BLOCK_ENUMS.FACING_TOP)
-			{
-				this.parent.velocity.y = -500;
-			}
-			if(dir === SPRING_BLOCK_ENUMS.FACING_LEFT)
-			{
-				this.parent.velocity.y = -200;
-				this.parent.velocity.x = -500;
-			}
-			if(dir === SPRING_BLOCK_ENUMS.FACING_RIGHT)
-			{
-				this.parent.velocity.y = -200;
-				this.parent.velocity.x = 500;
-			}
+	// private springTriggerdHelper(node: AnimatedSprite, other:AnimatedSprite, dir: string)
+	// {
+	// 	if(node === this.owner || other === this.owner)
+	// 	{
+	// 		//node is springblock
+	// 		this.finished("jump");
+	// 		if(dir === SPRING_BLOCK_ENUMS.FACING_BOTTOM)
+	// 		{
+	// 			this.parent.velocity.y = 500;
+	// 		}
+	// 		if(dir === SPRING_BLOCK_ENUMS.FACING_TOP)
+	// 		{
+	// 			this.parent.velocity.y = -500;
+	// 		}
+	// 		if(dir === SPRING_BLOCK_ENUMS.FACING_LEFT)
+	// 		{
+	// 			this.parent.velocity.y = -200;
+	// 			this.parent.velocity.x = -500;
+	// 		}
+	// 		if(dir === SPRING_BLOCK_ENUMS.FACING_RIGHT)
+	// 		{
+	// 			this.parent.velocity.y = -200;
+	// 			this.parent.velocity.x = 500;
+	// 		}
 			
-			this.owner.tweens.play("flip");
-		}
-		if(!(node === this.owner))
-		{
-			(<AnimatedSprite>node).animation.play("ACTIVATED", false);
-		}
-		else
-		{
-			(<AnimatedSprite>other).animation.play("ACTIVATED", false);
-		}
-	}
+	// 		this.owner.tweens.play("flip");
+	// 	}
+	// 	if(!(node === this.owner))
+	// 	{
+	// 		(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+	// 	}
+	// 	else
+	// 	{
+	// 		(<AnimatedSprite>other).animation.play("ACTIVATED", false);
+	// 	}
+	// }
 
 	update(deltaT: number): void {
 		// Do gravity

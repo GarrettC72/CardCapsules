@@ -527,7 +527,7 @@ export default class GameLevel extends Scene {
         }
         if(spriteKey == "spring_block")
         {
-            block.addPhysics();
+            block.addPhysics(new AABB(new Vec2(0, 0), new Vec2(9, 9)));
             block.setGroup("enemy");
             let faceDirection = data ? data["orientation"] : SPRING_BLOCK_ENUMS.FACING_TOP;
 

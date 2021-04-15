@@ -67,7 +67,7 @@ export default class GridNode extends CanvasNode
         for(let i = 0; i < 20; i++)
         {
             let rect = new Rect(new Vec2(i * gap, 0), size.clone());
-            rect.color = new Color(255, 0, 0, 0.5);
+            rect.color = new Color(92, 95, 99, 0.5);
             this.vlines.push(rect);
             this.layer.addNode(rect);
         }
@@ -81,7 +81,7 @@ export default class GridNode extends CanvasNode
         for(let i = 0; i < 20; i++)
         {
             let rect = new Rect(new Vec2(0, i * gap), size.clone());
-            rect.color = new Color(255, 0, 0, 0.5);
+            rect.color = new Color(92, 95, 99, 0.5);
             this.hlines.push(rect);
             this.layer.addNode(rect);
         }
@@ -123,10 +123,10 @@ export default class GridNode extends CanvasNode
      {
          this.blockLocations.push(new BlockData(blockName, location));
  
-         this.blockLocations.forEach((block) =>
-         {  
-             console.log(block.name);
-         });
+        //  this.blockLocations.forEach((block) =>
+        //  {  
+        //      console.log(block.name);
+        //  });
      }
  
 
