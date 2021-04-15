@@ -276,7 +276,7 @@ export default class GameLevel extends Scene {
 
     protected initGrid(): void
     {
-        this.grid = new GridNode(this.getLayer("grid"), 32, 32, this.viewport);
+        this.grid = new GridNode(this.getLayer("grid"), 32, 32, this.viewport, this.getTilemap("Main") as OrthogonalTilemap);
         this.sceneGraph.addNode(this.grid);
     }
 

@@ -2,6 +2,7 @@ import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Input from "../../Wolfie2D/Input/Input";
 import CanvasNode from "../../Wolfie2D/Nodes/CanvasNode";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
+import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
@@ -20,16 +21,24 @@ export default class GridNode extends CanvasNode
     viewport: Viewport;
     private showGrid: boolean;
 
-    public constructor(layer: Layer, gridWidth: number, gridHeight: number, viewport: Viewport)
+    blockName: string;
+    tilemap: OrthogonalTilemap;
+
+    colorGreen: Color = new Color(0, 255, 0, 0.3);
+    colorRed: Color = new Color(191, 25, 78, 0.3);
+
+    public constructor(layer: Layer, gridWidth: number, gridHeight: number, viewport: Viewport, tilemap:OrthogonalTilemap)
     {
         super();
         this.visible = false; //this is part of the CanvasNode class not part of the grid itself.
         this.showGrid = false; //This variable decides if the grid is to be shown or not.
+        this.blockName = ""; //This tells the grid which block is being placed.
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.layer = layer;
         this.defaultViewportOrigin = new Vec2();
         this.viewport = viewport;
+        this.tilemap = tilemap;
         this.initVlines();
         this.initHlines();
         this.initSectionRect();
@@ -95,6 +104,13 @@ export default class GridNode extends CanvasNode
         })
     }
 
+    //forces the grid to display itself according to which block is being placed.
+    public showGridFor(blockName:string): void
+    {
+        this.setShowGrid(true);
+        this.blockName = blockName;
+    }
+
     update(deltaT: number)
     {
         if(!this.showGrid)
@@ -103,21 +119,35 @@ export default class GridNode extends CanvasNode
         }
 
         let mousePos = Input.getMousePosition();
+        let viewportOrigin = this.viewport.getOrigin();
+        
+
+        let row = Math.floor((mousePos.x +viewportOrigin.x)/ this.gridWidth); //in game row of mouse.
+        let col = Math.floor((mousePos.y +viewportOrigin.y)/ this.gridHeight); //in game col of mouse.
+
+        let blockHere = this.isThereBlockAt(new Vec2(row, col)); //is there a block at the given row col.
+
+
+        //the indicator rectangle turns red if the block cannot be placed. Green if it can be placed.
+        if(blockHere)
+            this.rect.setColor(this.colorRed);
+        else
+            this.rect.setColor(this.colorGreen);
+
         //console.log("hello?");
         if(Input.isMousePressed())
         {
-            let viewportOrigin = this.viewport.getOrigin();
-
-
-
-            let row = Math.floor((mousePos.x +viewportOrigin.x)/ this.gridWidth);
-            let col = Math.floor((mousePos.y +viewportOrigin.y)/ this.gridHeight);
-            this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
-            this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col});
+            if(blockHere)
+            {
+                //cannot place block. Maybe play a sound.
+            }
+            else
+            {
+                this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
+                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col});
+            }
         }
         
-
-        let viewportOrigin = this.viewport.getView().topLeft;
         let offsetX = (viewportOrigin.x - this.defaultViewportOrigin.x) % this.gridWidth;
         let offsetY = (viewportOrigin.y - this.defaultViewportOrigin.y) % this.gridHeight;
         
@@ -134,6 +164,14 @@ export default class GridNode extends CanvasNode
         this.rect.position.x = (Math.floor((mousePos.x + offsetX) / this.gridWidth) * this.gridWidth) + this.gridWidth/2 - offsetX;
         this.rect.position.y = (Math.floor((mousePos.y + offsetY) / this.gridHeight) * this.gridHeight) + this.gridHeight/2 - offsetY;
         
+    }
+
+    private isThereBlockAt(rowCol: Vec2): boolean
+    {
+        console.log("Tile number: ", this.tilemap.getTileAtRowCol(rowCol));
+        if(this.tilemap.getTileAtRowCol(rowCol) === 0)
+            return false;
+        return true;
     }
 
     public isShowGrid(): boolean
