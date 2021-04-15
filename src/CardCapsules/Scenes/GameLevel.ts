@@ -209,14 +209,11 @@ export default class GameLevel extends Scene {
                     {
                         let row = event.data.get("row");
                         let col = event.data.get("col");
-                        //console.log("row: ", row);
-                        //console.log("col: ", col);
-                        let tilemap = <OrthogonalTilemap>this.getTilemap("Main");
-
-                        //tilemap.setTileAtRowCol(new Vec2(row, col), 18);
-                        //this.add
-                        //console.log(this.viewport.getOrigin());
-                        this.addBlock(this.selectedBlock, new Vec2(row, col));
+                        let orientation = event.data.get("orientation");
+                        if(orientation)
+                            this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
+                        else
+                            this.addBlock(this.selectedBlock, new Vec2(row, col));
                         this.grid.setShowGrid(false);
                     }
                     break;
@@ -229,7 +226,7 @@ export default class GameLevel extends Scene {
 
                 case CC_EVENTS.SHOW_PLACEMENT_GRID:
                     {
-                        this.grid.setShowGrid(true);
+                        this.grid.showGridFor(this.selectedBlock);
                     }
                     break;
 
@@ -515,7 +512,7 @@ export default class GameLevel extends Scene {
         enemy.setGroup("enemy");
     }
 
-    protected addBlock(spriteKey: string, tilePos: Vec2)
+    protected addBlock(spriteKey: string, tilePos: Vec2, data: Record<string, any> = null)
     {
         let block = this.add.animatedSprite(spriteKey, "primary");
         //block.rotation = Math.PI;
@@ -532,7 +529,29 @@ export default class GameLevel extends Scene {
         {
             block.addPhysics();
             block.setGroup("enemy");
-            new SpringBlock(block, SPRING_BLOCK_ENUMS.FACING_TOP);
+            let faceDirection = data ? data["orientation"] : SPRING_BLOCK_ENUMS.FACING_TOP;
+
+            //console.log(data["orientation"]);
+            //block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_DOWN, null);
+            if(faceDirection == SPRING_BLOCK_ENUMS.FACING_BOTTOM)
+            {
+                block.rotation = Math.PI;
+                block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_DOWN, null);
+            }
+            if(faceDirection == SPRING_BLOCK_ENUMS.FACING_LEFT)
+            {
+                block.rotation = Math.PI * 0.5;
+                block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_LEFT, null);
+            }
+            if(faceDirection == SPRING_BLOCK_ENUMS.FACING_RIGHT)
+            {
+                block.rotation = Math.PI * 1.5;
+                block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_RIGHT, null);
+            }
+            if(faceDirection == SPRING_BLOCK_ENUMS.FACING_TOP)
+            {
+                block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
+            }
         }
         
     }

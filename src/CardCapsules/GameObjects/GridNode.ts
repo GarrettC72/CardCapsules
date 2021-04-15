@@ -7,6 +7,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_EVENTS } from "../CardCapsulesEnums";
+import { SPRING_BLOCK_ENUMS } from "./SpringBlock";
 
 
 export default class GridNode extends CanvasNode
@@ -125,11 +126,56 @@ export default class GridNode extends CanvasNode
         let row = Math.floor((mousePos.x +viewportOrigin.x)/ this.gridWidth); //in game row of mouse.
         let col = Math.floor((mousePos.y +viewportOrigin.y)/ this.gridHeight); //in game col of mouse.
 
-        let blockHere = this.isThereBlockAt(new Vec2(row, col)); //is there a block at the given row col.
+        //let blockHere = this.isThereBlockAt(new Vec2(row, col)); //is there a block at the given row col.
 
 
         //the indicator rectangle turns red if the block cannot be placed. Green if it can be placed.
-        if(blockHere)
+        let canPlace = false;
+        
+        //let blockHere = this.isThereBlockAt(new Vec2(row, col));
+        let faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
+
+
+        if(this.blockName === "floating_block")
+        {
+            if(!this.isThereBlockAt(new Vec2(row, col)))
+                canPlace = true;
+        }
+        else if(this.blockName === "spring_block")
+        {
+            if(!this.isThereBlockAt(new Vec2(row, col)))
+            {
+                if(this.isThereBlockAt(new Vec2(row, col + 1)))
+                {
+                    faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
+                    canPlace = true;
+                }
+                else if(this.isThereBlockAt(new Vec2(row, col - 1)))
+                {
+                    faceDirection = SPRING_BLOCK_ENUMS.FACING_BOTTOM;
+                    canPlace = true;
+                }
+                else if(this.isThereBlockAt(new Vec2(row + 1, col)))
+                {
+                    faceDirection = SPRING_BLOCK_ENUMS.FACING_LEFT;
+                    canPlace = true;
+                }
+                else if(this.isThereBlockAt(new Vec2(row - 1, col)))
+                {
+                    faceDirection = SPRING_BLOCK_ENUMS.FACING_RIGHT;
+                    canPlace = true;
+                }
+            }
+        }
+        else
+        {
+            if(!this.isThereBlockAt(new Vec2(row, col)))
+                canPlace = true;
+        }
+
+        
+
+        if(!canPlace)
             this.rect.setColor(this.colorRed);
         else
             this.rect.setColor(this.colorGreen);
@@ -137,14 +183,15 @@ export default class GridNode extends CanvasNode
         //console.log("hello?");
         if(Input.isMousePressed())
         {
-            if(blockHere)
+            if(canPlace)
             {
-                //cannot place block. Maybe play a sound.
+                
+                this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
+                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col, orientation: faceDirection});
             }
             else
             {
-                this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
-                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col});
+                //cannot place block. Maybe play a sound.
             }
         }
         
@@ -168,7 +215,7 @@ export default class GridNode extends CanvasNode
 
     private isThereBlockAt(rowCol: Vec2): boolean
     {
-        console.log("Tile number: ", this.tilemap.getTileAtRowCol(rowCol));
+        //console.log("Tile number: ", this.tilemap.getTileAtRowCol(rowCol));
         if(this.tilemap.getTileAtRowCol(rowCol) === 0)
             return false;
         return true;

@@ -12,4 +12,8 @@ export enum CC_EVENTS {
     PLAYER_HIT_CIRCULAR_ROCK_CARD = "PlayerHitCircularRockCard",
     SPRING_TRIGGERED = "spring_triggered",
     CARD_CLICKED = "card_clicked",
+    SPRING_TRIGGERED_TOP = "spring_triggered_top",
+    SPRING_TRIGGERED_DOWN = "spring_triggered_down",
+    SPRING_TRIGGERED_LEFT = "spring_triggered_left",
+    SPRING_TRIGGERED_RIGHT = "spring_triggered_right",
 }

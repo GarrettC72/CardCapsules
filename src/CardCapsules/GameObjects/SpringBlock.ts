@@ -14,6 +14,11 @@ export default class SpringBlock
     sprite: AnimatedSprite;
     faceDirection: string;
 
+    /**
+     *  DEPRECATED
+     * @param sprite 
+     * @param faceDirection 
+     */
     public constructor(sprite: AnimatedSprite, faceDirection: string)
     {
         this.sprite = sprite;

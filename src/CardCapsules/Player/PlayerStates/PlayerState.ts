@@ -6,6 +6,7 @@ import Input from "../../../Wolfie2D/Input/Input";
 import GameNode from "../../../Wolfie2D/Nodes/GameNode";
 import AnimatedSprite from "../../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import { CC_EVENTS } from "../../CardCapsulesEnums";
+import { SPRING_BLOCK_ENUMS } from "../../GameObjects/SpringBlock";
 import PlayerController from "../PlayerController";
 
 
@@ -26,35 +27,90 @@ export default abstract class PlayerState extends State {
 		return direction;
 	}
 
-	handleInput(event: GameEvent) {
-    
-		//console.log("EVENT TRIGGEddRED IN PLAYERSTATE");
-		if (event.type === CC_EVENTS.SPRING_TRIGGERED) {
+	handleInput(event: GameEvent)
+	{
+		let node = this.owner.getScene().getSceneGraph().getNode(event.data.get("node"));
+		let other = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
+		// if (event.type === CC_EVENTS.SPRING_TRIGGERED || event.type === CC_EVENTS.SPRING_TRIGGERED_TOP)
+		// 	this.springTriggerdHelper(node as AnimatedSprite, other as AnimatedSprite, SPRING_BLOCK_ENUMS.FACING_TOP);
+		// if (event.type === CC_EVENTS.SPRING_TRIGGERED_DOWN)
+		// 	this.springTriggerdHelper(node as AnimatedSprite, other as AnimatedSprite, SPRING_BLOCK_ENUMS.FACING_BOTTOM);
+		// if (event.type === CC_EVENTS.SPRING_TRIGGERED_LEFT)
+		// 	this.springTriggerdHelper(node as AnimatedSprite, other as AnimatedSprite, SPRING_BLOCK_ENUMS.FACING_LEFT);
+		// if (event.type === CC_EVENTS.SPRING_TRIGGERED_RIGHT)
+		// 	this.springTriggerdHelper(node as AnimatedSprite, other as AnimatedSprite, SPRING_BLOCK_ENUMS.FACING_RIGHT);
 
-			//console.log("EVENT TRIGGERED IN PLAYERSTATE");
-			let node = this.owner.getScene().getSceneGraph().getNode(event.data.get("node"));
-			let other = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
-
-			if(node === this.owner || other === this.owner)
+		if(node === this.owner || other === this.owner)
+		{
+			//node is springblock
+			this.finished("jump");
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_DOWN)
 			{
-				//node is springblock
-				this.finished("jump");
+				this.parent.velocity.y = 500;
+			}
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED || event.type === CC_EVENTS.SPRING_TRIGGERED_TOP)
+			{
 				this.parent.velocity.y = -500;
-				this.owner.tweens.play("flip");
-
 			}
-			if(node === this.owner)
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_LEFT)
 			{
-				(<AnimatedSprite>other).animation.play("ACTIVATED");
-				(<AnimatedSprite>other).animation.queue("IDLE", true);
+				this.parent.velocity.y = -200;
+				this.parent.velocity.x = -500;
 			}
-			else
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_RIGHT)
 			{
-				(<AnimatedSprite>node).animation.play("ACTIVATED");
-				(<AnimatedSprite>node).animation.queue("IDLE", true);
+				this.parent.velocity.y = -200;
+				this.parent.velocity.x = 500;
 			}
+			
+			this.owner.tweens.play("flip");
+		}
+		if(!(node === this.owner))
+		{
+			(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+		}
+		else
+		{
+			(<AnimatedSprite>other).animation.play("ACTIVATED", false);
 		}
 	}	
+
+	private springTriggerdHelper(node: AnimatedSprite, other:AnimatedSprite, dir: string)
+	{
+		if(node === this.owner || other === this.owner)
+		{
+			//node is springblock
+			this.finished("jump");
+			if(dir === SPRING_BLOCK_ENUMS.FACING_BOTTOM)
+			{
+				this.parent.velocity.y = 500;
+			}
+			if(dir === SPRING_BLOCK_ENUMS.FACING_TOP)
+			{
+				this.parent.velocity.y = -500;
+			}
+			if(dir === SPRING_BLOCK_ENUMS.FACING_LEFT)
+			{
+				this.parent.velocity.y = -200;
+				this.parent.velocity.x = -500;
+			}
+			if(dir === SPRING_BLOCK_ENUMS.FACING_RIGHT)
+			{
+				this.parent.velocity.y = -200;
+				this.parent.velocity.x = 500;
+			}
+			
+			this.owner.tweens.play("flip");
+		}
+		if(!(node === this.owner))
+		{
+			(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+		}
+		else
+		{
+			(<AnimatedSprite>other).animation.play("ACTIVATED", false);
+		}
+	}
 
 	update(deltaT: number): void {
 		// Do gravity

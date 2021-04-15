@@ -60,7 +60,13 @@ export default class PlayerController extends StateMachineAI {
         //this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
         //this.coin.position.set(-100, -100);
         //this.coin.scale.set(2, 2);
-        this.receiver.subscribe(CC_EVENTS.SPRING_TRIGGERED);
+        this.receiver.subscribe(
+            [CC_EVENTS.SPRING_TRIGGERED,
+                CC_EVENTS.SPRING_TRIGGERED_DOWN,
+                CC_EVENTS.SPRING_TRIGGERED_LEFT,
+                CC_EVENTS.SPRING_TRIGGERED_RIGHT,
+                CC_EVENTS.SPRING_TRIGGERED_TOP,
+        ]);
     }
 
     initializePlatformer(): void {
