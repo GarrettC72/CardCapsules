@@ -38,8 +38,11 @@ export default class GameLevel extends Scene {
 
     // Labels for the UI
     protected static floatingBlockCardCount: number = 0;
+    protected floatingBlockCountLabel: Label;
     protected static springBlockCardCount: number = 0;
+    protected springBlockCountLabel: Label;
     protected static circularRockCardCount: number = 0;
+    protected circularRockCountLabel: Label;
     protected static coinCount: number = 0;
     protected coinCountLabel: Label;
     protected static livesCount: number = 3;
@@ -146,6 +149,56 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
+                    case CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD:
+                    {
+                        console.log("card");
+                        // Hit a card
+                        let card;
+                        if(event.data.get("node") === this.player.id){
+                            // Other is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("other"));
+                        } else {
+                            // Node is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("node"));
+                        }
+                        
+                        // Remove card
+                        card.destroy();
+
+
+                        // Increment our number of cards
+                        this.incPlayerSpringBlockCards(1);
+
+                        // Play a card sound
+                        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                    }
+                    break;
+
+                    case CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD:
+                    {
+                        console.log("card");
+                        // Hit a card
+                        let card;
+                        if(event.data.get("node") === this.player.id){
+                            // Other is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("other"));
+                        } else {
+                            // Node is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("node"));
+                        }
+                        
+                        // Remove card
+                        card.destroy();
+
+
+                        // Increment our number of cards
+                        this.incPlayerCircularRockCards(1);
+
+                        // Play a card sound
+                        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                    }
+                    break;
+
                 // case HW4_Events.PLAYER_HIT_COIN_BLOCK:
                 //     {
                 //         // Hit a coin block, so increment our number of coins
@@ -200,7 +253,7 @@ export default class GameLevel extends Scene {
                         if(this.nextLevel){
                             let sceneOptions = {
                                 physics: {
-                                    groupNames: ["ground", "player", "enemy", "coin"],
+                                    groupNames: ["ground", "player", "enemy", "card"],
                                     collisions:
                                     [
                                         [0, 1, 1, 0],
@@ -227,6 +280,13 @@ export default class GameLevel extends Scene {
                         else
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
                         this.grid.setShowGrid(false);
+                        if(this.selectedBlock === "floating_block"){
+                            this.incPlayerFloatingBlockCards(-1);
+                        }else if(this.selectedBlock === "spring_block"){
+                            this.incPlayerSpringBlockCards(-1);
+                        }else if(this.selectedBlock === "circular_rock"){
+                            this.incPlayerCircularRockCards(-1);
+                        }
                         this.selectedBlock = "";
                     }
                     break;
@@ -347,9 +407,9 @@ export default class GameLevel extends Scene {
      */
     protected addUI(){
         // In-game labels
-        this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(80, 30), text: "Coins: " + GameLevel.coinCount});
-        this.coinCountLabel.textColor = Color.WHITE
-        this.coinCountLabel.font = "PixelSimple";
+        // this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(80, 30), text: "Cards: " + GameLevel.floatingBlockCardCount});
+        // this.coinCountLabel.textColor = Color.WHITE
+        // this.coinCountLabel.font = "PixelSimple";
         this.livesCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(500, 30), text: "Lives: " + GameLevel.livesCount});
         this.livesCountLabel.textColor = Color.WHITE
         this.livesCountLabel.font = "PixelSimple";
@@ -459,6 +519,13 @@ export default class GameLevel extends Scene {
         sbui.position = c2Pos;
         sbui.scale = new Vec2(5, 5);
 
+        //Add card UI labels
+        this.floatingBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c1Pos.clone().mult(new Vec2(1.30,0.955)), text:"" + GameLevel.floatingBlockCardCount});
+        this.floatingBlockCountLabel.textColor = Color.BLACK
+        this.floatingBlockCountLabel.font = "PixelSimple";
+        this.springBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c2Pos.clone().mult(new Vec2(1.115,0.955)), text:"" + GameLevel.springBlockCardCount});
+        this.springBlockCountLabel.textColor = Color.BLACK
+        this.springBlockCountLabel.font = "PixelSimple";
     }
 
     /**
@@ -681,7 +748,7 @@ export default class GameLevel extends Scene {
      */
     protected incPlayerFloatingBlockCards(amt: number): void {
         GameLevel.floatingBlockCardCount += amt;
-        this.coinCountLabel.text = "Coins: " + GameLevel.floatingBlockCardCount;
+        this.floatingBlockCountLabel.text = "" + Math.max(GameLevel.floatingBlockCardCount, 0);
     }
 
     /**
@@ -690,7 +757,7 @@ export default class GameLevel extends Scene {
      */
      protected incPlayerSpringBlockCards(amt: number): void {
         GameLevel.springBlockCardCount += amt;
-        this.coinCountLabel.text = "Coins: " + GameLevel.springBlockCardCount;
+        this.springBlockCountLabel.text = "" + Math.max(GameLevel.springBlockCardCount, 0);
     }
 
     /**
@@ -699,7 +766,7 @@ export default class GameLevel extends Scene {
      */
      protected incPlayerCircularRockCards(amt: number): void {
         GameLevel.circularRockCardCount += amt;
-        this.coinCountLabel.text = "Coins: " + GameLevel.circularRockCardCount;
+        this.circularRockCountLabel.text = "" + Math.max(GameLevel.circularRockCardCount, 0);
     }
 
     /**
