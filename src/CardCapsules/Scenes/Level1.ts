@@ -15,6 +15,8 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
         this.load.spritesheet("spring_block", "card-capsules_assets/spritesheets/spring_block.json");
         this.load.spritesheet("goal_card", "card-capsules_assets/spritesheets/goal_card.json");
+        this.load.image("floating_block_ui", "card-capsules_assets/sprites/floating_block_ui.png");
+        this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
         //this.load.spritesheet("hopper", "hw4_assets/spritesheets/hopper.json");
         //this.load.spritesheet("bunny", "hw4_assets/spritesheets/ghostBunny.json");
         //this.load.audio("jump", "hw4_assets/sounds/jump.wav");

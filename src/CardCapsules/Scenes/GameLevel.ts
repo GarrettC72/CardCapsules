@@ -421,7 +421,14 @@ export default class GameLevel extends Scene {
         c1.borderColor = new Color(230, 200, 11);
         c1.borderRadius = 1;
         c1.borderWidth = 5;
-        c1.size = new Vec2(100,120);
+        c1.size = new Vec2(50,60);
+        
+        let fbui = this.add.sprite("floating_block_ui", "UI");
+        fbui.position = c1Pos;
+        fbui.scale = new Vec2(5, 5);
+        
+        
+        //c1.addPhysics(new AABB(new Vec2(50, 60)));
         
         //due to viewport sizing issues the actual button that can be clicked is here.
         //let c1C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone().mult(new Vec2(2, 2)), text: ""});
@@ -438,7 +445,7 @@ export default class GameLevel extends Scene {
         c2.borderColor = new Color(230, 200, 11);
         c2.borderRadius = 1;
         c2.borderWidth = 5;
-        c2.size = new Vec2(100,120);
+        c2.size = new Vec2(50,60);
         
         //due to viewport sizing issues the actual button that can be clicked is here.
        // let c2C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone().mult(new Vec2(2, 2)), text: ""});
@@ -448,6 +455,9 @@ export default class GameLevel extends Scene {
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "spring_block"});
         }
 
+        let sbui = this.add.sprite("spring_block_ui", "UI");
+        sbui.position = c2Pos;
+        sbui.scale = new Vec2(5, 5);
 
     }
 
