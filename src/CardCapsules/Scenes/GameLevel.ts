@@ -56,7 +56,7 @@ export default class GameLevel extends Scene {
     protected levelTransitionScreen: Rect;
 
     protected grid: GridNode;
-    protected selectedBlock: string = "floating_block"; //The current block that the player clicked on.
+    protected selectedBlock: string = ""; //The current block that the player clicked on.
     protected showGridTimer: Timer; //Timer to delay the show grid event.
 
 
@@ -227,6 +227,7 @@ export default class GameLevel extends Scene {
                         else
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
                         this.grid.setShowGrid(false);
+                        this.selectedBlock = "";
                     }
                     break;
 
@@ -246,7 +247,18 @@ export default class GameLevel extends Scene {
                 {
                     let cardName = event.data.get("cardName");
                     this.selectedBlock = cardName;
-                    this.showGridTimer.start();
+                    //this.showGridTimer.start();
+                }
+                break;
+
+                case GameEventType.MOUSE_UP:
+                {
+                    console.log(this.selectedBlock);
+                    if(this.selectedBlock !== "")
+                    {
+                        this.grid.showGridFor(this.selectedBlock);
+                    }
+                    //this.showGridTimer.start();
                 }
                 break;
 
@@ -326,6 +338,7 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD,
             CC_EVENTS.CARD_CLICKED,
+            GameEventType.MOUSE_UP,
         ]);
     }
 
@@ -411,9 +424,9 @@ export default class GameLevel extends Scene {
         c1.size = new Vec2(100,120);
         
         //due to viewport sizing issues the actual button that can be clicked is here.
-        let c1C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone().mult(new Vec2(2, 2)), text: ""});
-        c1C.size = new Vec2(100,120);
-        c1C.onClick = () =>
+        //let c1C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone().mult(new Vec2(2, 2)), text: ""});
+        //c1C.size = new Vec2(100,120);
+        c1.onClick = () =>
         {
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "floating_block"});
         }
@@ -428,9 +441,9 @@ export default class GameLevel extends Scene {
         c2.size = new Vec2(100,120);
         
         //due to viewport sizing issues the actual button that can be clicked is here.
-        let c2C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone().mult(new Vec2(2, 2)), text: ""});
-        c2C.size = new Vec2(100,120);
-        c2C.onClick = () =>
+       // let c2C = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone().mult(new Vec2(2, 2)), text: ""});
+        //c2C.size = new Vec2(100,120);
+        c2.onClick = () =>
         {
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "spring_block"});
         }
