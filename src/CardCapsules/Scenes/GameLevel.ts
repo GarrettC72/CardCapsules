@@ -534,7 +534,8 @@ export default class GameLevel extends Scene {
         //block.rotation = Math.PI;
         block.position.set(tilePos.x * 32 + 16, tilePos.y * 32 + 16);
         block.scale.set(2, 2);
-        block.animation.play("IDLE");
+        block.animation.play("SPAWN", false);
+        block.animation.queue("IDLE", true);
         
         if(spriteKey == "floating_block")
         {
