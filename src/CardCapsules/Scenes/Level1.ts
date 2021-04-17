@@ -79,7 +79,7 @@ export default class Level1 extends GameLevel {
         //this.nextLevel = Level2;
 
         //Add enemies of various types
-        for(let pos of [new Vec2(4, 11)]){
+        for(let pos of [new Vec2(4, 5)]){
             this.addEnemy("Rock_Monster", pos, {});
         }
 

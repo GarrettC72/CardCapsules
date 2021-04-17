@@ -204,7 +204,7 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
-                // case HW4_Events.PLAYER_HIT_COIN_BLOCK:
+                // case CC_EVENTS.PLAYER_HIT_COIN_BLOCK:
                 //     {
                 //         // Hit a coin block, so increment our number of coins
                 //         this.incPlayerCoins(1);
@@ -212,28 +212,40 @@ export default class GameLevel extends Scene {
                 //     }
                 //     break;
 
-                // case HW4_Events.PLAYER_HIT_ENEMY:
-                //     {
-                //         let node = this.sceneGraph.getNode(event.data.get("node"));
-                //         let other = this.sceneGraph.getNode(event.data.get("other"));
+                case CC_EVENTS.PLAYER_HIT_ENEMY:
+                    {
+                        let node = this.sceneGraph.getNode(event.data.get("node"));
+                        let other = this.sceneGraph.getNode(event.data.get("other"));
 
-                //         if(node === this.player){
-                //             // Node is player, other is enemy
-                //             this.handlePlayerEnemyCollision(<AnimatedSprite>node, <AnimatedSprite>other);
-                //         } else {
-                //             // Other is player, node is enemy
-                //             this.handlePlayerEnemyCollision(<AnimatedSprite>other,<AnimatedSprite>node);
-                //         }
-                //     }
-                //     break;
+                        if(node === this.player){
+                            // Node is player, other is enemy
+                            this.handlePlayerEnemyCollision(<AnimatedSprite>node, <AnimatedSprite>other);
+                        } else {
+                            // Other is player, node is enemy
+                            this.handlePlayerEnemyCollision(<AnimatedSprite>other,<AnimatedSprite>node);
+                        }
+                    }
+                    break;
+                
+                case CC_EVENTS.PLAYER_DIED:
+                    {
+                        
+                        this.player.freeze();
+                        this.player.isCollidable = false;
+                        //this.player.tweens.play("flip2", false)
+                        //setTimeout(() => { this.player.tweens.play("jump", false); }, 500);
+                        setTimeout(() => { this.player.unfreeze(); }, 500);
+                        setTimeout(() => { this.player.isCollidable = true; }, 500);
+                        
+                    }
 
-                // case HW4_Events.ENEMY_DIED:
-                //     {
-                //         // An enemy finished its dying animation, destroy it
-                //         let node = this.sceneGraph.getNode(event.data.get("owner"));
-                //         node.destroy();
-                //     }
-                //     break;
+                case CC_EVENTS.ENEMY_DIED:
+                    {
+                        // An enemy finished its dying animation, destroy it
+                        let node = this.sceneGraph.getNode(event.data.get("owner"));
+                        node.destroy();
+                    }
+                    break;
                     
                 case CC_EVENTS.PLAYER_ENTERED_LEVEL_END:
                     {
@@ -415,6 +427,7 @@ export default class GameLevel extends Scene {
             CC_EVENTS.CARD_CLICKED,
             CC_EVENTS.PLAYER_MOVE,
             CC_EVENTS.PLAYER_JUMP,
+            CC_EVENTS.PLAYER_HIT_ENEMY,
             GameEventType.MOUSE_UP,
         ]);
     }
@@ -651,9 +664,10 @@ export default class GameLevel extends Scene {
         enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.scale.set(2, 2);
         enemy.addPhysics();
-        //enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
+        enemy.setTrigger("player", CC_EVENTS.PLAYER_HIT_ENEMY, null);
+
     }
 
     protected addBlock(spriteKey: string, tilePos: Vec2, data: Record<string, any> = null)
@@ -731,43 +745,83 @@ export default class GameLevel extends Scene {
      * 
      * You can implement this method using whatever math you see fit.
      */
-    protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {
-        let width = (player.size.x + enemy.size.x)/2 * (player.position.y - enemy.position.y);
-        let height = (player.size.y + enemy.size.y)/2 * (player.position.x - enemy.position.x);
+     protected handlePlayerEnemyCollision(player: AnimatedSprite, enemy: AnimatedSprite) {
+        
+        let direction = player.position.dirTo(enemy.position);
+        let livenum = 3;
 
-        switch(enemy.imageId){
-            case "GhostBunny":
-                if(width < height && width < -height){
-                    //enemy.animation.play("DYING", false, HW4_Events.ENEMY_DIED);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bunny_death", loop: false, holdReference: false});
-                    enemy.disablePhysics();
-                }else{
+        if((<EnemyController>enemy.ai).jumpy && !(<EnemyController>enemy.ai).spiky){
+            if(direction.dot(Vec2.UP) > 0.5){
+                enemy.disablePhysics();
+                enemy.tweens.stopAll();
+                enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
+                //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "explode", loop: false, holdReference: false});
+
+                
+                (<PlayerController>player.ai).velocity.y = 0;
+            } else {
+                if(GameLevel.livesCount > 1){
+                    this.player.disablePhysics();
                     this.incPlayerLife(-1);
-                    player.tweens.play("dying");
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    player.disablePhysics();
-                    this.respawnTimer.start();
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                    setTimeout(() => { this.respawnPlayer(); }, 500);
+                    setTimeout(() => { this.player.enablePhysics(); }, 500);
                 }
-                break;
-            case "Hopper":
-                if(width > height && width > -height){
-                    //enemy.animation.play("DYING", false, HW4_Events.ENEMY_DIED);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "hopper_death", loop: false, holdReference: false});
-                    enemy.disablePhysics();
-                }else{
+                else{
+                    this.player.disablePhysics();
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                }
+            }
+        } else {
+            if((<EnemyController>enemy.ai).spiky){
+                if(GameLevel.livesCount > 1){
+                    this.player.disablePhysics();
+                    //this.incPlayerLife(-1);
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    setTimeout(() => { this.respawnPlayer(); }, 500);
+                    setTimeout(() => { this.player.enablePhysics(); }, 1000);
+                }
+                else{
+                    this.player.disablePhysics();
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                }
+            }
+            if(direction.dot(Vec2.DOWN) > 0.5 && !(<EnemyController>enemy.ai).spiky){
+                enemy.disablePhysics();
+                enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bunny_death", loop: false, holdReference: false});
+
+                let tempVelocity = (<PlayerController>player.ai).velocity;
+                if(tempVelocity.y < 0){
+                    tempVelocity.y += 0.2*(<PlayerController>player.ai).velocity.y;
+                } else {
+                    tempVelocity.y = -0.5 * (<PlayerController>player.ai).velocity.y;
+                }
+            } else {
+                if(GameLevel.livesCount > 1){
+                    this.player.disablePhysics();
                     this.incPlayerLife(-1);
-                    player.tweens.play("dying");
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    player.disablePhysics();
-                    this.respawnTimer.start();
+                    setTimeout(() => { this.respawnPlayer(); }, 500);
+                    setTimeout(() => { this.player.enablePhysics(); }, 500);
                 }
-                break;
-            case "spikeball":
-                this.incPlayerLife(-1);
-                player.tweens.play("dying");
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                player.disablePhysics();
-                this.respawnTimer.start();
+                else{
+                    this.player.disablePhysics();
+                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                    
+                    
+                }
+            }
         }
     }
 
