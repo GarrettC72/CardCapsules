@@ -16,4 +16,6 @@ export enum CC_EVENTS {
     SPRING_TRIGGERED_DOWN = "spring_triggered_down",
     SPRING_TRIGGERED_LEFT = "spring_triggered_left",
     SPRING_TRIGGERED_RIGHT = "spring_triggered_right",
+    PLAYER_JUMP = "player_jump",
+    PLAYER_MOVE = "player_move"
 }

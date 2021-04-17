@@ -412,6 +412,8 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD,
             CC_EVENTS.CARD_CLICKED,
+            CC_EVENTS.PLAYER_MOVE,
+            CC_EVENTS.PLAYER_JUMP,
             GameEventType.MOUSE_UP,
         ]);
     }
