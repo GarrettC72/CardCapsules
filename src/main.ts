@@ -15,7 +15,7 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "left", keys: ["a"]},
             {name: "right", keys: ["d"]},
             {name: "jump", keys: ["w", "space"]},
-            {name: "grid", keys:["e"]}
+            {name: "giveBlock", keys:["k"]}
             //{name: "run", keys: ["shift"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl

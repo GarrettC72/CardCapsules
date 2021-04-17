@@ -22,6 +22,7 @@ import SpringBlock, { SPRING_BLOCK_ENUMS } from "../GameObjects/SpringBlock";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 
 // HOMEWORK 4 - TODO
 /**
@@ -47,6 +48,9 @@ export default class GameLevel extends Scene {
     protected coinCountLabel: Label;
     protected static livesCount: number = 3;
     protected livesCountLabel: Label;
+
+    protected springBlockCardUI: Sprite;
+    protected floatingBlockCardUI: Sprite;
 
     // Stuff to end the level and go to the next level
     protected levelEndArea: Rect;
@@ -306,14 +310,22 @@ export default class GameLevel extends Scene {
                 case CC_EVENTS.CARD_CLICKED:
                 {
                     let cardName = event.data.get("cardName");
-                    this.selectedBlock = cardName;
+                    //only can select the cards that have a count greater than 0.
+                    if(cardName === "spring_block" && GameLevel.springBlockCardCount > 0)
+                    {
+                        this.selectedBlock = cardName;
+                    }
+                    if(cardName === "floating_block" && GameLevel.floatingBlockCardCount > 0)
+                    {
+                        this.selectedBlock = cardName;
+                    }
                     //this.showGridTimer.start();
                 }
                 break;
 
                 case GameEventType.MOUSE_UP:
                 {
-                    console.log(this.selectedBlock);
+                    //console.log(this.selectedBlock);
                     if(this.selectedBlock !== "")
                     {
                         this.grid.showGridFor(this.selectedBlock);
@@ -325,9 +337,11 @@ export default class GameLevel extends Scene {
             }
         }
 
-        if(Input.isJustPressed("grid"))
+        //CHEATTTTTT PRESS k. Get 10 blocks of each type.
+        if(Input.isJustPressed("giveBlock"))
         {
-            this.grid.setShowGrid(!this.grid.isShowGrid());
+            this.incPlayerFloatingBlockCards(10);
+            this.incPlayerSpringBlockCards(10);
         }
 
         // If player falls into a pit, kill them off and reset their position
@@ -476,9 +490,9 @@ export default class GameLevel extends Scene {
 
         //adding a button for card one.
         let c1Pos = new Vec2((size.x * 2) * 0.07, (size.y * 2) * 0.90);
-        let c1 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone(), text: "1"});
-        c1.backgroundColor = new Color(21, 163, 121);
-        c1.borderColor = new Color(230, 200, 11);
+        let c1 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c1Pos.clone(), text: ""});
+        c1.backgroundColor = new Color(21, 163, 121, 0);
+        c1.borderColor = new Color(230, 200, 11, 0);
         c1.borderRadius = 1;
         c1.borderWidth = 5;
         c1.size = new Vec2(50,60);
@@ -486,6 +500,10 @@ export default class GameLevel extends Scene {
         let fbui = this.add.sprite("floating_block_ui", "UI");
         fbui.position = c1Pos;
         fbui.scale = new Vec2(5, 5);
+        this.floatingBlockCardUI = fbui;
+        if(GameLevel.floatingBlockCardCount === 0)
+            this.floatingBlockCardUI.alpha = 0.5;
+        //fbui.alpha = 0.5;
         
         
         //c1.addPhysics(new AABB(new Vec2(50, 60)));
@@ -500,9 +518,9 @@ export default class GameLevel extends Scene {
 
         //adding a button for card two.
         let c2Pos = new Vec2((size.x * 2) * 0.18, (size.y * 2) * 0.90);
-        let c2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone(), text: "2"});
-        c2.backgroundColor = new Color(21, 163, 121);
-        c2.borderColor = new Color(230, 200, 11);
+        let c2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c2Pos.clone(), text: ""});
+        c2.backgroundColor = new Color(21, 163, 121, 0);
+        c2.borderColor = new Color(230, 200, 11, 0);
         c2.borderRadius = 1;
         c2.borderWidth = 5;
         c2.size = new Vec2(50,60);
@@ -518,6 +536,9 @@ export default class GameLevel extends Scene {
         let sbui = this.add.sprite("spring_block_ui", "UI");
         sbui.position = c2Pos;
         sbui.scale = new Vec2(5, 5);
+        this.springBlockCardUI = sbui;
+        if(GameLevel.springBlockCardCount === 0)
+            this.springBlockCardUI.alpha = 0.5;
 
         //Add card UI labels
         this.floatingBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c1Pos.clone().mult(new Vec2(1.30,0.955)), text:"" + GameLevel.floatingBlockCardCount});
@@ -526,6 +547,20 @@ export default class GameLevel extends Scene {
         this.springBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c2Pos.clone().mult(new Vec2(1.115,0.955)), text:"" + GameLevel.springBlockCardCount});
         this.springBlockCountLabel.textColor = Color.BLACK
         this.springBlockCountLabel.font = "PixelSimple";
+
+        // this.floatingBlockCountLabel.tweens.add("noCard", {
+        //     startDelay: 0,
+        //     duration: 1000,
+        //     effects: [
+        //         {
+        //             property: TweenableProperties.,
+        //             start: 0,
+        //             end: 1,
+        //             ease: EaseFunctionType.IN_OUT_QUAD
+        //         }
+        //     ],
+        //     reverseOnComplete: true,
+        // });
     }
 
     /**
@@ -749,6 +784,10 @@ export default class GameLevel extends Scene {
     protected incPlayerFloatingBlockCards(amt: number): void {
         GameLevel.floatingBlockCardCount += amt;
         this.floatingBlockCountLabel.text = "" + Math.max(GameLevel.floatingBlockCardCount, 0);
+        if(GameLevel.floatingBlockCardCount === 0)
+            this.floatingBlockCardUI.alpha = 0.5;
+        else
+            this.floatingBlockCardUI.alpha = 1;
     }
 
     /**
@@ -758,6 +797,10 @@ export default class GameLevel extends Scene {
      protected incPlayerSpringBlockCards(amt: number): void {
         GameLevel.springBlockCardCount += amt;
         this.springBlockCountLabel.text = "" + Math.max(GameLevel.springBlockCardCount, 0);
+        if(GameLevel.springBlockCardCount === 0)
+            this.springBlockCardUI.alpha = 0.5;
+        else
+            this.springBlockCardUI.alpha = 1;
     }
 
     /**
