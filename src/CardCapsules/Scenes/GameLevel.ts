@@ -377,9 +377,14 @@ export default class GameLevel extends Scene {
             if(GameLevel.livesCount === 0){
                 this.sceneManager.changeToScene(MainMenu);
             } else {
-                this.respawnPlayer();
+                this.restartlevel();
             }
         }
+    }
+
+    protected restartlevel()
+    {
+        console.log("Restart level not overridden");
     }
 
     /**

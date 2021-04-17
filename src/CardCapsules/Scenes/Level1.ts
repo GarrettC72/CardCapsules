@@ -97,27 +97,32 @@ export default class Level1 extends GameLevel {
 
         if(Input.isJustPressed("restart"))
         {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    lives: 3, 
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    circularRocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+            this.restartlevel();
         }
 
         Debug.log("playerpos", this.player.position.toString());
+    }
+
+    protected restartlevel()
+    {
+        let sceneOptions = {
+            physics: {
+                groupNames: ["ground", "player", "enemy", "card"],
+                collisions:
+                [
+                    [0, 1, 1, 0],
+                    [1, 0, 0, 1],
+                    [1, 0, 0, 0],
+                    [0, 1, 0, 0]
+                ]
+            },
+            inventory: {
+                lives: 3, 
+                floatingBlocks: 0, 
+                springBlocks: 0, 
+                circularRocks: 0
+            }
+        }
+        this.sceneManager.changeToScene(Level1, {}, sceneOptions);
     }
 }
