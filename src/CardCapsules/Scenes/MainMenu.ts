@@ -7,8 +7,11 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Level1 from "./Level1";
 import LevelSelect from "./LevelSelect";
+import Level1 from "./Level1";
+
+
+//import Level2 from "./Level2";
 
 export default class MainMenu extends Scene {
 
@@ -268,7 +271,7 @@ export default class MainMenu extends Scene {
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
             }
 
-            if(event.type === "level"){
+            if(event.type === "level" ){
                 this.sceneManager.changeToScene(LevelSelect);
             }
 

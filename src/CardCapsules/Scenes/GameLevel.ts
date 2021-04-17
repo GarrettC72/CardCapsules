@@ -24,6 +24,7 @@ import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyController from "../Enemies/EnemyController";
+//import Level1 from "./Level1";
 
 // HOMEWORK 4 - TODO
 /**
@@ -297,6 +298,9 @@ export default class GameLevel extends Scene {
                         else
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
                         this.grid.setShowGrid(false);
+                        // this.player.unfreeze();
+                        // this.player.enablePhysics();
+                        (<PlayerController>this.player.ai).slow = false;
                         if(this.selectedBlock === "floating_block"){
                             this.incPlayerFloatingBlockCards(-1);
                         }else if(this.selectedBlock === "spring_block"){
@@ -317,6 +321,7 @@ export default class GameLevel extends Scene {
                 case CC_EVENTS.SHOW_PLACEMENT_GRID:
                     {
                         this.grid.showGridFor(this.selectedBlock);
+                        
                     }
                     break;
 
@@ -342,6 +347,9 @@ export default class GameLevel extends Scene {
                     if(this.selectedBlock !== "")
                     {
                         this.grid.showGridFor(this.selectedBlock);
+                        (<PlayerController>this.player.ai).slow = true;
+                        // this.player.freeze();
+                        // this.player.disablePhysics();
                     }
                     //this.showGridTimer.start();
                 }
@@ -357,6 +365,12 @@ export default class GameLevel extends Scene {
             this.incPlayerSpringBlockCards(10);
         }
 
+        if(Input.isJustPressed("mainmenu"))
+        {
+            this.sceneManager.changeToScene(MainMenu);
+        }
+
+        
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
             this.incPlayerLife(-1);

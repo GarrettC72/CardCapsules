@@ -12,16 +12,21 @@ export default abstract class InAir extends PlayerState {
 		//this.parent.velocity.x += dir.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
 
         //new in air movement to allow the spring to give some left right momentum.
-        let slowMultiplier = 0.3;
-        let tweakedSpeed = this.parent.speed/3.5;
-        if(Math.abs(this.parent.velocity.x) > 200)
+        if(!this.parent.slow)
         {
-            slowMultiplier = 0.01;
-            tweakedSpeed = 0;
-        } 
-		this.parent.velocity.x += (dir.x * tweakedSpeed - slowMultiplier*this.parent.velocity.x);
+            let slowMultiplier = 0.3;
+            let tweakedSpeed = this.parent.speed/3.5;
+            if(Math.abs(this.parent.velocity.x) > 200)
+            {
+                slowMultiplier = 0.01;
+                tweakedSpeed = 0;
+            } 
+            this.parent.velocity.x += (dir.x * tweakedSpeed - slowMultiplier*this.parent.velocity.x);
 
-		this.owner.move(this.parent.velocity.scaled(deltaT));
+            
+            this.owner.move(this.parent.velocity.scaled(deltaT));
+        }
+        
 
         if(this.owner.onGround){
 			this.finished(PlayerStates.PREVIOUS);

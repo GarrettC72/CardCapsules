@@ -116,6 +116,7 @@ export default abstract class PlayerState extends State {
 
 	update(deltaT: number): void {
 		// Do gravity
-		this.parent.velocity.y += this.gravity*deltaT;
+		if(!this.parent.slow)
+			this.parent.velocity.y += this.gravity*deltaT;
 	}
 }

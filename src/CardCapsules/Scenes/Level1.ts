@@ -3,6 +3,8 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import GameLevel from "./GameLevel";
 //import Level2 from "./Level2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import Input from "../../Wolfie2D/Input/Input";
+import Level2 from "./Level2";
 
 export default class Level1 extends GameLevel {
     
@@ -14,8 +16,8 @@ export default class Level1 extends GameLevel {
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
         this.load.spritesheet("spring_block", "card-capsules_assets/spritesheets/spring_block.json");
-        this.load.spritesheet("goal_card", "card-capsules_assets/spritesheets/goal_card.json")
-        this.load.spritesheet("Rock_Monster", "card-capsules_assets/spritesheets/Rock_Monster.json");;
+        this.load.spritesheet("goal_card", "card-capsules_assets/spritesheets/goal_card.json");
+        this.load.spritesheet("Rock_Monster", "card-capsules_assets/spritesheets/Rock_Monster.json");
         this.load.image("floating_block_ui", "card-capsules_assets/sprites/floating_block_ui.png");
         
         this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
@@ -76,7 +78,7 @@ export default class Level1 extends GameLevel {
 
         this.addLevelEnd(new Vec2(57, 6), new Vec2(1, 1));
 
-        //this.nextLevel = Level2;
+        this.nextLevel = Level2;
 
         //Add enemies of various types
         for(let pos of [new Vec2(4, 5)]){
@@ -92,6 +94,29 @@ export default class Level1 extends GameLevel {
 
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
+
+        if(Input.isJustPressed("restart"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    lives: 3, 
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    circularRocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+        }
 
         Debug.log("playerpos", this.player.position.toString());
     }

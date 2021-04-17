@@ -15,6 +15,8 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "left", keys: ["a"]},
             {name: "right", keys: ["d"]},
             {name: "jump", keys: ["w", "space"]},
+            {name: "restart", keys:["r"]},
+            {name: "mainmenu", keys:["m"]},
             {name: "giveBlock", keys:["k"]}
             //{name: "run", keys: ["shift"]}
         ],

@@ -32,7 +32,9 @@ export default class Walk extends OnGround {
 		this.parent.velocity.x = dir.x * this.parent.speed
 
 		this.emitter.fireEvent(CC_EVENTS.PLAYER_MOVE, {position: this.owner.position.clone()});
-		this.owner.move(this.parent.velocity.scaled(deltaT));
+		
+		if(!this.parent.slow)
+			this.owner.move(this.parent.velocity.scaled(deltaT));
 	}
 
 	onExit(): Record<string, any> {

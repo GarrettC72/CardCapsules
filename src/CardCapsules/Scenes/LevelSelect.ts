@@ -7,8 +7,10 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
-import Level1 from "./Level1";
+
 import MainMenu from "./MainMenu";
+import Level1 from "./Level1";
+import Level2 from "./Level2";
 //import Level2 from "./Level2";
 
 export default class LevelSelect extends Scene {
@@ -117,6 +119,7 @@ export default class LevelSelect extends Scene {
 
         //Subscribe to button events
         this.receiver.subscribe("level1");
+        this.receiver.subscribe("level2");
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
@@ -193,7 +196,7 @@ export default class LevelSelect extends Scene {
                         circularRocks: 0
                     }
                 }
-                //this.sceneManager.changeToScene(Level2, {}, sceneOptions);
+                this.sceneManager.changeToScene(Level2, {}, sceneOptions);
             }
 
             if(event.type === "menu"){

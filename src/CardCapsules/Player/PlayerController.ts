@@ -35,6 +35,7 @@ export default class PlayerController extends StateMachineAI {
     MAX_SPEED: number = 300;
     tilemap: OrthogonalTilemap;
     //coin: Sprite;
+    slow: boolean;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
@@ -43,6 +44,7 @@ export default class PlayerController extends StateMachineAI {
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
 
+        this.slow = false;
         //console.log("HELLOOOOOOOO");
         // HOMEWORK 4 - TODO
         /*
