@@ -23,6 +23,7 @@ import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
+import EnemyController from "../Enemies/EnemyController";
 
 // HOMEWORK 4 - TODO
 /**
@@ -651,7 +652,7 @@ export default class GameLevel extends Scene {
         enemy.scale.set(2, 2);
         enemy.addPhysics();
         //enemy.setTrigger("player", HW4_Events.PLAYER_HIT_ENEMY, null);
-        //enemy.addAI(EnemyController, aiOptions);
+        enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
     }
 

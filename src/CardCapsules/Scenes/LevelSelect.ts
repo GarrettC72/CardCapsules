@@ -9,6 +9,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import Level1 from "./Level1";
 import MainMenu from "./MainMenu";
+//import Level2 from "./Level2";
 
 export default class LevelSelect extends Scene {
 
@@ -54,9 +55,20 @@ export default class LevelSelect extends Scene {
         const level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y - 100), text: "2"});
         level2Btn.size.set(100, 100);
         level2Btn.borderWidth = 2;
-        level2Btn.borderColor = Color.RED;
-        level2Btn.setTextColor(Color.RED);
+        level2Btn.borderColor = Color.WHITE;
+        level2Btn.setTextColor(Color.WHITE);
         level2Btn.setBackgroundColor(Color.TRANSPARENT);
+        level2Btn.onEnter = () => {
+            level2Btn.borderColor = Color.BLACK;
+            level2Btn.setBackgroundColor(Color.WHITE);
+            level2Btn.setTextColor(Color.BLACK);
+        }
+        level2Btn.onLeave = () => {
+            level2Btn.borderColor = Color.WHITE;
+            level2Btn.setBackgroundColor(Color.TRANSPARENT);
+            level2Btn.setTextColor(Color.WHITE);
+        }
+        level2Btn.onClickEventId = "level2";
 
         const level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y - 100), text: "3"});
         level3Btn.size.set(100, 100);
@@ -159,6 +171,29 @@ export default class LevelSelect extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+            }
+
+            if(event.type === "level2")
+            {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemy", "card"],
+                        collisions:
+                        [
+                            [0, 1, 1, 0],
+                            [1, 0, 0, 1],
+                            [1, 0, 0, 0],
+                            [0, 1, 0, 0]
+                        ]
+                    },
+                    inventory: {
+                        lives: 3, 
+                        floatingBlocks: 0, 
+                        springBlocks: 0, 
+                        circularRocks: 0
+                    }
+                }
+                //this.sceneManager.changeToScene(Level2, {}, sceneOptions);
             }
 
             if(event.type === "menu"){
