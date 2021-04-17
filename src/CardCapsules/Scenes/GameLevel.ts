@@ -44,8 +44,8 @@ export default class GameLevel extends Scene {
     protected springBlockCountLabel: Label;
     protected static circularRockCardCount: number = 0;
     protected circularRockCountLabel: Label;
-    protected static coinCount: number = 0;
-    protected coinCountLabel: Label;
+    // protected static coinCount: number = 0;
+    // protected coinCountLabel: Label;
     protected static livesCount: number = 3;
     protected livesCountLabel: Label;
 
@@ -542,10 +542,10 @@ export default class GameLevel extends Scene {
 
         //Add card UI labels
         this.floatingBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c1Pos.clone().mult(new Vec2(1.30,0.955)), text:"" + GameLevel.floatingBlockCardCount});
-        this.floatingBlockCountLabel.textColor = Color.BLACK
+        this.floatingBlockCountLabel.setTextColor(Color.BLACK);
         this.floatingBlockCountLabel.font = "PixelSimple";
         this.springBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c2Pos.clone().mult(new Vec2(1.115,0.955)), text:"" + GameLevel.springBlockCardCount});
-        this.springBlockCountLabel.textColor = Color.BLACK
+        this.springBlockCountLabel.setTextColor(Color.BLACK);
         this.springBlockCountLabel.font = "PixelSimple";
 
         // this.floatingBlockCountLabel.tweens.add("noCard", {
@@ -774,7 +774,7 @@ export default class GameLevel extends Scene {
      */
     protected incPlayerLife(amt: number): void {
         GameLevel.livesCount += amt;
-        this.livesCountLabel.text = "Lives: " + GameLevel.livesCount;
+        this.livesCountLabel.setText("Lives: " + GameLevel.livesCount);
     }
 
     /**
@@ -783,7 +783,7 @@ export default class GameLevel extends Scene {
      */
     protected incPlayerFloatingBlockCards(amt: number): void {
         GameLevel.floatingBlockCardCount += amt;
-        this.floatingBlockCountLabel.text = "" + Math.max(GameLevel.floatingBlockCardCount, 0);
+        this.floatingBlockCountLabel.setText("" + GameLevel.floatingBlockCardCount);
         if(GameLevel.floatingBlockCardCount === 0)
             this.floatingBlockCardUI.alpha = 0.5;
         else
@@ -796,7 +796,7 @@ export default class GameLevel extends Scene {
      */
      protected incPlayerSpringBlockCards(amt: number): void {
         GameLevel.springBlockCardCount += amt;
-        this.springBlockCountLabel.text = "" + Math.max(GameLevel.springBlockCardCount, 0);
+        this.springBlockCountLabel.setText("" + GameLevel.springBlockCardCount);
         if(GameLevel.springBlockCardCount === 0)
             this.springBlockCardUI.alpha = 0.5;
         else
@@ -809,7 +809,7 @@ export default class GameLevel extends Scene {
      */
      protected incPlayerCircularRockCards(amt: number): void {
         GameLevel.circularRockCardCount += amt;
-        this.circularRockCountLabel.text = "" + Math.max(GameLevel.circularRockCardCount, 0);
+        this.circularRockCountLabel.setText("" + GameLevel.circularRockCardCount);
     }
 
     /**
