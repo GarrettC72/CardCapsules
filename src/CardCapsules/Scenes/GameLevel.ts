@@ -236,13 +236,15 @@ export default class GameLevel extends Scene {
                 case CC_EVENTS.PLAYER_DIED:
                     {
                         
-                        this.player.freeze();
+                        //this.player.freeze();
+                        
                         this.player.isCollidable = false;
                         //this.player.tweens.play("dying", false);
                         this.player.tweens.play("flip2", false);
+                        //this.player.animation.play("DYING", false);
                         //setTimeout(() => { this.player.tweens.play("jump", false); }, 500);
-                        setTimeout(() => { this.player.unfreeze(); }, 500);
-                        setTimeout(() => { this.player.isCollidable = true; }, 500);
+                        setTimeout(() => { this.player.unfreeze(); }, 1000);
+                        setTimeout(() => { this.player.isCollidable = true; }, 1000);
                         
                     }
                     break;
@@ -875,7 +877,9 @@ export default class GameLevel extends Scene {
                 //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
+                    //this.player.animation.play("DYING", false);
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    
                     //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
                     //setTimeout(() => { this.respawnPlayer(); }, 500);
                     //setTimeout(() => { this.player.enablePhysics(); }, 500);
@@ -894,7 +898,9 @@ export default class GameLevel extends Scene {
                 //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
+                    //this.player.animation.play("DYING", false);
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 1000);
                     this.respawnTimer.start();
@@ -909,7 +915,7 @@ export default class GameLevel extends Scene {
             if(direction.dot(Vec2.DOWN) > 0.5 && !(<EnemyController>enemy.ai).spiky){
                 enemy.disablePhysics();
                 enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
-                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bunny_death", loop: false, holdReference: false});
+                //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bunny_death", loop: false, holdReference: false});
 
                 let tempVelocity = (<PlayerController>player.ai).velocity;
                 if(tempVelocity.y < 0){
@@ -921,6 +927,7 @@ export default class GameLevel extends Scene {
                 //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
+                    //this.player.animation.play("DYING", false);
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
