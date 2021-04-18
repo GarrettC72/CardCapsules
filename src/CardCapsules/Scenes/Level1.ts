@@ -5,6 +5,9 @@ import GameLevel from "./GameLevel";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import Level2 from "./Level2";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Color from "../../Wolfie2D/Utils/Color";
 
 export default class Level1 extends GameLevel {
     
@@ -89,7 +92,21 @@ export default class Level1 extends GameLevel {
         //     this.addEnemy("hopper", pos, {jumpy: true});
         // }
 
+        
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(13*32, 9.6*32), text: "[A left] [D right] [W/Space jump]"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(28*32, 7.6*32), text: "If you need to restart level, press R."}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(41*32, 4.6*32), text: "^^ Grab this card ^^"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 8.6*32), text: "Once you get the card, "}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 9.2*32), text: "click on it and place it over the gap."}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(58*32, 7.6*32), text: "Collect goal card to complete level. Congrats."}));
+
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+    }
+
+    private addPropertiesToLabel(label: Label):void
+    {
+        label.textColor = Color.WHITE;
+        label.font = "PixelSimple";
     }
 
     updateScene(deltaT: number): void {

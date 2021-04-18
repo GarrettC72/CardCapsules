@@ -68,6 +68,8 @@ export default class GameLevel extends Scene {
     protected selectedBlock: string = ""; //The current block that the player clicked on.
     protected showGridTimer: Timer; //Timer to delay the show grid event.
 
+    protected cancelLabel: Label;
+
     protected timeSlowFilterScreen: Rect;
 
 
@@ -310,6 +312,7 @@ export default class GameLevel extends Scene {
                         // this.player.unfreeze();
                         // this.player.enablePhysics();
                         (<PlayerController>this.player.ai).slow = false;
+                        this.cancelLabel.visible = false;
                         this.timeSlowFilterScreen.tweens.play("fadeOut");
                         if(this.selectedBlock === "floating_block"){
                             this.incPlayerFloatingBlockCards(-1);
@@ -359,6 +362,7 @@ export default class GameLevel extends Scene {
                         this.grid.showGridFor(this.selectedBlock);
                         (<PlayerController>this.player.ai).slow = true;
                         this.timeSlowFilterScreen.tweens.play("fadeIn");
+                        this.cancelLabel.visible = true;
                         // this.player.freeze();
                         // this.player.disablePhysics();
                     }
@@ -379,6 +383,18 @@ export default class GameLevel extends Scene {
         if(Input.isJustPressed("mainmenu"))
         {
             this.sceneManager.changeToScene(MainMenu);
+        }
+
+        if(Input.isJustPressed("cancelPlacement"))
+        {
+            if(this.selectedBlock !== "")
+            {
+                this.grid.setShowGrid(false);
+                (<PlayerController>this.player.ai).slow = false;
+                this.selectedBlock = "";
+                this.timeSlowFilterScreen.tweens.play("fadeOut");
+                this.cancelLabel.visible = false;
+            }
         }
 
         
@@ -558,6 +574,14 @@ export default class GameLevel extends Scene {
                 }
             ],
         });
+
+        this.cancelLabel = <Label>this.add.uiElement(UIElementType.LABEL, "grid", {position: new Vec2(2.5 * 32, 10 * 32), text: "E to Cancel"});
+        this.cancelLabel.font = "PixelSimple";
+        this.cancelLabel.fontSize = 28;
+        this.cancelLabel.visible = false;
+        //this.cancelLabel.size.set(120, 60);
+        //this.cancelLabel.backgroundColor = new Color(34, 32, 52);
+        this.cancelLabel.textColor = Color.WHITE;
         
     }
 
