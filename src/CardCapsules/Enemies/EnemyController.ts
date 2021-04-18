@@ -43,6 +43,8 @@ export default class EnemyController extends StateMachineAI {
 		this.jumpy = options.jumpy ? options.jumpy : false;
 		this.spiky = options.spiky ? options.spiky : false;
 
+		//this.jumpy = true;
+
 		this.receiver.subscribe(CC_EVENTS.PLAYER_MOVE);
 		if(this.jumpy){
 			this.receiver.subscribe(CC_EVENTS.PLAYER_JUMP);
@@ -95,6 +97,14 @@ export default class EnemyController extends StateMachineAI {
 		this.addState(EnemyStates.SPIKEJUMP, jump);
 
 		this.initialize(EnemyStates.IDLE);
+
+		this.receiver.subscribe(
+            [CC_EVENTS.SPRING_TRIGGERED,
+                CC_EVENTS.SPRING_TRIGGERED_DOWN,
+                CC_EVENTS.SPRING_TRIGGERED_LEFT,
+                CC_EVENTS.SPRING_TRIGGERED_RIGHT,
+                CC_EVENTS.SPRING_TRIGGERED_TOP,
+        ]);
 	}
 
 	changeState(stateName: string): void {

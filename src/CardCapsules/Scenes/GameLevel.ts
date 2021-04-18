@@ -582,7 +582,7 @@ export default class GameLevel extends Scene {
 
         this.cancelLabel = <Label>this.add.uiElement(UIElementType.LABEL, "grid", {position: new Vec2(2.5 * 32, 10 * 32), text: "E to Cancel"});
         this.cancelLabel.font = "PixelSimple";
-        this.cancelLabel.fontSize = 28;
+        this.cancelLabel.fontSize = 36;
         this.cancelLabel.visible = false;
         //this.cancelLabel.size.set(120, 60);
         //this.cancelLabel.backgroundColor = new Color(34, 32, 52);
@@ -810,20 +810,24 @@ export default class GameLevel extends Scene {
             {
                 block.rotation = Math.PI;
                 block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_DOWN, null);
+                block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_DOWN, null);
             }
             if(faceDirection == SPRING_BLOCK_ENUMS.FACING_LEFT)
             {
                 block.rotation = Math.PI * 0.5;
                 block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_LEFT, null);
+                block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_LEFT, null);
             }
             if(faceDirection == SPRING_BLOCK_ENUMS.FACING_RIGHT)
             {
                 block.rotation = Math.PI * 1.5;
                 block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_RIGHT, null);
+                block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_RIGHT, null);
             }
             if(faceDirection == SPRING_BLOCK_ENUMS.FACING_TOP)
             {
                 block.setTrigger("player", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
+                block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
             }
         }
         this.grid.addBlockLocation(spriteKey, tilePos.clone()); //used to keep track of locations where blocks can be placed.

@@ -50,7 +50,7 @@ export default abstract class PlayerState extends State {
 			}
 			if(event.type === CC_EVENTS.SPRING_TRIGGERED || event.type === CC_EVENTS.SPRING_TRIGGERED_TOP)
 			{
-				this.parent.velocity.y = -500;
+				this.parent.velocity.y = -650;
 			}
 			if(event.type === CC_EVENTS.SPRING_TRIGGERED_LEFT)
 			{
@@ -64,17 +64,18 @@ export default abstract class PlayerState extends State {
 			}
 			
 			this.owner.tweens.play("flip");
+			if(!(node === this.owner))
+			{
+				(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+				(<AnimatedSprite>node).animation.queue("IDLE", true);
+			}
+			else
+			{
+				(<AnimatedSprite>other).animation.play("ACTIVATED", false);
+				(<AnimatedSprite>other).animation.queue("IDLE", true);
+			}
 		}
-		if(!(node === this.owner))
-		{
-			(<AnimatedSprite>node).animation.play("ACTIVATED", false);
-			(<AnimatedSprite>node).animation.queue("IDLE", true);
-		}
-		else
-		{
-			(<AnimatedSprite>other).animation.play("ACTIVATED", false);
-			(<AnimatedSprite>other).animation.queue("IDLE", true);
-		}
+		
 	}	
 
 	// private springTriggerdHelper(node: AnimatedSprite, other:AnimatedSprite, dir: string)
