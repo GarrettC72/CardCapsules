@@ -118,13 +118,13 @@ export default class MainMenu extends Scene {
         const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 250), text: "Controls"});
         controlsHeader.setTextColor(Color.WHITE);
 
-        const controlsText1 = "Press A to move left";
-        const controlsText2 = "Press D to move right";
-        const controlsText3 = "Press W or Space to jump";
-        const controlsText4 = "Press S to duck";
-        const controlsText5 = "Hold R to restart a level";
-        const controlsText6 = "Click on a card to start placing it. Left click";
-        const controlsText7 = "to place. Right click to cancel.";
+        const controlsText1 = "Press A to move left.";
+        const controlsText2 = "Press D to move right.";
+        const controlsText3 = "Press W or Space to jump.";
+        const controlsText4 = "Press R to restart a level.";
+        const controlsText5 = "Press M to return to the main menu.";
+        const controlsText6 = "Click on a card to start placing it. Then";
+        const controlsText7 = "click to place. Press E to cancel.";
 
         const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 150), text: controlsText1});
         const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 100), text: controlsText2});
