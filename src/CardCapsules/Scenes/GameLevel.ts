@@ -245,7 +245,7 @@ export default class GameLevel extends Scene {
                         setTimeout(() => { this.player.isCollidable = true; }, 500);
                         
                     }
-
+                    break;
                 case CC_EVENTS.ENEMY_DIED:
                     {
                         // An enemy finished its dying animation, destroy it
@@ -476,6 +476,7 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_MOVE,
             CC_EVENTS.PLAYER_JUMP,
             CC_EVENTS.PLAYER_HIT_ENEMY,
+            CC_EVENTS.PLAYER_DIED,
             GameEventType.MOUSE_UP,
         ]);
     }

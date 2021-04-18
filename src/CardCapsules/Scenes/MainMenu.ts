@@ -117,6 +117,7 @@ export default class MainMenu extends Scene {
 
         const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 250), text: "Controls"});
         controlsHeader.setTextColor(Color.WHITE);
+        controlsHeader.fontSize = 60;
 
         const controlsText1 = "Press A to move left.";
         const controlsText2 = "Press D to move right.";
@@ -165,6 +166,7 @@ export default class MainMenu extends Scene {
 
         const helpHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 325), text: "Help"});
         helpHeader.setTextColor(Color.WHITE);
+        helpHeader.fontSize = 60;
 
         const helpText1 = "Game developed by Sheng Wei Zhu, John Buckley, and Garrett Chen";
         const helpText2 = "After a terraforming operation went awry due to a space pirate";

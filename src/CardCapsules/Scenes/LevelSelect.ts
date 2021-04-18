@@ -36,6 +36,7 @@ export default class LevelSelect extends Scene {
 
         const levelHeader = <Label>this.add.uiElement(UIElementType.LABEL, "LevelSelect", {position: new Vec2(size.x, size.y - 250), text: "Level Select"});
         levelHeader.setTextColor(Color.WHITE);
+        levelHeader.fontSize = 60;
 
         const level1Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x - 300, size.y - 100), text: "1"});
         level1Btn.size.set(100, 100);
