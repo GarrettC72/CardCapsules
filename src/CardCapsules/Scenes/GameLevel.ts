@@ -48,8 +48,8 @@ export default class GameLevel extends Scene {
     protected circularRockCountLabel: Label;
     // protected static coinCount: number = 0;
     // protected coinCountLabel: Label;
-    protected static livesCount: number = 3;
-    protected livesCountLabel: Label;
+    // protected static livesCount: number = 3;
+    // protected livesCountLabel: Label;
 
     protected springBlockCardUI: Sprite;
     protected floatingBlockCardUI: Sprite;
@@ -75,9 +75,9 @@ export default class GameLevel extends Scene {
     protected goal: AnimatedSprite;
 
     initScene(): void{
-        if(GameLevel.livesCount === 0){
-            GameLevel.livesCount += this.sceneOptions.inventory.lives;
-        }
+        // if(GameLevel.livesCount === 0){
+        //     GameLevel.livesCount += this.sceneOptions.inventory.lives;
+        // }
         GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
         GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
         GameLevel.circularRockCardCount = this.sceneOptions.inventory.circularRocks;
@@ -98,13 +98,14 @@ export default class GameLevel extends Scene {
             this.emitter.fireEvent(CC_EVENTS.SHOW_PLACEMENT_GRID);
         });
         this.respawnTimer = new Timer(1000, () => {
-            if(GameLevel.livesCount === 0){
-                this.sceneManager.changeToScene(MainMenu);
-            } else {
-                this.respawnPlayer();
-                this.player.enablePhysics();
-                this.player.unfreeze();
-            }
+            // if(GameLevel.livesCount === 0){
+            //     this.sceneManager.changeToScene(MainMenu);
+            // } else {
+                // this.respawnPlayer();
+                // this.player.enablePhysics();
+                // this.player.unfreeze();
+                this.restartlevel();
+            //}
         });
         this.levelTransitionTimer = new Timer(500);
         this.levelEndTimer = new Timer(3000, () => {
@@ -280,7 +281,12 @@ export default class GameLevel extends Scene {
                                         [1, 0, 0, 1],
                                         [1, 0, 0, 0],
                                         [0, 1, 0, 0]
-                                    ]
+                                    ],
+                                    inventory: {
+                                        floatingBlocks: 0, 
+                                        springBlocks: 0, 
+                                        circularRocks: 0
+                                    }
                                 }
                             }
                             this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
@@ -378,12 +384,12 @@ export default class GameLevel extends Scene {
         
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
-            this.incPlayerLife(-1);
-            if(GameLevel.livesCount === 0){
-                this.sceneManager.changeToScene(MainMenu);
-            } else {
+            //this.incPlayerLife(-1);
+            // if(GameLevel.livesCount === 0){
+            //     this.sceneManager.changeToScene(MainMenu);
+            // } else {
                 this.restartlevel();
-            }
+            //}
         }
     }
 
@@ -464,9 +470,9 @@ export default class GameLevel extends Scene {
         // this.coinCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(80, 30), text: "Cards: " + GameLevel.floatingBlockCardCount});
         // this.coinCountLabel.textColor = Color.WHITE
         // this.coinCountLabel.font = "PixelSimple";
-        this.livesCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(500, 30), text: "Lives: " + GameLevel.livesCount});
-        this.livesCountLabel.textColor = Color.WHITE
-        this.livesCountLabel.font = "PixelSimple";
+        // this.livesCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(500, 30), text: "Lives: " + GameLevel.livesCount});
+        // this.livesCountLabel.textColor = Color.WHITE
+        // this.livesCountLabel.font = "PixelSimple";
 
         // End of level label (start off screen)
         this.levelEndLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: new Vec2(-300, 200), text: "Level Complete"});
@@ -815,37 +821,39 @@ export default class GameLevel extends Scene {
                 
                 (<PlayerController>player.ai).velocity.y = 0;
             } else {
-                if(GameLevel.livesCount > 1){
+                //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
-                    this.incPlayerLife(-1);
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    //this.incPlayerLife(-1);
+                    //this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    setTimeout(() => { this.respawnPlayer(); }, 500);
-                    setTimeout(() => { this.player.enablePhysics(); }, 500);
-                }
-                else{
-                    this.player.disablePhysics();
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
-                    //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
-                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
-                }
+                    //setTimeout(() => { this.respawnPlayer(); }, 500);
+                    //setTimeout(() => { this.player.enablePhysics(); }, 500);
+                    this.respawnTimer.start();
+                // }
+                // else{
+                //     this.player.disablePhysics();
+                //     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                //     //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                //     setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                //     setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                // }
             }
         } else {
             if((<EnemyController>enemy.ai).spiky){
-                if(GameLevel.livesCount > 1){
+                //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
-                    setTimeout(() => { this.respawnPlayer(); }, 500);
-                    setTimeout(() => { this.player.enablePhysics(); }, 1000);
-                }
-                else{
-                    this.player.disablePhysics();
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
-                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
-                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
-                }
+                    // this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    // setTimeout(() => { this.respawnPlayer(); }, 500);
+                    // setTimeout(() => { this.player.enablePhysics(); }, 1000);
+                    this.respawnTimer.start();
+                //}
+                // else{
+                //     this.player.disablePhysics();
+                //     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                //     setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                //     setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                // }
             }
             if(direction.dot(Vec2.DOWN) > 0.5 && !(<EnemyController>enemy.ai).spiky){
                 enemy.disablePhysics();
@@ -859,23 +867,24 @@ export default class GameLevel extends Scene {
                     tempVelocity.y = -0.5 * (<PlayerController>player.ai).velocity.y;
                 }
             } else {
-                if(GameLevel.livesCount > 1){
+                //if(GameLevel.livesCount > 1){
                     this.player.disablePhysics();
-                    this.incPlayerLife(-1);
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    setTimeout(() => { this.respawnPlayer(); }, 500);
-                    setTimeout(() => { this.player.enablePhysics(); }, 500);
-                }
-                else{
-                    this.player.disablePhysics();
-                    this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
-                    setTimeout(() => { this.player.enablePhysics(); }, 1200);
-                    setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
+                    //this.incPlayerLife(-1);
+                    // this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                    // setTimeout(() => { this.respawnPlayer(); }, 500);
+                    // setTimeout(() => { this.player.enablePhysics(); }, 500);
+                    this.respawnTimer.start();
+                // }
+                // else{
+                //     this.player.disablePhysics();
+                //     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                //     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
+                //     setTimeout(() => { this.player.enablePhysics(); }, 1200);
+                //     setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
                     
                     
-                }
+                // }
             }
         }
     }
@@ -884,10 +893,10 @@ export default class GameLevel extends Scene {
      * Increments the amount of life the player has
      * @param amt The amount to add to the player life
      */
-    protected incPlayerLife(amt: number): void {
-        GameLevel.livesCount += amt;
-        this.livesCountLabel.setText("Lives: " + GameLevel.livesCount);
-    }
+    // protected incPlayerLife(amt: number): void {
+    //     GameLevel.livesCount += amt;
+    //     this.livesCountLabel.setText("Lives: " + GameLevel.livesCount);
+    // }
 
     /**
      * Increments the number of floating block cards the player has

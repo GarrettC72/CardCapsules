@@ -262,7 +262,6 @@ export default class MainMenu extends Scene {
                         ]
                     },
                     inventory: {
-                        lives: 3, 
                         floatingBlocks: 0, 
                         springBlocks: 0, 
                         circularRocks: 0

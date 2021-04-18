@@ -167,7 +167,6 @@ export default class LevelSelect extends Scene {
                         ]
                     },
                     inventory: {
-                        lives: 3, 
                         floatingBlocks: 0, 
                         springBlocks: 0, 
                         circularRocks: 0
@@ -190,7 +189,6 @@ export default class LevelSelect extends Scene {
                         ]
                     },
                     inventory: {
-                        lives: 3, 
                         floatingBlocks: 0, 
                         springBlocks: 0, 
                         circularRocks: 0

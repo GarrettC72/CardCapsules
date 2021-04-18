@@ -12,7 +12,6 @@ export default class SceneOptions {
     }
 
     inventory: {
-        lives: number,
         floatingBlocks: number,
         springBlocks: number,
         circularRocks: number;
@@ -28,7 +27,7 @@ export default class SceneOptions {
         }
 
         if(options.inventory === undefined){
-            sOpt.inventory = {lives: 3, floatingBlocks: 0, springBlocks: 0, circularRocks: 0};
+            sOpt.inventory = {floatingBlocks: 0, springBlocks: 0, circularRocks: 0};
         }else{
             sOpt.inventory = options.inventory;
         }

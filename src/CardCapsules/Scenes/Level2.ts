@@ -104,7 +104,6 @@ export default class Level2 extends GameLevel {
                 ]
             },
             inventory: {
-                lives: 3, 
                 floatingBlocks: 0, 
                 springBlocks: 0, 
                 circularRocks: 0
