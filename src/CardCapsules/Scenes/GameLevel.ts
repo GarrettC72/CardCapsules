@@ -68,6 +68,8 @@ export default class GameLevel extends Scene {
     protected selectedBlock: string = ""; //The current block that the player clicked on.
     protected showGridTimer: Timer; //Timer to delay the show grid event.
 
+    protected timeSlowFilterScreen: Rect;
+
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
@@ -290,6 +292,7 @@ export default class GameLevel extends Scene {
 
                 case CC_EVENTS.PLACE_BLOCK:
                     {
+                        //The code to run when the block has been placed.
                         let row = event.data.get("row");
                         let col = event.data.get("col");
                         let orientation = event.data.get("orientation");
@@ -301,6 +304,7 @@ export default class GameLevel extends Scene {
                         // this.player.unfreeze();
                         // this.player.enablePhysics();
                         (<PlayerController>this.player.ai).slow = false;
+                        this.timeSlowFilterScreen.tweens.play("fadeOut");
                         if(this.selectedBlock === "floating_block"){
                             this.incPlayerFloatingBlockCards(-1);
                         }else if(this.selectedBlock === "spring_block"){
@@ -348,6 +352,7 @@ export default class GameLevel extends Scene {
                     {
                         this.grid.showGridFor(this.selectedBlock);
                         (<PlayerController>this.player.ai).slow = true;
+                        this.timeSlowFilterScreen.tweens.play("fadeIn");
                         // this.player.freeze();
                         // this.player.disablePhysics();
                     }
@@ -517,6 +522,37 @@ export default class GameLevel extends Scene {
             ],
             onEnd: CC_EVENTS.LEVEL_START
         });
+
+        this.timeSlowFilterScreen = <Rect>this.add.graphic(GraphicType.RECT, "UI", {position: new Vec2(300, 200), size: new Vec2(600, 400)});
+        this.timeSlowFilterScreen.color = new Color(60, 114, 201);
+        this.timeSlowFilterScreen.alpha = 0;
+
+        this.timeSlowFilterScreen.tweens.add("fadeIn", {
+            startDelay: 0,
+            duration: 200,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 0,
+                    end: 0.2,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+        });
+
+        this.timeSlowFilterScreen.tweens.add("fadeOut", {
+            startDelay: 0,
+            duration: 200,
+            effects: [
+                {
+                    property: TweenableProperties.alpha,
+                    start: 0.2,
+                    end: 0,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+        });
+        
     }
 
     protected addCardGUI(): void {
