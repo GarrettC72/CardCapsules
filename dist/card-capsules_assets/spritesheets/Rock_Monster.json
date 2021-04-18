@@ -3,8 +3,8 @@
     "spriteSheetImage": "Rock_Monster.png",
     "spriteWidth": 16,
     "spriteHeight": 16,
-    "columns": 2,
-    "rows": 3,
+    "columns": 4,
+    "rows": 4,
     "animations": [
         { 
             "name": "IDLE",
@@ -16,7 +16,7 @@
         },
         {
             "name": "DYING",
-            "frames": [ {"index": 2, "duration": 8}, {"index": 3, "duration": 8}, {"index": 4, "duration": 8}]
+            "frames": [ {"index": 5, "duration": 8}, {"index": 6, "duration": 8}, {"index": 7, "duration": 8}, {"index": 8, "duration": 8}, {"index": 9, "duration": 8}, {"index": 10, "duration": 8}, {"index": 11, "duration": 8}, {"index": 12, "duration": 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999}]
         }
     ]
 }
