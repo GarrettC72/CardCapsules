@@ -11,6 +11,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import MainMenu from "./MainMenu";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
+import Level3 from "./Level3";
 //import Level2 from "./Level2";
 
 export default class LevelSelect extends Scene {
@@ -76,9 +77,20 @@ export default class LevelSelect extends Scene {
         const level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y - 100), text: "3"});
         level3Btn.size.set(100, 100);
         level3Btn.borderWidth = 2;
-        level3Btn.borderColor = Color.RED;
-        level3Btn.setTextColor(Color.RED);
+        level3Btn.borderColor = Color.WHITE;
+        level3Btn.setTextColor(Color.WHITE);
         level3Btn.setBackgroundColor(Color.TRANSPARENT);
+        level3Btn.onEnter = () => {
+            level3Btn.borderColor = Color.BLACK;
+            level3Btn.setBackgroundColor(Color.WHITE);
+            level3Btn.setTextColor(Color.BLACK);
+        }
+        level3Btn.onLeave = () => {
+            level3Btn.borderColor = Color.WHITE;
+            level3Btn.setBackgroundColor(Color.TRANSPARENT);
+            level3Btn.setTextColor(Color.WHITE);
+        }
+        level3Btn.onClickEventId = "level3";
 
         const level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x - 300, size.y + 100), text: "4"});
         level4Btn.size.set(100, 100);
@@ -121,6 +133,7 @@ export default class LevelSelect extends Scene {
         //Subscribe to button events
         this.receiver.subscribe("level1");
         this.receiver.subscribe("level2");
+        this.receiver.subscribe("level3");
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
@@ -196,6 +209,28 @@ export default class LevelSelect extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Level2, {}, sceneOptions);
+            }
+
+            if(event.type === "level3")
+            {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemy", "card"],
+                        collisions:
+                        [
+                            [0, 1, 1, 0],
+                            [1, 0, 0, 1],
+                            [1, 0, 0, 0],
+                            [0, 1, 0, 0]
+                        ]
+                    },
+                    inventory: {
+                        floatingBlocks: 0, 
+                        springBlocks: 0, 
+                        circularRocks: 0
+                    }
+                }
+                this.sceneManager.changeToScene(Level3, {}, sceneOptions);
             }
 
             if(event.type === "menu"){

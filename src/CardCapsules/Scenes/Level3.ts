@@ -5,15 +5,14 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameLevel from "./GameLevel";
-import Level3 from "./Level3";
 
-export default class Level2 extends GameLevel {
+export default class Level3 extends GameLevel {
     
     loadScene(): void {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.tilemap("level2", "card-capsules_assets/tilemaps/level2.json");
+        this.load.tilemap("level3", "card-capsules_assets/tilemaps/level3.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
         this.load.spritesheet("spring_block", "card-capsules_assets/spritesheets/spring_block.json");
@@ -56,17 +55,17 @@ export default class Level2 extends GameLevel {
         // bg.position.set(bg.boundary.halfSize.x, 76);
 
         // Add the level 2 tilemap
-        this.add.tilemap("level2", new Vec2(2, 2));
-        this.viewport.setBounds(0, 0, 64*32, 36*32);
+        this.add.tilemap("level3", new Vec2(2, 2));
+        this.viewport.setBounds(0, 0, 80*32, 48*32);
 
-        this.playerSpawn = new Vec2(3*32, 11*32);
+        this.playerSpawn = new Vec2(3*32, 30*32);
 
         // Do generic setup for a GameLevel
         super.startScene();
 
         this.addLevelEnd(new Vec2(54, 14), new Vec2(1, 1));
 
-        this.nextLevel = Level3;
+        //this.nextLevel = Level2;
 
         //Add enemies of various types
         // for(let pos of [new Vec2(24, 18)]){
@@ -110,6 +109,6 @@ export default class Level2 extends GameLevel {
                 circularRocks: 0
             }
         }
-        this.sceneManager.changeToScene(Level2, {}, sceneOptions);
+        this.sceneManager.changeToScene(Level3, {}, sceneOptions);
     }
 }
