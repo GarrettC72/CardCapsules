@@ -28,10 +28,12 @@ export default class Walk extends OnGround {
 			this.finished(EnemyStates.JUMP);
 			this.parent.velocity.y = -300;
 		}
-
-		this.parent.velocity.x = this.parent.direction.x * this.parent.speed;
-
-		this.owner.move(this.parent.velocity.scaled(deltaT));
+		
+		if(!this.parent.freeze)
+		{
+			this.parent.velocity.x = this.parent.direction.x * this.parent.speed;
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+		}	
 	}
 
 	onExit(): Record<string, any> {

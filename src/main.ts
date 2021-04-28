@@ -18,7 +18,10 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "restart", keys:["r"]},
             {name: "mainmenu", keys:["m"]},
             {name: "cancelPlacement", keys:["e"]},
-            {name: "giveBlock", keys:["k"]}
+            {name: "giveBlock", keys:["k"]},
+            {name: "selectFirstCard", keys:["1"]},
+            {name: "selectSecondCard", keys:["2"]},
+            {name: "selectThirdCard", keys:["3"]}
             //{name: "run", keys: ["shift"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl

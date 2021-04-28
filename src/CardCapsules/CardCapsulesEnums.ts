@@ -21,5 +21,7 @@ export enum CC_EVENTS {
     PLAYER_DIED = "PlayerDied",
     ENEMY_DIED = "EnemyDied",
     PLAYER_HIT_ENEMY = "PlayerHitEnemy",
-    PLAYER_RESPAWN = "PlayerRespawn"
+    PLAYER_RESPAWN = "PlayerRespawn",
+    PAUSE_GAME = "Pause_game",
+    UNPAUSE_GAME = "Unpause_game"
 }

@@ -305,36 +305,46 @@ export default class GameLevel extends Scene {
                 case CC_EVENTS.PLACE_BLOCK:
                     {
                         //The code to run when the block has been placed.
+                        //this.selectedBlock stores the card name that is currectly selected.
                         let row = event.data.get("row");
                         let col = event.data.get("col");
-                        let orientation = event.data.get("orientation");
-                        if(orientation)
-                            this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
-                        else
+                            
+                        
+                        if(this.selectedBlock === "floating_block")
+                        {
+                            //places floating block.
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
-                        this.grid.setShowGrid(false);
-                        // this.player.unfreeze();
-                        // this.player.enablePhysics();
-                        (<PlayerController>this.player.ai).slow = false;
-                        this.cancelLabel.visible = false;
-                        this.timeSlowFilterScreen.tweens.play("fadeOut");
-                        if(this.selectedBlock === "floating_block"){
                             this.incPlayerFloatingBlockCards(-1);
-                        }else if(this.selectedBlock === "spring_block"){
+                        }
+                        else if(this.selectedBlock === "spring_block")
+                        {
+                            //places spring block. With the given orientation from GridNode class.
+                            let orientation = event.data.get("orientation");
+                            this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
                             this.incPlayerSpringBlockCards(-1);
-                        }else if(this.selectedBlock === "circular_rock"){
+                        }
+                        else if(this.selectedBlock === "circular_rock")
+                        {
                             this.incPlayerCircularRockCards(-1);
                         }
-                        this.selectedBlock = "";
+
+                        //patch up work.
+                        this.unfreezeGame(); //unfreeze player and enemy movement.
+                        this.grid.setShowGrid(false); //hide the grid.
+                        this.cancelLabel.visible = false; //hide the cancel placement label
+                        this.timeSlowFilterScreen.tweens.play("fadeOut"); //return from icy blue screen to normal screen.
+                        this.selectedBlock = ""; //make the current selected card empty.
                     }
                     break;
 
+                    //unused
                 case CC_EVENTS.HIDE_PLACEMENT_GRID:
                     {
                         this.grid.setShowGrid(false);
                     }
                     break;
 
+                    //unused
                 case CC_EVENTS.SHOW_PLACEMENT_GRID:
                     {
                         this.grid.showGridFor(this.selectedBlock);
@@ -344,6 +354,8 @@ export default class GameLevel extends Scene {
 
                 case CC_EVENTS.CARD_CLICKED:
                 {
+                    //gets the card that was pressed. This works together with Mouse_up event below.
+                    //Grid will not show unless the player releases the mouse click.
                     let cardName = event.data.get("cardName");
                     //only can select the cards that have a count greater than 0.
                     if(cardName === "spring_block" && GameLevel.springBlockCardCount > 0)
@@ -354,23 +366,18 @@ export default class GameLevel extends Scene {
                     {
                         this.selectedBlock = cardName;
                     }
-                    //this.showGridTimer.start();
+                    
                 }
                 break;
 
                 case GameEventType.MOUSE_UP:
                 {
-                    //console.log(this.selectedBlock);
+                    //runs when the player clicks on a card. Using game event mouse_up to prevent card from being selected on mouse press only.
                     if(this.selectedBlock !== "")
                     {
-                        this.grid.showGridFor(this.selectedBlock);
-                        (<PlayerController>this.player.ai).slow = true;
-                        this.timeSlowFilterScreen.tweens.play("fadeIn");
-                        this.cancelLabel.visible = true;
-                        // this.player.freeze();
-                        // this.player.disablePhysics();
+                        this.activateCardPlacement();
                     }
-                    //this.showGridTimer.start();
+                    
                 }
                 break;
 
@@ -384,21 +391,45 @@ export default class GameLevel extends Scene {
             this.incPlayerSpringBlockCards(10);
         }
 
+        //return to main menu.
         if(Input.isJustPressed("mainmenu"))
         {
             this.sceneManager.changeToScene(MainMenu);
         }
 
+        //cancel placement of currect card.
         if(Input.isJustPressed("cancelPlacement"))
         {
             if(this.selectedBlock !== "")
             {
+                this.unfreezeGame();
                 this.grid.setShowGrid(false);
-                (<PlayerController>this.player.ai).slow = false;
+                
                 this.selectedBlock = "";
                 this.timeSlowFilterScreen.tweens.play("fadeOut");
                 this.cancelLabel.visible = false;
             }
+        }
+
+        //select the floating_block
+        if(Input.isJustPressed("selectFirstCard"))
+        {
+            this.selectedBlock = "floating_block";
+            this.activateCardPlacement();
+        }
+
+        //select the spring_block
+        if(Input.isJustPressed("selectSecondCard"))
+        {
+            this.selectedBlock = "spring_block";
+            this.activateCardPlacement();
+        }
+
+        //TODO: drill block
+        if(Input.isJustPressed("selectThirdCard"))
+        {
+            this.selectedBlock = "";
+            this.activateCardPlacement();
         }
 
         
@@ -413,8 +444,24 @@ export default class GameLevel extends Scene {
         }
     }
 
+    /**
+     * Function that sets up card placement. If this.selectedCard is empty, does nothing.
+     * The deactive function is not implement, it is built into the event CC_EVENTS.PLACE_BLOCK.
+     */
+    protected activateCardPlacement()
+    {
+        if(this.selectedBlock !== "")
+        {
+            this.freezeGame(); //stops all player and enemy movement.
+            this.grid.showGridFor(this.selectedBlock);
+            this.timeSlowFilterScreen.tweens.play("fadeIn");
+            this.cancelLabel.visible = true;
+        }
+    }
+
     protected restartlevel()
     {
+        //restart level is implemented in the level subclasses.
         console.log("Restart level not overridden");
     }
 
@@ -971,6 +1018,27 @@ export default class GameLevel extends Scene {
             this.floatingBlockCardUI.alpha = 0.5;
         else
             this.floatingBlockCardUI.alpha = 1;
+    }
+
+    /**
+     * Used to pause the game. Used when player is placing a block.
+     */
+    protected freezeGame()
+    {
+        //sends an event to player and enemy
+        //(<PlayerController>this.player.ai).slow = true;
+        this.emitter.fireEvent(CC_EVENTS.PAUSE_GAME);
+        
+    }
+
+    /**
+     * Unfreeze the game.
+     */
+    protected unfreezeGame()
+    {
+        //sends an event to player and enemy
+        //(<PlayerController>this.player.ai).slow = false;
+        this.emitter.fireEvent(CC_EVENTS.UNPAUSE_GAME);
     }
 
     /**

@@ -37,6 +37,7 @@ export default class EnemyController extends StateMachineAI {
 	velocity: Vec2 = Vec2.ZERO;
 	speed: number = 75;
 	spiky: boolean;
+	freeze: boolean;
 
 	initializeAI(owner: GameNode, options: Record<string, any>){
 		this.owner = owner;
@@ -104,6 +105,8 @@ export default class EnemyController extends StateMachineAI {
                 CC_EVENTS.SPRING_TRIGGERED_LEFT,
                 CC_EVENTS.SPRING_TRIGGERED_RIGHT,
                 CC_EVENTS.SPRING_TRIGGERED_TOP,
+				CC_EVENTS.PAUSE_GAME,
+				CC_EVENTS.UNPAUSE_GAME
         ]);
 	}
 
