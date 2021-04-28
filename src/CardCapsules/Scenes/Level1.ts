@@ -95,7 +95,7 @@ export default class Level1 extends GameLevel {
         
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(13*32, 9.6*32), text: "[A left] [D right] [W/Space jump]"}));
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(28*32, 7.6*32), text: "If you need to restart level, press R."}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(41*32, 4.6*32), text: "^^ Grab this card ^^"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(41*32, 4.6*32), text: "Walk over the card above."}));
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 8.6*32), text: "Once you get the card, "}));
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 9.2*32), text: "click on it and place it over the gap."}));
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(58*32, 7.6*32), text: "Collect goal card to complete level. Congrats."}));
