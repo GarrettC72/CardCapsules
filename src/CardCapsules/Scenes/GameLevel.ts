@@ -72,6 +72,8 @@ export default class GameLevel extends Scene {
 
     protected timeSlowFilterScreen: Rect;
 
+    protected static invincible: boolean = false;
+
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
@@ -430,6 +432,11 @@ export default class GameLevel extends Scene {
         {
             this.selectedBlock = "";
             this.activateCardPlacement();
+        }
+
+        if(Input.isJustPressed("invincible"))
+        {
+            GameLevel.invincible = !GameLevel.invincible;
         }
 
         
@@ -926,6 +933,7 @@ export default class GameLevel extends Scene {
                 (<PlayerController>player.ai).velocity.y = 0;
             } else {
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -935,6 +943,7 @@ export default class GameLevel extends Scene {
                     //setTimeout(() => { this.respawnPlayer(); }, 500);
                     //setTimeout(() => { this.player.enablePhysics(); }, 500);
                     this.respawnTimer.start();
+                    }
                 // }
                 // else{
                 //     this.player.disablePhysics();
@@ -947,6 +956,7 @@ export default class GameLevel extends Scene {
         } else {
             if((<EnemyController>enemy.ai).spiky){
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -955,6 +965,7 @@ export default class GameLevel extends Scene {
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 1000);
                     this.respawnTimer.start();
+                    }
                 //}
                 // else{
                 //     this.player.disablePhysics();
@@ -976,6 +987,7 @@ export default class GameLevel extends Scene {
                 }
             } else {
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -984,6 +996,7 @@ export default class GameLevel extends Scene {
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 500);
                     this.respawnTimer.start();
+                    }
                 // }
                 // else{
                 //     this.player.disablePhysics();

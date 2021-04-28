@@ -20,6 +20,8 @@ export default class MainMenu extends Scene {
     private levelSelect: Layer;
     private controls: Layer;
     private help: Layer;
+    private splash: Layer;
+    private static start: boolean = false;
 
     loadScene(): void {
         // Load the menu song
@@ -27,7 +29,14 @@ export default class MainMenu extends Scene {
     }
 
     startScene(): void {
+        // Add a background layer and set the background image on it
+        // this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
+        // let bg = this.add.sprite("background", "bg");
+        // bg.scale.set(2, 2);
+        // bg.position.set(bg.boundary.halfSize.x, 76);
+
         this.mainMenu = this.addUILayer("Main");
+        this.mainMenu.setHidden(!MainMenu.start);
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -212,6 +221,27 @@ export default class MainMenu extends Scene {
             helpBack.setTextColor(Color.WHITE);
         }
 
+        //Set up splash screen
+        this.splash = this.addUILayer("Splash");
+        this.splash.setHidden(MainMenu.start);
+
+        const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Click to Start"});
+        splashEnter.size.set(250, 50);
+        splashEnter.borderWidth = 2;
+        splashEnter.borderColor = Color.WHITE;
+        splashEnter.setBackgroundColor(Color.TRANSPARENT);
+        splashEnter.onClickEventId = "menu";
+        splashEnter.onEnter = () => {
+            splashEnter.borderColor = Color.BLACK;
+            splashEnter.setBackgroundColor(Color.WHITE);
+            splashEnter.setTextColor(Color.BLACK);
+        }
+        splashEnter.onLeave = () => {
+            splashEnter.borderColor = Color.WHITE;
+            splashEnter.setBackgroundColor(Color.TRANSPARENT);
+            splashEnter.setTextColor(Color.WHITE);
+        }
+
         //Subscribe to button events
         this.receiver.subscribe("play");
         this.receiver.subscribe("level");
@@ -290,6 +320,8 @@ export default class MainMenu extends Scene {
                 this.mainMenu.setHidden(false);
                 this.controls.setHidden(true);
                 this.help.setHidden(true);
+                this.splash.setHidden(true);
+                MainMenu.start = true;
             }
         }
     }

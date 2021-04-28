@@ -21,7 +21,8 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "giveBlock", keys:["k"]},
             {name: "selectFirstCard", keys:["1"]},
             {name: "selectSecondCard", keys:["2"]},
-            {name: "selectThirdCard", keys:["3"]}
+            {name: "selectThirdCard", keys:["3"]},
+            {name: "invincible", keys:["i"]}
             //{name: "run", keys: ["shift"]}
         ],
         useWebGL: false,                        // Tell the game we want to use webgl
