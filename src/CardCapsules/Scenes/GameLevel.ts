@@ -24,6 +24,7 @@ import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyController from "../Enemies/EnemyController";
+import Layer from "../../Wolfie2D/Scene/Layer";
 //import Level1 from "./Level1";
 
 // HOMEWORK 4 - TODO
@@ -44,8 +45,8 @@ export default class GameLevel extends Scene {
     protected floatingBlockCountLabel: Label;
     protected static springBlockCardCount: number = 0;
     protected springBlockCountLabel: Label;
-    protected static circularRockCardCount: number = 0;
-    protected circularRockCountLabel: Label;
+    protected static drillBlockCardCount: number = 0;
+    protected drillBlockockCountLabel: Label;
     // protected static coinCount: number = 0;
     // protected coinCountLabel: Label;
     // protected static livesCount: number = 3;
@@ -74,6 +75,8 @@ export default class GameLevel extends Scene {
 
     protected static invincible: boolean = false;
 
+    protected pause: Layer;
+
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
@@ -84,7 +87,7 @@ export default class GameLevel extends Scene {
         // }
         GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
         GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
-        GameLevel.circularRockCardCount = this.sceneOptions.inventory.circularRocks;
+        GameLevel.drillBlockCardCount = this.sceneOptions.inventory.drillBlocks;
     }
 
     startScene(): void {
@@ -383,11 +386,36 @@ export default class GameLevel extends Scene {
                 }
                 break;
 
+                case "pause":
+                {
+                    this.pause.setHidden(false);
+                    this.freezeGame();
+                }
+                break;
+
+                case "unpause":
+                {
+                    this.pause.setHidden(true);
+                    this.unfreezeGame();
+                }
+                break;
+
+                case "levelSelect":
+                {
+                    this.sceneManager.changeToScene(LevelSelect);
+                }
+                break;
+
+                case "restart":
+                {
+                    this.restartlevel();
+                }
+                break;
             }
         }
 
         //CHEATTTTTT PRESS k. Get 10 blocks of each type.
-        if(Input.isJustPressed("giveBlock"))
+        if(Input.isJustPressed("giveBlock") && this.pause.isHidden())
         {
             this.incPlayerFloatingBlockCards(10);
             this.incPlayerSpringBlockCards(10);
@@ -414,27 +442,33 @@ export default class GameLevel extends Scene {
         }
 
         //select the floating_block
-        if(Input.isJustPressed("selectFirstCard"))
+        if(Input.isJustPressed("selectFirstCard") && this.pause.isHidden())
         {
-            this.selectedBlock = "floating_block";
-            this.activateCardPlacement();
+            if(GameLevel.floatingBlockCardCount > 0)
+            {
+                this.selectedBlock = "floating_block";
+                this.activateCardPlacement();
+            }
         }
 
         //select the spring_block
-        if(Input.isJustPressed("selectSecondCard"))
+        if(Input.isJustPressed("selectSecondCard") && this.pause.isHidden())
         {
-            this.selectedBlock = "spring_block";
-            this.activateCardPlacement();
+            if(GameLevel.springBlockCardCount > 0)
+            {
+                this.selectedBlock = "spring_block";
+                this.activateCardPlacement();
+            }
         }
 
         //TODO: drill block
-        if(Input.isJustPressed("selectThirdCard"))
+        if(Input.isJustPressed("selectThirdCard") && this.pause.isHidden())
         {
             this.selectedBlock = "";
             this.activateCardPlacement();
         }
 
-        if(Input.isJustPressed("invincible"))
+        if(Input.isJustPressed("invincible") && this.pause.isHidden())
         {
             GameLevel.invincible = !GameLevel.invincible;
         }
@@ -487,6 +521,10 @@ export default class GameLevel extends Scene {
 
         // Add grid layer.
         this.addUILayer("grid");
+
+        //Add a pause popup layer
+        this.pause = this.addUILayer("pause");
+        this.pause.setHidden(true);
     }
 
 
@@ -534,6 +572,10 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_HIT_ENEMY,
             CC_EVENTS.PLAYER_DIED,
             GameEventType.MOUSE_UP,
+            "pause",
+            "unpause",
+            "restart",
+            "levelSelect"
         ]);
     }
 
@@ -641,7 +683,52 @@ export default class GameLevel extends Scene {
         //this.cancelLabel.size.set(120, 60);
         //this.cancelLabel.backgroundColor = new Color(34, 32, 52);
         this.cancelLabel.textColor = Color.WHITE;
-        
+
+        let size = this.viewport.getHalfSize();
+
+        //Add pause button to UI
+        const pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 275, size.y - 175), text: ""});
+        pauseButton.backgroundColor = new Color(21, 163, 121, 0);
+        pauseButton.borderColor = new Color(230, 200, 11, 0);
+        pauseButton.borderRadius = 1;
+        pauseButton.borderWidth = 5;
+        pauseButton.size = new Vec2(32, 32);
+
+        let pauseUI = this.add.sprite("pause_button", "UI");
+        pauseUI.position = pauseButton.position;
+        pauseUI.scale = new Vec2(2, 2);
+
+        pauseButton.onClickEventId = "pause";
+
+        //Add elements to pause popup layer
+        let buttonColor = new Color(157,85,17,1);
+        const pauseBackground = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(size.x, size.y), text: ""});
+        pauseBackground.setBackgroundColor(new Color(247,222,146,1));
+        pauseBackground.borderColor = buttonColor;
+        pauseBackground.size.set(350,320);
+        pauseBackground.borderWidth = 5;
+
+        const resumeButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 50), text: "Resume"});
+        resumeButton.size.set(250, 50);
+        resumeButton.setBackgroundColor(buttonColor);
+        resumeButton.borderColor = Color.BLACK;
+        resumeButton.setPadding(new Vec2(50, 10));
+        resumeButton.scale.set(0.5,0.5);
+        resumeButton.onClickEventId = "unpause";
+        const restartButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y), text: "Restart"});
+        restartButton.size.set(250, 50);
+        restartButton.setBackgroundColor(buttonColor);
+        restartButton.borderColor = Color.BLACK;
+        restartButton.setPadding(new Vec2(50, 10));
+        restartButton.scale.set(0.5,0.5);
+        restartButton.onClickEventId = "restart";
+        const levelSelectButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 50), text: "Level Select"});
+        levelSelectButton.size.set(250, 50);
+        levelSelectButton.setBackgroundColor(buttonColor);
+        levelSelectButton.borderColor = Color.BLACK;
+        levelSelectButton.setPadding(new Vec2(50, 10));
+        levelSelectButton.scale.set(0.5,0.5);
+        levelSelectButton.onClickEventId = "levelSelect";
     }
 
     protected addCardGUI(): void {
@@ -673,6 +760,7 @@ export default class GameLevel extends Scene {
         //c1C.size = new Vec2(100,120);
         c1.onClick = () =>
         {
+            if(this.pause.isHidden())
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "floating_block"});
         }
 
@@ -690,6 +778,7 @@ export default class GameLevel extends Scene {
         //c2C.size = new Vec2(100,120);
         c2.onClick = () =>
         {
+            if(this.pause.isHidden())
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "spring_block"});
         }
 
@@ -1072,8 +1161,8 @@ export default class GameLevel extends Scene {
      * @param amt The amount to add the the number of floating block cards
      */
      protected incPlayerCircularRockCards(amt: number): void {
-        GameLevel.circularRockCardCount += amt;
-        this.circularRockCountLabel.setText("" + GameLevel.circularRockCardCount);
+        GameLevel.drillBlockCardCount += amt;
+        this.drillBlockockCountLabel.setText("" + GameLevel.drillBlockCardCount);
     }
 
     /**

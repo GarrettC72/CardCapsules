@@ -24,6 +24,7 @@ export default class Level1 extends GameLevel {
         this.load.image("floating_block_ui", "card-capsules_assets/sprites/floating_block_ui.png");
         
         this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
+        this.load.image("pause_button", "card-capsules_assets/sprites/pause_button.png");
         //this.load.spritesheet("hopper", "hw4_assets/spritesheets/hopper.json");
         //this.load.spritesheet("bunny", "hw4_assets/spritesheets/ghostBunny.json");
         //this.load.audio("jump", "hw4_assets/sounds/jump.wav");
@@ -84,7 +85,7 @@ export default class Level1 extends GameLevel {
         this.nextLevel = Level2;
 
         //Add enemies of various types
-        for(let pos of [new Vec2(19, 11)]){
+        for(let pos of [new Vec2(19, 11), new Vec2(41,7)]){
             this.addEnemy("Rock_Monster", pos, {});
         }
 
