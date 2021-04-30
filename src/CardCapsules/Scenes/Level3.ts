@@ -12,6 +12,7 @@ export default class Level3 extends GameLevel {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
+        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
         this.load.tilemap("level3", "card-capsules_assets/tilemaps/level3.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
@@ -50,10 +51,10 @@ export default class Level3 extends GameLevel {
 
     startScene(): void {
         // Add a background layer and set the background image on it
-        // this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
-        // let bg = this.add.sprite("background", "bg");
-        // bg.scale.set(2, 2);
-        // bg.position.set(bg.boundary.halfSize.x, 76);
+        this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
+        let bg = this.add.sprite("background", "bg");
+        bg.scale.set(18, 16);
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
 
         // Add the level 2 tilemap
         this.add.tilemap("level3", new Vec2(2, 2));
