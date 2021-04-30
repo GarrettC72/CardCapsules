@@ -25,6 +25,10 @@ export default class LevelSelect extends Scene {
     }
 
     startScene(): void {
+        //Add a background layer and set the background image on it
+        this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
+        let bg = this.add.sprite("splash_background", "bg");
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -35,100 +39,111 @@ export default class LevelSelect extends Scene {
         //Create a level select screen
         this.levelSelect = this.addUILayer("LevelSelect");
 
+        let buttonColor = new Color(157,85,17,1);
+        const levelSelectBackground = <Label>this.add.uiElement(UIElementType.LABEL, "LevelSelect", {position: new Vec2(size.x, size.y), text: ""});
+        levelSelectBackground.setBackgroundColor(new Color(247,222,146,0.8));
+        levelSelectBackground.borderColor = buttonColor;
+        levelSelectBackground.size.set(900,600);
+        levelSelectBackground.borderWidth = 5;
+
         const levelHeader = <Label>this.add.uiElement(UIElementType.LABEL, "LevelSelect", {position: new Vec2(size.x, size.y - 250), text: "Level Select"});
-        levelHeader.setTextColor(Color.WHITE);
+        levelHeader.setTextColor(Color.BLACK);
         levelHeader.fontSize = 60;
 
         const level1Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x - 300, size.y - 100), text: "1"});
         level1Btn.size.set(100, 100);
         level1Btn.borderWidth = 2;
-        level1Btn.borderColor = Color.WHITE;
-        level1Btn.setBackgroundColor(Color.TRANSPARENT);
-        level1Btn.onEnter = () => {
-            level1Btn.borderColor = Color.BLACK;
-            level1Btn.setBackgroundColor(Color.WHITE);
-            level1Btn.setTextColor(Color.BLACK);
-        }
-        level1Btn.onLeave = () => {
-            level1Btn.borderColor = Color.WHITE;
-            level1Btn.setBackgroundColor(Color.TRANSPARENT);
-            level1Btn.setTextColor(Color.WHITE);
-        }
+        level1Btn.borderColor = Color.BLACK;
+        level1Btn.setTextColor(Color.WHITE);
+        level1Btn.setBackgroundColor(buttonColor);
+        // level1Btn.onEnter = () => {
+        //     level1Btn.borderColor = Color.BLACK;
+        //     level1Btn.setBackgroundColor(Color.WHITE);
+        //     level1Btn.setTextColor(Color.BLACK);
+        // }
+        // level1Btn.onLeave = () => {
+        //     level1Btn.borderColor = Color.WHITE;
+        //     level1Btn.setBackgroundColor(Color.TRANSPARENT);
+        //     level1Btn.setTextColor(Color.WHITE);
+        // }
         level1Btn.onClickEventId = "level1";
 
         const level2Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y - 100), text: "2"});
         level2Btn.size.set(100, 100);
         level2Btn.borderWidth = 2;
-        level2Btn.borderColor = Color.WHITE;
+        level2Btn.borderColor = Color.BLACK;
         level2Btn.setTextColor(Color.WHITE);
-        level2Btn.setBackgroundColor(Color.TRANSPARENT);
-        level2Btn.onEnter = () => {
-            level2Btn.borderColor = Color.BLACK;
-            level2Btn.setBackgroundColor(Color.WHITE);
-            level2Btn.setTextColor(Color.BLACK);
-        }
-        level2Btn.onLeave = () => {
-            level2Btn.borderColor = Color.WHITE;
-            level2Btn.setBackgroundColor(Color.TRANSPARENT);
-            level2Btn.setTextColor(Color.WHITE);
-        }
+        level2Btn.setBackgroundColor(buttonColor);
+        // level2Btn.onEnter = () => {
+        //     level2Btn.borderColor = Color.BLACK;
+        //     level2Btn.setBackgroundColor(Color.WHITE);
+        //     level2Btn.setTextColor(Color.BLACK);
+        // }
+        // level2Btn.onLeave = () => {
+        //     level2Btn.borderColor = Color.WHITE;
+        //     level2Btn.setBackgroundColor(Color.TRANSPARENT);
+        //     level2Btn.setTextColor(Color.WHITE);
+        // }
         level2Btn.onClickEventId = "level2";
 
         const level3Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y - 100), text: "3"});
         level3Btn.size.set(100, 100);
         level3Btn.borderWidth = 2;
-        level3Btn.borderColor = Color.WHITE;
+        level3Btn.borderColor = Color.BLACK;
         level3Btn.setTextColor(Color.WHITE);
-        level3Btn.setBackgroundColor(Color.TRANSPARENT);
-        level3Btn.onEnter = () => {
-            level3Btn.borderColor = Color.BLACK;
-            level3Btn.setBackgroundColor(Color.WHITE);
-            level3Btn.setTextColor(Color.BLACK);
-        }
-        level3Btn.onLeave = () => {
-            level3Btn.borderColor = Color.WHITE;
-            level3Btn.setBackgroundColor(Color.TRANSPARENT);
-            level3Btn.setTextColor(Color.WHITE);
-        }
+        level3Btn.setBackgroundColor(buttonColor);
+        // level3Btn.onEnter = () => {
+        //     level3Btn.borderColor = Color.BLACK;
+        //     level3Btn.setBackgroundColor(Color.WHITE);
+        //     level3Btn.setTextColor(Color.BLACK);
+        // }
+        // level3Btn.onLeave = () => {
+        //     level3Btn.borderColor = Color.WHITE;
+        //     level3Btn.setBackgroundColor(Color.TRANSPARENT);
+        //     level3Btn.setTextColor(Color.WHITE);
+        // }
         level3Btn.onClickEventId = "level3";
 
         const level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x - 300, size.y + 100), text: "4"});
         level4Btn.size.set(100, 100);
         level4Btn.borderWidth = 2;
         level4Btn.borderColor = Color.RED;
-        level4Btn.setTextColor(Color.RED);
-        level4Btn.setBackgroundColor(Color.TRANSPARENT);
+        level4Btn.setTextColor(Color.WHITE);
+        level4Btn.setBackgroundColor(buttonColor);
+        level4Btn.onEnter = () => {
+
+        }
 
         const level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 100), text: "5"});
         level5Btn.size.set(100, 100);
         level5Btn.borderWidth = 2;
         level5Btn.borderColor = Color.RED;
-        level5Btn.setTextColor(Color.RED);
-        level5Btn.setBackgroundColor(Color.TRANSPARENT);
+        level5Btn.setTextColor(Color.WHITE);
+        level5Btn.setBackgroundColor(buttonColor);
 
         const level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y + 100), text: "6"});
         level6Btn.size.set(100, 100);
         level6Btn.borderWidth = 2;
         level6Btn.borderColor = Color.RED;
-        level6Btn.setTextColor(Color.RED);
-        level6Btn.setBackgroundColor(Color.TRANSPARENT);
+        level6Btn.setTextColor(Color.WHITE);
+        level6Btn.setBackgroundColor(buttonColor);
 
         const levelBack = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 250), text: "Back"});
         levelBack.size.set(200, 50);
         levelBack.borderWidth = 2;
-        levelBack.borderColor = Color.WHITE;
-        levelBack.setBackgroundColor(Color.TRANSPARENT);
+        levelBack.borderColor = Color.BLACK;
+        levelBack.setBackgroundColor(buttonColor);
         levelBack.onClickEventId = "menu";
-        levelBack.onEnter = () => {
-            levelBack.borderColor = Color.BLACK;
-            levelBack.setBackgroundColor(Color.WHITE);
-            levelBack.setTextColor(Color.BLACK);
-        }
-        levelBack.onLeave = () => {
-            levelBack.borderColor = Color.WHITE;
-            levelBack.setBackgroundColor(Color.TRANSPARENT);
-            levelBack.setTextColor(Color.WHITE);
-        }
+        // levelBack.onEnter = () => {
+        //     levelBack.borderColor = Color.BLACK;
+        //     levelBack.setBackgroundColor(Color.WHITE);
+        //     levelBack.setTextColor(Color.BLACK);
+        // }
+        // levelBack.onLeave = () => {
+        //     levelBack.borderColor = Color.WHITE;
+        //     levelBack.setBackgroundColor(Color.TRANSPARENT);
+        //     levelBack.setTextColor(Color.WHITE);
+        // }
 
         //Subscribe to button events
         this.receiver.subscribe("level1");
@@ -143,6 +158,7 @@ export default class LevelSelect extends Scene {
     unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
+        this.load.keepImage("splash_background");
     }
 
     updateScene(): void{

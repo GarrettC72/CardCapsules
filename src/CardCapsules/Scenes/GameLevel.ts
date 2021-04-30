@@ -715,6 +715,7 @@ export default class GameLevel extends Scene {
         resumeButton.setPadding(new Vec2(50, 10));
         resumeButton.scale.set(0.5,0.5);
         resumeButton.onClickEventId = "unpause";
+
         const restartButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y), text: "Restart"});
         restartButton.size.set(250, 50);
         restartButton.setBackgroundColor(buttonColor);
@@ -722,6 +723,7 @@ export default class GameLevel extends Scene {
         restartButton.setPadding(new Vec2(50, 10));
         restartButton.scale.set(0.5,0.5);
         restartButton.onClickEventId = "restart";
+        
         const levelSelectButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 50), text: "Level Select"});
         levelSelectButton.size.set(250, 50);
         levelSelectButton.setBackgroundColor(buttonColor);
