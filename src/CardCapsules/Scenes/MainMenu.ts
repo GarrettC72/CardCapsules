@@ -1,6 +1,7 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Layer from "../../Wolfie2D/Scene/Layer";
+import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Button from "../../Wolfie2D/Nodes/UIElements/Button";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
@@ -21,19 +22,22 @@ export default class MainMenu extends Scene {
     private controls: Layer;
     private help: Layer;
     private splash: Layer;
+    private splash_bg: Sprite;
     private static start: boolean = false;
 
     loadScene(): void {
         // Load the menu song
         //this.load.audio("menu", "card-capsules_assets/music/menu.mp3");
+        this.load.image("splash_background", "card-capsules_assets/sprites/CardCapsuleSplashScreen.png");
     }
 
     startScene(): void {
-        // Add a background layer and set the background image on it
-        // this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
-        // let bg = this.add.sprite("background", "bg");
-        // bg.scale.set(2, 2);
-        // bg.position.set(bg.boundary.halfSize.x, 76);
+        //Add a background layer and set the background image on it
+        if(!MainMenu.start){
+            let bg = this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
+            this.splash_bg = this.add.sprite("splash_background", "bg");
+            this.splash_bg.position.set(this.splash_bg.boundary.halfSize.x, this.splash_bg.boundary.halfSize.y);
+        }
 
         this.mainMenu = this.addUILayer("Main");
         this.mainMenu.setHidden(!MainMenu.start);
@@ -228,19 +232,19 @@ export default class MainMenu extends Scene {
         const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Click to Start"});
         splashEnter.size.set(250, 50);
         splashEnter.borderWidth = 2;
-        splashEnter.borderColor = Color.WHITE;
-        splashEnter.setBackgroundColor(Color.TRANSPARENT);
+        splashEnter.borderColor = Color.BLACK;
+        splashEnter.setBackgroundColor(new Color(157,85,17,1));
         splashEnter.onClickEventId = "menu";
-        splashEnter.onEnter = () => {
-            splashEnter.borderColor = Color.BLACK;
-            splashEnter.setBackgroundColor(Color.WHITE);
-            splashEnter.setTextColor(Color.BLACK);
-        }
-        splashEnter.onLeave = () => {
-            splashEnter.borderColor = Color.WHITE;
-            splashEnter.setBackgroundColor(Color.TRANSPARENT);
-            splashEnter.setTextColor(Color.WHITE);
-        }
+        // splashEnter.onEnter = () => {
+        //     splashEnter.borderColor = Color.BLACK;
+        //     splashEnter.setBackgroundColor(Color.WHITE);
+        //     splashEnter.setTextColor(Color.BLACK);
+        // }
+        // splashEnter.onLeave = () => {
+        //     splashEnter.borderColor = Color.WHITE;
+        //     splashEnter.setBackgroundColor(Color.TRANSPARENT);
+        //     splashEnter.setTextColor(Color.WHITE);
+        // }
 
         //Subscribe to button events
         this.receiver.subscribe("play");
@@ -321,7 +325,11 @@ export default class MainMenu extends Scene {
                 this.controls.setHidden(true);
                 this.help.setHidden(true);
                 this.splash.setHidden(true);
-                MainMenu.start = true;
+                //this.splash_bg.setHidden(true);
+                if(!MainMenu.start){
+                    this.splash_bg.destroy();
+                    MainMenu.start = true;
+                }
             }
         }
     }
