@@ -488,6 +488,12 @@ export default class GameLevel extends Scene {
                     this.restartlevel();
                 }
                 break;
+
+                case "mainMenu":
+                {
+                    this.sceneManager.changeToScene(MainMenu);
+                }
+                break;
             }
         }
 
@@ -656,7 +662,8 @@ export default class GameLevel extends Scene {
             "pause",
             "unpause",
             "restart",
-            "levelSelect"
+            "levelSelect",
+            "mainMenu"
         ]);
     }
 
@@ -786,10 +793,10 @@ export default class GameLevel extends Scene {
         const pauseBackground = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(size.x, size.y), text: ""});
         pauseBackground.setBackgroundColor(new Color(247,222,146,1));
         pauseBackground.borderColor = buttonColor;
-        pauseBackground.size.set(350,320);
+        pauseBackground.size.set(350,400);
         pauseBackground.borderWidth = 5;
 
-        const resumeButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 50), text: "Resume"});
+        const resumeButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 75), text: "Resume"});
         resumeButton.size.set(250, 50);
         resumeButton.setBackgroundColor(buttonColor);
         resumeButton.borderColor = Color.BLACK;
@@ -797,7 +804,7 @@ export default class GameLevel extends Scene {
         resumeButton.scale.set(0.5,0.5);
         resumeButton.onClickEventId = "unpause";
 
-        const restartButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y), text: "Restart"});
+        const restartButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 25), text: "Restart"});
         restartButton.size.set(250, 50);
         restartButton.setBackgroundColor(buttonColor);
         restartButton.borderColor = Color.BLACK;
@@ -805,13 +812,21 @@ export default class GameLevel extends Scene {
         restartButton.scale.set(0.5,0.5);
         restartButton.onClickEventId = "restart";
         
-        const levelSelectButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 50), text: "Level Select"});
+        const levelSelectButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 25), text: "Level Select"});
         levelSelectButton.size.set(250, 50);
         levelSelectButton.setBackgroundColor(buttonColor);
         levelSelectButton.borderColor = Color.BLACK;
         levelSelectButton.setPadding(new Vec2(50, 10));
         levelSelectButton.scale.set(0.5,0.5);
         levelSelectButton.onClickEventId = "levelSelect";
+
+        const mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 75), text: "Main Menu"});
+        mainMenuButton.size.set(250, 50);
+        mainMenuButton.setBackgroundColor(buttonColor);
+        mainMenuButton.borderColor = Color.BLACK;
+        mainMenuButton.setPadding(new Vec2(50, 10));
+        mainMenuButton.scale.set(0.5,0.5);
+        mainMenuButton.onClickEventId = "mainMenu";
     }
 
     protected addCardGUI(): void {
