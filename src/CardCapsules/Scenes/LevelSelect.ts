@@ -12,6 +12,7 @@ import MainMenu from "./MainMenu";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
+import Level4 from "./Level4";
 //import Level2 from "./Level2";
 
 export default class LevelSelect extends Scene {
@@ -107,12 +108,10 @@ export default class LevelSelect extends Scene {
         const level4Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x - 300, size.y + 100), text: "4"});
         level4Btn.size.set(100, 100);
         level4Btn.borderWidth = 2;
-        level4Btn.borderColor = Color.RED;
+        level4Btn.borderColor = Color.BLACK;
         level4Btn.setTextColor(Color.WHITE);
         level4Btn.setBackgroundColor(buttonColor);
-        level4Btn.onEnter = () => {
-
-        }
+        level4Btn.onClickEventId = "level4";
 
         const level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 100), text: "5"});
         level5Btn.size.set(100, 100);
@@ -149,6 +148,7 @@ export default class LevelSelect extends Scene {
         this.receiver.subscribe("level1");
         this.receiver.subscribe("level2");
         this.receiver.subscribe("level3");
+        this.receiver.subscribe("level4");
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
@@ -247,6 +247,28 @@ export default class LevelSelect extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Level3, {}, sceneOptions);
+            }
+
+            if(event.type === "level4")
+            {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemy", "card"],
+                        collisions:
+                        [
+                            [0, 1, 1, 0],
+                            [1, 0, 0, 1],
+                            [1, 0, 0, 0],
+                            [0, 1, 0, 0]
+                        ]
+                    },
+                    inventory: {
+                        floatingBlocks: 0, 
+                        springBlocks: 0, 
+                        drillBlocks: 0
+                    }
+                }
+                this.sceneManager.changeToScene(Level4, {}, sceneOptions);
             }
 
             if(event.type === "menu"){
