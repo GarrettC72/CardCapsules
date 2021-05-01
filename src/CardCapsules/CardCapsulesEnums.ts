@@ -10,6 +10,7 @@ export enum CC_EVENTS {
     PLAYER_HIT_FLOATING_BLOCK_CARD = "PlayerHitFloatingBlockCard",
     PLAYER_HIT_SPRING_BLOCK_CARD = "PlayerHitSpringBlockCard",
     PLAYER_HIT_CIRCULAR_ROCK_CARD = "PlayerHitCircularRockCard",
+    PLAYER_HIT_DRILL_BLOCK_CARD = "PlayerHitDrillBlockCard",
     SPRING_TRIGGERED = "spring_triggered",
     CARD_CLICKED = "card_clicked",
     SPRING_TRIGGERED_TOP = "spring_triggered_top",

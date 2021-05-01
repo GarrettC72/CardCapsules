@@ -108,7 +108,7 @@ export default class Level3 extends GameLevel {
             inventory: {
                 floatingBlocks: 0, 
                 springBlocks: 0, 
-                circularRocks: 0
+                drillBlocks: 0
             }
         }
         this.sceneManager.changeToScene(Level3, {}, sceneOptions);

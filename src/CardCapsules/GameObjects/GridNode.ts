@@ -22,7 +22,7 @@ export default class GridNode extends CanvasNode
     viewport: Viewport;
     private showGrid: boolean;
 
-    blockName: string;
+    blockName: string; //This tells the grid which block is being placed.
     tilemap: OrthogonalTilemap;
 
     colorGreen: Color = new Color(0, 255, 0, 0.3);
@@ -35,7 +35,7 @@ export default class GridNode extends CanvasNode
         super();
         this.visible = false; //this is part of the CanvasNode class not part of the grid itself.
         this.showGrid = false; //This variable decides if the grid is to be shown or not.
-        this.blockName = ""; //This tells the grid which block is being placed.
+        this.blockName = ""; 
         this.gridWidth = gridWidth;
         this.gridHeight = gridHeight;
         this.layer = layer;
@@ -87,6 +87,9 @@ export default class GridNode extends CanvasNode
         }
     }
 
+    /**
+     * Hides the grid lines.
+     */
     private hideGridLines(): void
     {
         this.vlines.forEach((rline, idx) => {
@@ -97,6 +100,9 @@ export default class GridNode extends CanvasNode
         })
     }
 
+    /**
+     * Shows the grid lines.
+     */
     private showGridLines(): void
     {
         this.vlines.forEach((rline, idx) => {
@@ -119,14 +125,27 @@ export default class GridNode extends CanvasNode
      * Data used to keep track on where the block is being placed.
      * Location is in row col.
      */
-     public addBlockLocation(blockName:string, location:Vec2)
+     public addBlockLocation(blockName:string, location:Vec2, id:number)
      {
-         this.blockLocations.push(new BlockData(blockName, location));
+         this.blockLocations.push(new BlockData(blockName, location, id));
  
         //  this.blockLocations.forEach((block) =>
         //  {  
         //      console.log(block.name);
         //  });
+     }
+
+     public removeBlockLocation(id:number)
+     {
+        let index = -1;
+        this.blockLocations.forEach((block, idx)=>{
+            if(block.id == id)
+            {
+                index = idx;
+            }
+        });
+        if(index != -1)
+            this.blockLocations.splice(index, 1);
      }
  
 
@@ -152,17 +171,21 @@ export default class GridNode extends CanvasNode
         
         //let blockHere = this.isThereBlockAt(new Vec2(row, col));
         let faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
+        let blockId = -1; //id used to know which blocks to destory for the drill block. -1 means a tilemap block, > 0 means floating_block, spring_block, etc.
 
 
         if(this.blockName === "floating_block")
         {
+            //if the selected block is the floating_block, cannot place block where there is already a block.
             if(!this.isThereBlockAt(new Vec2(row, col)))
                 canPlace = true;
         }
         else if(this.blockName === "spring_block")
         {
+            //if the selected block is the spring block, cannot place block not adjacent to other blocks. Ex. Can place on floor, wall, but not in air.
             if(!this.isThereBlockAt(new Vec2(row, col)))
             {
+                //checks the direction the spring block is supposed to face.
                 if(this.isThereBlockAt(new Vec2(row, col + 1)) && this.getBlockAt(new Vec2(row, col + 1)) !== "spring_block")
                 {
                     faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
@@ -185,6 +208,16 @@ export default class GridNode extends CanvasNode
                 }
             }
         }
+        else if(this.blockName === "drill_block")
+        {
+            //you can place a block where the is already one. Cuz its drill block, you use it to destroy another block.
+            if(this.isThereBlockAt(new Vec2(row, col)))
+            {
+                canPlace = true;
+                blockId = this.getBlockIdAt(new Vec2(row, col));
+            }
+                
+        }
         else
         {
             if(!this.isThereBlockAt(new Vec2(row, col)))
@@ -192,24 +225,23 @@ export default class GridNode extends CanvasNode
         }
 
         
-
+        //sets the indicator rectangle to red or green based on if the block can be placed.
         if(!canPlace)
             this.rect.setColor(this.colorRed);
         else
             this.rect.setColor(this.colorGreen);
 
-        //console.log("hello?");
+
         if(Input.isMousePressed())
         {
             if(canPlace)
             {
-                
                 this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
-                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col, orientation: faceDirection});
+                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col, orientation: faceDirection, blockId: blockId});
             }
             else
             {
-                //cannot place block. Maybe play a sound.
+                //TODO: cannot place block. Maybe play a sound.
             }
         }
         
@@ -231,6 +263,12 @@ export default class GridNode extends CanvasNode
         
     }
 
+
+    /**
+     * Returns whether there is card block or tilemap block at the given row col.
+     * @param rowCol specify the row col of the block.
+     * @returns is there a card block or tilemap block at the given location.
+     */
     private isThereBlockAt(rowCol: Vec2): boolean
     {
         if(this.tilemap.getTileAtRowCol(rowCol) === 0)
@@ -245,6 +283,11 @@ export default class GridNode extends CanvasNode
         return true;
     }
 
+    /**
+     * Returns the card block name at the given row col. (Floating block, spring block, etc.)
+     * @param rowCol specify the row col of the block.
+     * @returns the name of the block.
+     */
     private getBlockAt(rowCol: Vec2): string
     {
         let blockFound = "";
@@ -255,12 +298,32 @@ export default class GridNode extends CanvasNode
         return blockFound;
     }
 
+    /**
+     * Returns the card block id at the given row col. (Floating block, spring block, etc.)
+     * @param rowCol specify the row col of the block.
+     * @returns the id of the block. -1 if there is none.
+     */
+    private getBlockIdAt(rowCol: Vec2):number
+    {
+        let blockId = -1;
+        this.blockLocations.forEach((block) => {
+            if(block.location.x == rowCol.x && block.location.y == rowCol.y)
+                blockId = block.id; 
+        });
+        return blockId;
+    }
+
 
     public isShowGrid(): boolean
     {
         return this.showGrid;
     }
 
+    /**
+     * Function that provides allows the grid to be shown and hidden.
+     * It also hides the green/red placement location indicator rectangle.
+     * @param showGrid true/false to show or hide the grid.
+     */
     public setShowGrid(showGrid: boolean): void
     {
         this.showGrid = showGrid;
@@ -282,10 +345,12 @@ export default class GridNode extends CanvasNode
 class BlockData {
     location:Vec2;
     name:string;
+    id:number;
 
-    constructor(name:string, location:Vec2)
+    constructor(name:string, location:Vec2, id:number)
     {
         this.name = name;
         this.location = location;
+        this.id = id;
     }
 }

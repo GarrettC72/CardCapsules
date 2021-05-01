@@ -199,7 +199,7 @@ export default class LevelSelect extends Scene {
                     inventory: {
                         floatingBlocks: 0, 
                         springBlocks: 0, 
-                        circularRocks: 0
+                        drillBlocks: 0
                     }
                 }
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
@@ -221,7 +221,7 @@ export default class LevelSelect extends Scene {
                     inventory: {
                         floatingBlocks: 0, 
                         springBlocks: 0, 
-                        circularRocks: 0
+                        drillBlocks: 0
                     }
                 }
                 this.sceneManager.changeToScene(Level2, {}, sceneOptions);
@@ -243,7 +243,7 @@ export default class LevelSelect extends Scene {
                     inventory: {
                         floatingBlocks: 0, 
                         springBlocks: 0, 
-                        circularRocks: 0
+                        drillBlocks: 0
                     }
                 }
                 this.sceneManager.changeToScene(Level3, {}, sceneOptions);

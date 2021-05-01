@@ -46,7 +46,7 @@ export default class GameLevel extends Scene {
     protected static springBlockCardCount: number = 0;
     protected springBlockCountLabel: Label;
     protected static drillBlockCardCount: number = 0;
-    protected drillBlockockCountLabel: Label;
+    protected drillBlockCountLabel: Label;
     // protected static coinCount: number = 0;
     // protected coinCountLabel: Label;
     // protected static livesCount: number = 3;
@@ -54,6 +54,7 @@ export default class GameLevel extends Scene {
 
     protected springBlockCardUI: Sprite;
     protected floatingBlockCardUI: Sprite;
+    protected drillBlockCardUI:Sprite;
 
     // Stuff to end the level and go to the next level
     protected levelEndArea: Rect;
@@ -88,6 +89,7 @@ export default class GameLevel extends Scene {
         GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
         GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
         GameLevel.drillBlockCardCount = this.sceneOptions.inventory.drillBlocks;
+        console.log("Drill Card cound" + GameLevel.drillBlockCardCount);
     }
 
     startScene(): void {
@@ -215,6 +217,31 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
+                    case CC_EVENTS.PLAYER_HIT_DRILL_BLOCK_CARD:
+                    {
+                        console.log("card");
+                        // Hit a card
+                        let card;
+                        if(event.data.get("node") === this.player.id){
+                            // Other is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("other"));
+                        } else {
+                            // Node is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("node"));
+                        }
+                        
+                        // Remove card
+                        card.destroy();
+
+
+                        // Increment our number of cards
+                        this.incPlayerDrillBlockCards(1);
+
+                        // Play a card sound
+                        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                    }
+                    break;
+
                 // case CC_EVENTS.PLAYER_HIT_COIN_BLOCK:
                 //     {
                 //         // Hit a coin block, so increment our number of coins
@@ -296,7 +323,7 @@ export default class GameLevel extends Scene {
                                     inventory: {
                                         floatingBlocks: 0, 
                                         springBlocks: 0, 
-                                        circularRocks: 0
+                                        drillBlocks: 0
                                     }
                                 }
                             }
@@ -328,9 +355,21 @@ export default class GameLevel extends Scene {
                             this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
                             this.incPlayerSpringBlockCards(-1);
                         }
-                        else if(this.selectedBlock === "circular_rock")
+                        else if(this.selectedBlock === "drill_block")
                         {
-                            this.incPlayerCircularRockCards(-1);
+                            //this.addBlock(this.selectedBlock, new Vec2(row, col));
+                            let blockId = event.data.get("blockId");
+                            if(blockId >= 0)
+                            {
+                                //destorys block with given id, and remove it from grid's list of current blocks.
+                                this.sceneGraph.getNode(blockId).destroy();
+                                this.grid.removeBlockLocation(blockId);
+                            }
+                            else
+                            {
+                                (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
+                            }
+                            this.incPlayerDrillBlockCards(-1);
                         }
 
                         //patch up work.
@@ -371,7 +410,10 @@ export default class GameLevel extends Scene {
                     {
                         this.selectedBlock = cardName;
                     }
-                    
+                    if(cardName === "drill_block" && GameLevel.drillBlockCardCount > 0)
+                    {
+                        this.selectedBlock = cardName;
+                    }
                 }
                 break;
 
@@ -419,6 +461,7 @@ export default class GameLevel extends Scene {
         {
             this.incPlayerFloatingBlockCards(10);
             this.incPlayerSpringBlockCards(10);
+            this.incPlayerDrillBlockCards(10);
         }
 
         //return to main menu.
@@ -750,6 +793,8 @@ export default class GameLevel extends Scene {
         fbui.position = c1Pos;
         fbui.scale = new Vec2(5, 5);
         this.floatingBlockCardUI = fbui;
+
+
         if(GameLevel.floatingBlockCardCount === 0)
             this.floatingBlockCardUI.alpha = 0.5;
         //fbui.alpha = 0.5;
@@ -791,6 +836,38 @@ export default class GameLevel extends Scene {
         if(GameLevel.springBlockCardCount === 0)
             this.springBlockCardUI.alpha = 0.5;
 
+
+
+        //adding a button for card three.
+        let c3Pos = new Vec2((size.x * 2) * 0.29, (size.y * 2) * 0.90);
+        let c3 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c3Pos.clone(), text: ""});
+        c3.backgroundColor = new Color(21, 163, 121, 0);
+        c3.borderColor = new Color(230, 200, 11, 0);
+        c3.borderRadius = 1;
+        c3.borderWidth = 5;
+        c3.size = new Vec2(50,60);
+        
+        c3.onClick = () =>
+        {
+            if(this.pause.isHidden())
+            this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "drill_block"});
+        }
+
+        //sets the image for the drill card.
+        let dbui = this.add.sprite("spring_block_ui", "UI");
+        dbui.position = c3Pos;
+        dbui.scale = new Vec2(5, 5);
+        this.drillBlockCardUI = dbui;
+        if(GameLevel.drillBlockCardCount === 0)
+            this.drillBlockCardUI.alpha = 0.5;
+
+
+     
+
+
+
+
+        
         //Add card UI labels
         this.floatingBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c1Pos.clone().mult(new Vec2(1.30,0.955)), text:"" + GameLevel.floatingBlockCardCount});
         this.floatingBlockCountLabel.setTextColor(Color.BLACK);
@@ -798,6 +875,9 @@ export default class GameLevel extends Scene {
         this.springBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c2Pos.clone().mult(new Vec2(1.115,0.955)), text:"" + GameLevel.springBlockCardCount});
         this.springBlockCountLabel.setTextColor(Color.BLACK);
         this.springBlockCountLabel.font = "PixelSimple";
+        this.drillBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c3Pos.clone().mult(new Vec2(1.075,0.955)), text:"" + GameLevel.drillBlockCardCount});
+        this.drillBlockCountLabel.setTextColor(Color.BLACK);
+        this.drillBlockCountLabel.font = "PixelSimple";
 
         // this.floatingBlockCountLabel.tweens.add("noCard", {
         //     startDelay: 0,
@@ -975,7 +1055,8 @@ export default class GameLevel extends Scene {
                 block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
             }
         }
-        this.grid.addBlockLocation(spriteKey, tilePos.clone()); //used to keep track of locations where blocks can be placed.
+
+        this.grid.addBlockLocation(spriteKey, tilePos.clone(), block.id); //used to keep track of locations where blocks can be placed.
     }
 
     // HOMEWORK 4 - TODO
@@ -1164,7 +1245,20 @@ export default class GameLevel extends Scene {
      */
      protected incPlayerCircularRockCards(amt: number): void {
         GameLevel.drillBlockCardCount += amt;
-        this.drillBlockockCountLabel.setText("" + GameLevel.drillBlockCardCount);
+        this.drillBlockCountLabel.setText("" + GameLevel.drillBlockCardCount);
+    }
+
+    /**
+     * Increments the number of drill block cards the player has
+     * @param amt The amount to add the the number of floating block cards
+     */
+     protected incPlayerDrillBlockCards(amt: number): void {
+        GameLevel.drillBlockCardCount += amt;
+        this.drillBlockCountLabel.setText("" + GameLevel.drillBlockCardCount);
+        if(GameLevel.drillBlockCardCount === 0)
+            this.drillBlockCardUI.alpha = 0.5;
+        else
+            this.drillBlockCardUI.alpha = 1;
     }
 
     /**

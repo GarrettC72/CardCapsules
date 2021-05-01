@@ -318,7 +318,7 @@ export default class MainMenu extends Scene {
                     inventory: {
                         floatingBlocks: 0, 
                         springBlocks: 0, 
-                        circularRocks: 0
+                        drillBlocks: 0
                     }
                 }
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
