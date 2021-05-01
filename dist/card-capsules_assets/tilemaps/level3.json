@@ -467,6 +467,49 @@
                  "width":16,
                  "x":783.917,
                  "y":656.25
+                }, 
+                {
+                 "gid":36,
+                 "height":16,
+                 "id":12,
+                 "name":"DB",
+                 "properties":[
+                        {
+                         "name":"Group",
+                         "type":"string",
+                         "value":"card"
+                        }, 
+                        {
+                         "name":"HasPhysics",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"IsCollidable",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"IsTrigger",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"TriggerGroup",
+                         "type":"string",
+                         "value":"player"
+                        }, 
+                        {
+                         "name":"TriggerOnEnter",
+                         "type":"string",
+                         "value":"PlayerHitDrillBlockCard"
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":104.333333333333,
+                 "y":599.666666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -502,8 +545,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":4,
- "nextobjectid":12,
+ "nextlayerid":5,
+ "nextobjectid":13,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.5.0",
@@ -518,7 +561,7 @@
          "margin":0,
          "name":"CardCapsulesTileset",
          "spacing":0,
-         "tilecount":60,
+         "tilecount":48,
          "tileheight":16,
          "tilewidth":16
         }],

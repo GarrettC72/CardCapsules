@@ -24,5 +24,7 @@ export enum CC_EVENTS {
     PLAYER_HIT_ENEMY = "PlayerHitEnemy",
     PLAYER_RESPAWN = "PlayerRespawn",
     PAUSE_GAME = "Pause_game",
-    UNPAUSE_GAME = "Unpause_game"
+    UNPAUSE_GAME = "Unpause_game",
+    DRILL_BLOCK = "drill_block",
+    DESTROY_BLOCK = "destroy_block"
 }

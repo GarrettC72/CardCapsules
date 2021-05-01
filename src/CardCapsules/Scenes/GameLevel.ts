@@ -56,6 +56,12 @@ export default class GameLevel extends Scene {
     protected floatingBlockCardUI: Sprite;
     protected drillBlockCardUI:Sprite;
 
+    //variables to store the data of the block that is being destroyed by the drill.
+    protected drillDestroyRowNum:Array<number> = new Array<number>();
+    protected drillDestroyColNum:Array<number> = new Array<number>();
+    protected drillDestroyBlockId:Array<number> = new Array<number>(); // the id of the block the drill is destroying.
+    protected drillDestroyId:Array<number> = new Array<number>(); //the id of the drill.
+
     // Stuff to end the level and go to the next level
     protected levelEndArea: Rect;
     protected nextLevel: new (...args: any) => GameLevel;
@@ -358,17 +364,19 @@ export default class GameLevel extends Scene {
                         else if(this.selectedBlock === "drill_block")
                         {
                             //this.addBlock(this.selectedBlock, new Vec2(row, col));
-                            let blockId = event.data.get("blockId");
-                            if(blockId >= 0)
-                            {
-                                //destorys block with given id, and remove it from grid's list of current blocks.
-                                this.sceneGraph.getNode(blockId).destroy();
-                                this.grid.removeBlockLocation(blockId);
-                            }
-                            else
-                            {
-                                (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
-                            }
+                            let block = this.add.animatedSprite("drill_block", "primary");
+                            //block.rotation = Math.PI;
+                            block.position.set(row * 32 + 16, col * 32 + 16);
+                            block.scale.set(2, 2);
+                            block.animation.play("SPAWN", false, CC_EVENTS.DRILL_BLOCK);
+                            block.animation.queue("DESTROY", false, CC_EVENTS.DESTROY_BLOCK);
+
+                            //data used by the DRILL_BLOCK event after the spawn animation finishes.
+                            this.drillDestroyColNum.push(col);
+                            this.drillDestroyRowNum.push(row);
+                            this.drillDestroyBlockId.push(event.data.get("blockId"));
+                            this.drillDestroyId.push(block.id);
+
                             this.incPlayerDrillBlockCards(-1);
                         }
 
@@ -380,6 +388,33 @@ export default class GameLevel extends Scene {
                         this.selectedBlock = ""; //make the current selected card empty.
                     }
                     break;
+
+                case CC_EVENTS.DRILL_BLOCK:
+                    {
+                        //The code to run after the drill spawn animation.
+                        let blockId = this.drillDestroyBlockId.shift();
+                        let row = this.drillDestroyRowNum.shift();
+                        let col = this.drillDestroyColNum.shift();
+                        if(blockId >= 0)
+                        {
+                            //destorys block with given id, and remove it from grid's list of current blocks.
+                            this.sceneGraph.getNode(blockId).destroy();
+                            this.grid.removeBlockLocation(blockId);
+                        }
+                        else
+                        {
+                            (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
+                        }
+                    }
+                    break;
+
+                    case CC_EVENTS.DESTROY_BLOCK:
+                        {
+                            //The code to run after the drill destroy animation.
+                            let node = this.sceneGraph.getNode(this.drillDestroyId.shift());
+                            node.destroy();
+                        }
+                        break;
 
                     //unused
                 case CC_EVENTS.HIDE_PLACEMENT_GRID:
@@ -420,7 +455,7 @@ export default class GameLevel extends Scene {
                 case GameEventType.MOUSE_UP:
                 {
                     //runs when the player clicks on a card. Using game event mouse_up to prevent card from being selected on mouse press only.
-                    if(this.selectedBlock !== "")
+                    if(this.selectedBlock !== "" && !this.grid.isShowGrid())
                     {
                         this.activateCardPlacement();
                     }
@@ -609,11 +644,14 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_HIT_FLOATING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD,
+            CC_EVENTS.PLAYER_HIT_DRILL_BLOCK_CARD,
             CC_EVENTS.CARD_CLICKED,
             CC_EVENTS.PLAYER_MOVE,
             CC_EVENTS.PLAYER_JUMP,
             CC_EVENTS.PLAYER_HIT_ENEMY,
             CC_EVENTS.PLAYER_DIED,
+            CC_EVENTS.DRILL_BLOCK,
+            CC_EVENTS.DESTROY_BLOCK,
             GameEventType.MOUSE_UP,
             "pause",
             "unpause",
@@ -854,7 +892,7 @@ export default class GameLevel extends Scene {
         }
 
         //sets the image for the drill card.
-        let dbui = this.add.sprite("spring_block_ui", "UI");
+        let dbui = this.add.sprite("drill_block_ui", "UI");
         dbui.position = c3Pos;
         dbui.scale = new Vec2(5, 5);
         this.drillBlockCardUI = dbui;
