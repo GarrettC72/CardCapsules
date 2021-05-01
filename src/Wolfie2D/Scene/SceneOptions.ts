@@ -14,7 +14,7 @@ export default class SceneOptions {
     inventory: {
         floatingBlocks: number,
         springBlocks: number,
-        circularRocks: number;
+        drillBlocks: number;
     }
 
     static parse(options: Record<string, any>): SceneOptions{
@@ -27,7 +27,7 @@ export default class SceneOptions {
         }
 
         if(options.inventory === undefined){
-            sOpt.inventory = {floatingBlocks: 0, springBlocks: 0, circularRocks: 0};
+            sOpt.inventory = {floatingBlocks: 0, springBlocks: 0, drillBlocks: 0};
         }else{
             sOpt.inventory = options.inventory;
         }

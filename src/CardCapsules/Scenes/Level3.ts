@@ -5,6 +5,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameLevel from "./GameLevel";
+import Level4 from "./Level4";
 
 export default class Level3 extends GameLevel {
     
@@ -12,15 +13,19 @@ export default class Level3 extends GameLevel {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
+        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
         this.load.tilemap("level3", "card-capsules_assets/tilemaps/level3.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
         this.load.spritesheet("spring_block", "card-capsules_assets/spritesheets/spring_block.json");
+        this.load.spritesheet("drill_block", "card-capsules_assets/spritesheets/drill_block.json");
         this.load.spritesheet("goal_card", "card-capsules_assets/spritesheets/goal_card.json");
         this.load.spritesheet("Rock_Monster", "card-capsules_assets/spritesheets/Rock_Monster.json");
         this.load.image("floating_block_ui", "card-capsules_assets/sprites/floating_block_ui.png");
         
         this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
+        this.load.image("drill_block_ui", "card-capsules_assets/sprites/drill_block_ui.png");
+        this.load.image("pause_button", "card-capsules_assets/sprites/pause_button.png");
         //this.load.spritesheet("hopper", "hw4_assets/spritesheets/hopper.json");
         //this.load.spritesheet("bunny", "hw4_assets/spritesheets/ghostBunny.json");
         //this.load.audio("jump", "hw4_assets/sounds/jump.wav");
@@ -49,10 +54,10 @@ export default class Level3 extends GameLevel {
 
     startScene(): void {
         // Add a background layer and set the background image on it
-        // this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
-        // let bg = this.add.sprite("background", "bg");
-        // bg.scale.set(2, 2);
-        // bg.position.set(bg.boundary.halfSize.x, 76);
+        this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
+        let bg = this.add.sprite("background", "bg");
+        bg.scale.set(18, 16);
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
 
         // Add the level 2 tilemap
         this.add.tilemap("level3", new Vec2(2, 2));
@@ -65,7 +70,7 @@ export default class Level3 extends GameLevel {
 
         this.addLevelEnd(new Vec2(73, 8), new Vec2(1, 1));
 
-        //this.nextLevel = Level2;
+        this.nextLevel = Level4;
 
         //Add enemies of various types
         // for(let pos of [new Vec2(24, 18)]){
@@ -106,7 +111,7 @@ export default class Level3 extends GameLevel {
             inventory: {
                 floatingBlocks: 0, 
                 springBlocks: 0, 
-                circularRocks: 0
+                drillBlocks: 0
             }
         }
         this.sceneManager.changeToScene(Level3, {}, sceneOptions);

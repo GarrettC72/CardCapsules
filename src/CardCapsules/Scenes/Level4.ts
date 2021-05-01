@@ -1,27 +1,26 @@
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
-import GameLevel from "./GameLevel";
+
 //import Level2 from "./Level2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
-import Level2 from "./Level2";
-import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
-import Label from "../../Wolfie2D/Nodes/UIElements/Label";
-import Color from "../../Wolfie2D/Utils/Color";
+import GameLevel from "./GameLevel";
 
-export default class Level1 extends GameLevel {
+export default class Level4 extends GameLevel {
     
     loadScene(): void {
         // Load resources
-        this.load.image("background", "card-capsules_assets/sprites/GrassBackgroundTutorial.png");
+        //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.tilemap("level1", "card-capsules_assets/tilemaps/level1.json");
+        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
+        this.load.tilemap("level4", "card-capsules_assets/tilemaps/level4.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
         this.load.spritesheet("spring_block", "card-capsules_assets/spritesheets/spring_block.json");
         this.load.spritesheet("drill_block", "card-capsules_assets/spritesheets/drill_block.json");
         this.load.spritesheet("goal_card", "card-capsules_assets/spritesheets/goal_card.json");
         this.load.spritesheet("Rock_Monster", "card-capsules_assets/spritesheets/Rock_Monster.json");
+        this.load.spritesheet("Cactus", "card-capsules_assets/spritesheets/Cactus.json");
         this.load.image("floating_block_ui", "card-capsules_assets/sprites/floating_block_ui.png");
         
         this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
@@ -50,67 +49,39 @@ export default class Level1 extends GameLevel {
      * not a lot of load time for such a small project).
      */
     unloadScene(){
-        // Keep resources - this is up to you
-        // this.load.keepImage("background");
-        // this.load.keepImage("coin");
-        // this.load.keepSpritesheet("player");
-        // this.load.keepSpritesheet("bunny");
-        // this.load.keepSpritesheet("hopper");
-        // this.load.keepAudio("jump");
-        // this.load.keepAudio("coin");
-        // this.load.keepAudio("player_death");
-        // this.load.keepAudio("bunny_death");
-        // this.load.keepAudio("hopper_death");
-        // this.load.keepAudio("level_music");
-
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
+        
     }
 
     startScene(): void {
-        //Add a background layer and set the background image on it
-        this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
-        let bg = this.add.sprite("background", "bg");
-        bg.scale.set(16, 16);
-        //bg.position.set(bg.boundary.halfSize.x, 76);
-        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y - 50);
+        // Add a background layer and set the background image on it
+        // this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
+        // let bg = this.add.sprite("background", "bg");
+        // bg.scale.set(18, 16);
+        // bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
 
-        // Add the level 1 tilemap
-        this.add.tilemap("level1", new Vec2(2, 2));
-        this.viewport.setBounds(0, 0, 64*32, 20*32);
+        // Add the level 4 tilemap
+        this.add.tilemap("level4", new Vec2(2, 2));
+        this.viewport.setBounds(0, 0, 80*32, 48*32);
 
-        this.playerSpawn = new Vec2(4*32, 11*32);
+        this.playerSpawn = new Vec2(5*32, 38*32);
 
         // Do generic setup for a GameLevel
         super.startScene();
 
-        this.addLevelEnd(new Vec2(57, 6), new Vec2(1, 1));
+        this.addLevelEnd(new Vec2(36, 4), new Vec2(1, 1));
 
-        this.nextLevel = Level2;
+        //this.nextLevel = Level2;
 
         //Add enemies of various types
-        for(let pos of [new Vec2(19, 11), new Vec2(41,7)]){
+        for(let pos of [new Vec2(29, 39), new Vec2(47,20), new Vec2(57,32)]){
             this.addEnemy("Rock_Monster", pos, {});
         }
 
-        // for(let pos of [new Vec2(51, 17)]){
-        //     this.addEnemy("hopper", pos, {jumpy: true});
-        // }
-
-        
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(13*32, 9.6*32), text: "[A left] [D right] [W/Space jump]"}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(28*32, 7.6*32), text: "If you need to restart level, press R."}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(41*32, 4.6*32), text: "Walk over the card above."}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 8.6*32), text: "Once you get the card, "}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 9.2*32), text: "click on it and place it over the gap."}));
-        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(58*32, 7.6*32), text: "Collect goal card to complete level. Congrats."}));
+        for(let pos of [new Vec2(14.5, 29), new Vec2(8.5,29), new Vec2(29.5,21), new Vec2(30.5,17), new Vec2(35.5,15), new Vec2(46.5,20)]){
+            this.addEnemy("Cactus", pos, {spiky: true});
+        }
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
-    }
-
-    private addPropertiesToLabel(label: Label):void
-    {
-        label.textColor = Color.WHITE;
-        label.font = "PixelSimple";
     }
 
     updateScene(deltaT: number): void {
@@ -143,6 +114,6 @@ export default class Level1 extends GameLevel {
                 drillBlocks: 0
             }
         }
-        this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+        this.sceneManager.changeToScene(Level4, {}, sceneOptions);
     }
 }

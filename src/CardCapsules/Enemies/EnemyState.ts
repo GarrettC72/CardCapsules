@@ -18,6 +18,20 @@ export default abstract class EnemyState extends State {
 	}
 
 	handleInput(event: GameEvent): void {
+
+		if(event.type === CC_EVENTS.PAUSE_GAME)
+		{
+			(<AnimatedSprite>this.owner).animation.pause();
+			this.parent.freeze = true;
+		}
+			
+		if(event.type === CC_EVENTS.UNPAUSE_GAME)
+		{
+			(<AnimatedSprite>this.owner).animation.resume();
+			this.parent.freeze = false;
+		}
+			
+
 		let node = this.owner.getScene().getSceneGraph().getNode(event.data.get("node"));
 		let other = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
 
@@ -59,12 +73,16 @@ export default abstract class EnemyState extends State {
 
 	update(deltaT: number): void {
 		// Do gravity
-		this.parent.velocity.y += this.gravity*deltaT;
+		if(!this.parent.freeze)
+		{
+			this.parent.velocity.y += this.gravity*deltaT;
 
-		if(this.owner.onWall){
-			// Flip around
-			this.parent.direction.x *= -1;
-			(<AnimatedSprite>this.owner).invertX = !(<AnimatedSprite>this.owner).invertX;
+			if(this.owner.onWall){
+				// Flip around
+				this.parent.direction.x *= -1;
+				(<AnimatedSprite>this.owner).invertX = !(<AnimatedSprite>this.owner).invertX;
+			}
 		}
+		
 	}
 }

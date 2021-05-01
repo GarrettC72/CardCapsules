@@ -24,6 +24,7 @@ import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyController from "../Enemies/EnemyController";
+import Layer from "../../Wolfie2D/Scene/Layer";
 //import Level1 from "./Level1";
 
 // HOMEWORK 4 - TODO
@@ -44,8 +45,8 @@ export default class GameLevel extends Scene {
     protected floatingBlockCountLabel: Label;
     protected static springBlockCardCount: number = 0;
     protected springBlockCountLabel: Label;
-    protected static circularRockCardCount: number = 0;
-    protected circularRockCountLabel: Label;
+    protected static drillBlockCardCount: number = 0;
+    protected drillBlockCountLabel: Label;
     // protected static coinCount: number = 0;
     // protected coinCountLabel: Label;
     // protected static livesCount: number = 3;
@@ -53,6 +54,13 @@ export default class GameLevel extends Scene {
 
     protected springBlockCardUI: Sprite;
     protected floatingBlockCardUI: Sprite;
+    protected drillBlockCardUI:Sprite;
+
+    //variables to store the data of the block that is being destroyed by the drill.
+    protected drillDestroyRowNum:Array<number> = new Array<number>();
+    protected drillDestroyColNum:Array<number> = new Array<number>();
+    protected drillDestroyBlockId:Array<number> = new Array<number>(); // the id of the block the drill is destroying.
+    protected drillDestroyId:Array<number> = new Array<number>(); //the id of the drill.
 
     // Stuff to end the level and go to the next level
     protected levelEndArea: Rect;
@@ -72,6 +80,10 @@ export default class GameLevel extends Scene {
 
     protected timeSlowFilterScreen: Rect;
 
+    protected static invincible: boolean = false;
+
+    protected pause: Layer;
+
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
@@ -82,7 +94,8 @@ export default class GameLevel extends Scene {
         // }
         GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
         GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
-        GameLevel.circularRockCardCount = this.sceneOptions.inventory.circularRocks;
+        GameLevel.drillBlockCardCount = this.sceneOptions.inventory.drillBlocks;
+        console.log("Drill Card cound" + GameLevel.drillBlockCardCount);
     }
 
     startScene(): void {
@@ -210,6 +223,31 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
+                    case CC_EVENTS.PLAYER_HIT_DRILL_BLOCK_CARD:
+                    {
+                        console.log("card");
+                        // Hit a card
+                        let card;
+                        if(event.data.get("node") === this.player.id){
+                            // Other is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("other"));
+                        } else {
+                            // Node is card, disable
+                            card = this.sceneGraph.getNode(event.data.get("node"));
+                        }
+                        
+                        // Remove card
+                        card.destroy();
+
+
+                        // Increment our number of cards
+                        this.incPlayerDrillBlockCards(1);
+
+                        // Play a card sound
+                        //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
+                    }
+                    break;
+
                 // case CC_EVENTS.PLAYER_HIT_COIN_BLOCK:
                 //     {
                 //         // Hit a coin block, so increment our number of coins
@@ -291,7 +329,7 @@ export default class GameLevel extends Scene {
                                     inventory: {
                                         floatingBlocks: 0, 
                                         springBlocks: 0, 
-                                        circularRocks: 0
+                                        drillBlocks: 0
                                     }
                                 }
                             }
@@ -305,36 +343,87 @@ export default class GameLevel extends Scene {
                 case CC_EVENTS.PLACE_BLOCK:
                     {
                         //The code to run when the block has been placed.
+                        //this.selectedBlock stores the card name that is currectly selected.
                         let row = event.data.get("row");
                         let col = event.data.get("col");
-                        let orientation = event.data.get("orientation");
-                        if(orientation)
-                            this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
-                        else
+                            
+                        
+                        if(this.selectedBlock === "floating_block")
+                        {
+                            //places floating block.
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
-                        this.grid.setShowGrid(false);
-                        // this.player.unfreeze();
-                        // this.player.enablePhysics();
-                        (<PlayerController>this.player.ai).slow = false;
-                        this.cancelLabel.visible = false;
-                        this.timeSlowFilterScreen.tweens.play("fadeOut");
-                        if(this.selectedBlock === "floating_block"){
                             this.incPlayerFloatingBlockCards(-1);
-                        }else if(this.selectedBlock === "spring_block"){
-                            this.incPlayerSpringBlockCards(-1);
-                        }else if(this.selectedBlock === "circular_rock"){
-                            this.incPlayerCircularRockCards(-1);
                         }
-                        this.selectedBlock = "";
+                        else if(this.selectedBlock === "spring_block")
+                        {
+                            //places spring block. With the given orientation from GridNode class.
+                            let orientation = event.data.get("orientation");
+                            this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
+                            this.incPlayerSpringBlockCards(-1);
+                        }
+                        else if(this.selectedBlock === "drill_block")
+                        {
+                            //this.addBlock(this.selectedBlock, new Vec2(row, col));
+                            let block = this.add.animatedSprite("drill_block", "primary");
+                            //block.rotation = Math.PI;
+                            block.position.set(row * 32 + 16, col * 32 + 16);
+                            block.scale.set(2, 2);
+                            block.animation.play("SPAWN", false, CC_EVENTS.DRILL_BLOCK);
+                            block.animation.queue("DESTROY", false, CC_EVENTS.DESTROY_BLOCK);
+
+                            //data used by the DRILL_BLOCK event after the spawn animation finishes.
+                            this.drillDestroyColNum.push(col);
+                            this.drillDestroyRowNum.push(row);
+                            this.drillDestroyBlockId.push(event.data.get("blockId"));
+                            this.drillDestroyId.push(block.id);
+
+                            this.incPlayerDrillBlockCards(-1);
+                        }
+
+                        //patch up work.
+                        this.unfreezeGame(); //unfreeze player and enemy movement.
+                        this.grid.setShowGrid(false); //hide the grid.
+                        this.cancelLabel.visible = false; //hide the cancel placement label
+                        this.timeSlowFilterScreen.tweens.play("fadeOut"); //return from icy blue screen to normal screen.
+                        this.selectedBlock = ""; //make the current selected card empty.
                     }
                     break;
 
+                case CC_EVENTS.DRILL_BLOCK:
+                    {
+                        //The code to run after the drill spawn animation.
+                        let blockId = this.drillDestroyBlockId.shift();
+                        let row = this.drillDestroyRowNum.shift();
+                        let col = this.drillDestroyColNum.shift();
+                        if(blockId >= 0)
+                        {
+                            //destorys block with given id, and remove it from grid's list of current blocks.
+                            this.sceneGraph.getNode(blockId).destroy();
+                            this.grid.removeBlockLocation(blockId);
+                        }
+                        else
+                        {
+                            (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
+                        }
+                    }
+                    break;
+
+                    case CC_EVENTS.DESTROY_BLOCK:
+                        {
+                            //The code to run after the drill destroy animation.
+                            let node = this.sceneGraph.getNode(this.drillDestroyId.shift());
+                            node.destroy();
+                        }
+                        break;
+
+                    //unused
                 case CC_EVENTS.HIDE_PLACEMENT_GRID:
                     {
                         this.grid.setShowGrid(false);
                     }
                     break;
 
+                    //unused
                 case CC_EVENTS.SHOW_PLACEMENT_GRID:
                     {
                         this.grid.showGridFor(this.selectedBlock);
@@ -344,6 +433,8 @@ export default class GameLevel extends Scene {
 
                 case CC_EVENTS.CARD_CLICKED:
                 {
+                    //gets the card that was pressed. This works together with Mouse_up event below.
+                    //Grid will not show unless the player releases the mouse click.
                     let cardName = event.data.get("cardName");
                     //only can select the cards that have a count greater than 0.
                     if(cardName === "spring_block" && GameLevel.springBlockCardCount > 0)
@@ -354,51 +445,116 @@ export default class GameLevel extends Scene {
                     {
                         this.selectedBlock = cardName;
                     }
-                    //this.showGridTimer.start();
+                    if(cardName === "drill_block" && GameLevel.drillBlockCardCount > 0)
+                    {
+                        this.selectedBlock = cardName;
+                    }
                 }
                 break;
 
                 case GameEventType.MOUSE_UP:
                 {
-                    //console.log(this.selectedBlock);
-                    if(this.selectedBlock !== "")
+                    //runs when the player clicks on a card. Using game event mouse_up to prevent card from being selected on mouse press only.
+                    if(this.selectedBlock !== "" && !this.grid.isShowGrid())
                     {
-                        this.grid.showGridFor(this.selectedBlock);
-                        (<PlayerController>this.player.ai).slow = true;
-                        this.timeSlowFilterScreen.tweens.play("fadeIn");
-                        this.cancelLabel.visible = true;
-                        // this.player.freeze();
-                        // this.player.disablePhysics();
+                        this.activateCardPlacement();
                     }
-                    //this.showGridTimer.start();
+                    
                 }
                 break;
 
+                case "pause":
+                {
+                    this.pause.setHidden(false);
+                    this.freezeGame();
+                }
+                break;
+
+                case "unpause":
+                {
+                    this.pause.setHidden(true);
+                    this.unfreezeGame();
+                }
+                break;
+
+                case "levelSelect":
+                {
+                    this.sceneManager.changeToScene(LevelSelect);
+                }
+                break;
+
+                case "restart":
+                {
+                    this.restartlevel();
+                }
+                break;
+
+                case "mainMenu":
+                {
+                    this.sceneManager.changeToScene(MainMenu);
+                }
+                break;
             }
         }
 
         //CHEATTTTTT PRESS k. Get 10 blocks of each type.
-        if(Input.isJustPressed("giveBlock"))
+        if(Input.isJustPressed("giveBlock") && this.pause.isHidden())
         {
             this.incPlayerFloatingBlockCards(10);
             this.incPlayerSpringBlockCards(10);
+            this.incPlayerDrillBlockCards(10);
         }
 
+        //return to main menu.
         if(Input.isJustPressed("mainmenu"))
         {
             this.sceneManager.changeToScene(MainMenu);
         }
 
+        //cancel placement of currect card.
         if(Input.isJustPressed("cancelPlacement"))
         {
             if(this.selectedBlock !== "")
             {
+                this.unfreezeGame();
                 this.grid.setShowGrid(false);
-                (<PlayerController>this.player.ai).slow = false;
+                
                 this.selectedBlock = "";
                 this.timeSlowFilterScreen.tweens.play("fadeOut");
                 this.cancelLabel.visible = false;
             }
+        }
+
+        //select the floating_block
+        if(Input.isJustPressed("selectFirstCard") && this.pause.isHidden())
+        {
+            if(GameLevel.floatingBlockCardCount > 0)
+            {
+                this.selectedBlock = "floating_block";
+                this.activateCardPlacement();
+            }
+        }
+
+        //select the spring_block
+        if(Input.isJustPressed("selectSecondCard") && this.pause.isHidden())
+        {
+            if(GameLevel.springBlockCardCount > 0)
+            {
+                this.selectedBlock = "spring_block";
+                this.activateCardPlacement();
+            }
+        }
+
+        //TODO: drill block
+        if(Input.isJustPressed("selectThirdCard") && this.pause.isHidden())
+        {
+            this.selectedBlock = "";
+            this.activateCardPlacement();
+        }
+
+        if(Input.isJustPressed("invincible") && this.pause.isHidden())
+        {
+            GameLevel.invincible = !GameLevel.invincible;
         }
 
         
@@ -413,8 +569,24 @@ export default class GameLevel extends Scene {
         }
     }
 
+    /**
+     * Function that sets up card placement. If this.selectedCard is empty, does nothing.
+     * The deactive function is not implement, it is built into the event CC_EVENTS.PLACE_BLOCK.
+     */
+    protected activateCardPlacement()
+    {
+        if(this.selectedBlock !== "")
+        {
+            this.freezeGame(); //stops all player and enemy movement.
+            this.grid.showGridFor(this.selectedBlock);
+            this.timeSlowFilterScreen.tweens.play("fadeIn");
+            this.cancelLabel.visible = true;
+        }
+    }
+
     protected restartlevel()
     {
+        //restart level is implemented in the level subclasses.
         console.log("Restart level not overridden");
     }
 
@@ -433,6 +605,10 @@ export default class GameLevel extends Scene {
 
         // Add grid layer.
         this.addUILayer("grid");
+
+        //Add a pause popup layer
+        this.pause = this.addUILayer("pause");
+        this.pause.setHidden(true);
     }
 
 
@@ -474,12 +650,20 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_HIT_FLOATING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD,
             CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD,
+            CC_EVENTS.PLAYER_HIT_DRILL_BLOCK_CARD,
             CC_EVENTS.CARD_CLICKED,
             CC_EVENTS.PLAYER_MOVE,
             CC_EVENTS.PLAYER_JUMP,
             CC_EVENTS.PLAYER_HIT_ENEMY,
             CC_EVENTS.PLAYER_DIED,
+            CC_EVENTS.DRILL_BLOCK,
+            CC_EVENTS.DESTROY_BLOCK,
             GameEventType.MOUSE_UP,
+            "pause",
+            "unpause",
+            "restart",
+            "levelSelect",
+            "mainMenu"
         ]);
     }
 
@@ -587,7 +771,62 @@ export default class GameLevel extends Scene {
         //this.cancelLabel.size.set(120, 60);
         //this.cancelLabel.backgroundColor = new Color(34, 32, 52);
         this.cancelLabel.textColor = Color.WHITE;
+
+        let size = this.viewport.getHalfSize();
+
+        //Add pause button to UI
+        const pauseButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 275, size.y - 175), text: ""});
+        pauseButton.backgroundColor = new Color(21, 163, 121, 0);
+        pauseButton.borderColor = new Color(230, 200, 11, 0);
+        pauseButton.borderRadius = 1;
+        pauseButton.borderWidth = 5;
+        pauseButton.size = new Vec2(32, 32);
+
+        let pauseUI = this.add.sprite("pause_button", "UI");
+        pauseUI.position = pauseButton.position;
+        pauseUI.scale = new Vec2(2, 2);
+
+        pauseButton.onClickEventId = "pause";
+
+        //Add elements to pause popup layer
+        let buttonColor = new Color(157,85,17,1);
+        const pauseBackground = <Label>this.add.uiElement(UIElementType.LABEL, "pause", {position: new Vec2(size.x, size.y), text: ""});
+        pauseBackground.setBackgroundColor(new Color(247,222,146,1));
+        pauseBackground.borderColor = buttonColor;
+        pauseBackground.size.set(350,400);
+        pauseBackground.borderWidth = 5;
+
+        const resumeButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 75), text: "Resume"});
+        resumeButton.size.set(250, 50);
+        resumeButton.setBackgroundColor(buttonColor);
+        resumeButton.borderColor = Color.BLACK;
+        resumeButton.setPadding(new Vec2(50, 10));
+        resumeButton.scale.set(0.5,0.5);
+        resumeButton.onClickEventId = "unpause";
+
+        const restartButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y - 25), text: "Restart"});
+        restartButton.size.set(250, 50);
+        restartButton.setBackgroundColor(buttonColor);
+        restartButton.borderColor = Color.BLACK;
+        restartButton.setPadding(new Vec2(50, 10));
+        restartButton.scale.set(0.5,0.5);
+        restartButton.onClickEventId = "restart";
         
+        const levelSelectButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 25), text: "Level Select"});
+        levelSelectButton.size.set(250, 50);
+        levelSelectButton.setBackgroundColor(buttonColor);
+        levelSelectButton.borderColor = Color.BLACK;
+        levelSelectButton.setPadding(new Vec2(50, 10));
+        levelSelectButton.scale.set(0.5,0.5);
+        levelSelectButton.onClickEventId = "levelSelect";
+
+        const mainMenuButton = <Button>this.add.uiElement(UIElementType.BUTTON, "pause", {position: new Vec2(size.x, size.y + 75), text: "Main Menu"});
+        mainMenuButton.size.set(250, 50);
+        mainMenuButton.setBackgroundColor(buttonColor);
+        mainMenuButton.borderColor = Color.BLACK;
+        mainMenuButton.setPadding(new Vec2(50, 10));
+        mainMenuButton.scale.set(0.5,0.5);
+        mainMenuButton.onClickEventId = "mainMenu";
     }
 
     protected addCardGUI(): void {
@@ -607,6 +846,8 @@ export default class GameLevel extends Scene {
         fbui.position = c1Pos;
         fbui.scale = new Vec2(5, 5);
         this.floatingBlockCardUI = fbui;
+
+
         if(GameLevel.floatingBlockCardCount === 0)
             this.floatingBlockCardUI.alpha = 0.5;
         //fbui.alpha = 0.5;
@@ -619,6 +860,7 @@ export default class GameLevel extends Scene {
         //c1C.size = new Vec2(100,120);
         c1.onClick = () =>
         {
+            if(this.pause.isHidden())
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "floating_block"});
         }
 
@@ -636,6 +878,7 @@ export default class GameLevel extends Scene {
         //c2C.size = new Vec2(100,120);
         c2.onClick = () =>
         {
+            if(this.pause.isHidden())
             this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "spring_block"});
         }
 
@@ -646,6 +889,38 @@ export default class GameLevel extends Scene {
         if(GameLevel.springBlockCardCount === 0)
             this.springBlockCardUI.alpha = 0.5;
 
+
+
+        //adding a button for card three.
+        let c3Pos = new Vec2((size.x * 2) * 0.29, (size.y * 2) * 0.90);
+        let c3 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: c3Pos.clone(), text: ""});
+        c3.backgroundColor = new Color(21, 163, 121, 0);
+        c3.borderColor = new Color(230, 200, 11, 0);
+        c3.borderRadius = 1;
+        c3.borderWidth = 5;
+        c3.size = new Vec2(50,60);
+        
+        c3.onClick = () =>
+        {
+            if(this.pause.isHidden())
+            this.emitter.fireEvent(CC_EVENTS.CARD_CLICKED, {cardName: "drill_block"});
+        }
+
+        //sets the image for the drill card.
+        let dbui = this.add.sprite("drill_block_ui", "UI");
+        dbui.position = c3Pos;
+        dbui.scale = new Vec2(5, 5);
+        this.drillBlockCardUI = dbui;
+        if(GameLevel.drillBlockCardCount === 0)
+            this.drillBlockCardUI.alpha = 0.5;
+
+
+     
+
+
+
+
+        
         //Add card UI labels
         this.floatingBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c1Pos.clone().mult(new Vec2(1.30,0.955)), text:"" + GameLevel.floatingBlockCardCount});
         this.floatingBlockCountLabel.setTextColor(Color.BLACK);
@@ -653,6 +928,9 @@ export default class GameLevel extends Scene {
         this.springBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c2Pos.clone().mult(new Vec2(1.115,0.955)), text:"" + GameLevel.springBlockCardCount});
         this.springBlockCountLabel.setTextColor(Color.BLACK);
         this.springBlockCountLabel.font = "PixelSimple";
+        this.drillBlockCountLabel = <Label>this.add.uiElement(UIElementType.LABEL, "UI", {position: c3Pos.clone().mult(new Vec2(1.075,0.955)), text:"" + GameLevel.drillBlockCardCount});
+        this.drillBlockCountLabel.setTextColor(Color.BLACK);
+        this.drillBlockCountLabel.font = "PixelSimple";
 
         // this.floatingBlockCountLabel.tweens.add("noCard", {
         //     startDelay: 0,
@@ -830,7 +1108,8 @@ export default class GameLevel extends Scene {
                 block.setTrigger("enemy", CC_EVENTS.SPRING_TRIGGERED_TOP, null);
             }
         }
-        this.grid.addBlockLocation(spriteKey, tilePos.clone()); //used to keep track of locations where blocks can be placed.
+
+        this.grid.addBlockLocation(spriteKey, tilePos.clone(), block.id); //used to keep track of locations where blocks can be placed.
     }
 
     // HOMEWORK 4 - TODO
@@ -879,6 +1158,7 @@ export default class GameLevel extends Scene {
                 (<PlayerController>player.ai).velocity.y = 0;
             } else {
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -888,6 +1168,7 @@ export default class GameLevel extends Scene {
                     //setTimeout(() => { this.respawnPlayer(); }, 500);
                     //setTimeout(() => { this.player.enablePhysics(); }, 500);
                     this.respawnTimer.start();
+                    }
                 // }
                 // else{
                 //     this.player.disablePhysics();
@@ -900,6 +1181,7 @@ export default class GameLevel extends Scene {
         } else {
             if((<EnemyController>enemy.ai).spiky){
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -908,6 +1190,7 @@ export default class GameLevel extends Scene {
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 1000);
                     this.respawnTimer.start();
+                    }
                 //}
                 // else{
                 //     this.player.disablePhysics();
@@ -929,6 +1212,7 @@ export default class GameLevel extends Scene {
                 }
             } else {
                 //if(GameLevel.livesCount > 1){
+                    if(!GameLevel.invincible){
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
@@ -937,6 +1221,7 @@ export default class GameLevel extends Scene {
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 500);
                     this.respawnTimer.start();
+                    }
                 // }
                 // else{
                 //     this.player.disablePhysics();
@@ -974,6 +1259,27 @@ export default class GameLevel extends Scene {
     }
 
     /**
+     * Used to pause the game. Used when player is placing a block.
+     */
+    protected freezeGame()
+    {
+        //sends an event to player and enemy
+        //(<PlayerController>this.player.ai).slow = true;
+        this.emitter.fireEvent(CC_EVENTS.PAUSE_GAME);
+        
+    }
+
+    /**
+     * Unfreeze the game.
+     */
+    protected unfreezeGame()
+    {
+        //sends an event to player and enemy
+        //(<PlayerController>this.player.ai).slow = false;
+        this.emitter.fireEvent(CC_EVENTS.UNPAUSE_GAME);
+    }
+
+    /**
      * Increments the number of floating block cards the player has
      * @param amt The amount to add the the number of floating block cards
      */
@@ -991,8 +1297,21 @@ export default class GameLevel extends Scene {
      * @param amt The amount to add the the number of floating block cards
      */
      protected incPlayerCircularRockCards(amt: number): void {
-        GameLevel.circularRockCardCount += amt;
-        this.circularRockCountLabel.setText("" + GameLevel.circularRockCardCount);
+        GameLevel.drillBlockCardCount += amt;
+        this.drillBlockCountLabel.setText("" + GameLevel.drillBlockCardCount);
+    }
+
+    /**
+     * Increments the number of drill block cards the player has
+     * @param amt The amount to add the the number of floating block cards
+     */
+     protected incPlayerDrillBlockCards(amt: number): void {
+        GameLevel.drillBlockCardCount += amt;
+        this.drillBlockCountLabel.setText("" + GameLevel.drillBlockCardCount);
+        if(GameLevel.drillBlockCardCount === 0)
+            this.drillBlockCardUI.alpha = 0.5;
+        else
+            this.drillBlockCardUI.alpha = 1;
     }
 
     /**

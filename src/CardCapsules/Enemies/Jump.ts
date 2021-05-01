@@ -43,9 +43,11 @@ export default class Jump extends EnemyState {
 			this.parent.velocity.y = 0;
 		}
 
-		this.parent.velocity.x += this.parent.direction.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
-
-		this.owner.move(this.parent.velocity.scaled(deltaT));
+		if(!this.parent.freeze)
+		{
+			this.parent.velocity.x += this.parent.direction.x * this.parent.speed/3.5 - 0.3*this.parent.velocity.x;
+			this.owner.move(this.parent.velocity.scaled(deltaT));
+		}
 	}
 
 	onExit(): Record<string, any> {

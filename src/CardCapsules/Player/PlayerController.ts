@@ -1,7 +1,9 @@
 import StateMachineAI from "../../Wolfie2D/AI/StateMachineAI";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import Debug from "../../Wolfie2D/Debug/Debug";
+import GameEvent from "../../Wolfie2D/Events/GameEvent";
 import GameNode from "../../Wolfie2D/Nodes/GameNode";
+import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import OrthogonalTilemap from "../../Wolfie2D/Nodes/Tilemaps/OrthogonalTilemap";
 import { CC_EVENTS } from "../CardCapsulesEnums";
@@ -34,8 +36,7 @@ export default class PlayerController extends StateMachineAI {
 	MIN_SPEED: number = 200;
     MAX_SPEED: number = 300;
     tilemap: OrthogonalTilemap;
-    //coin: Sprite;
-    slow: boolean;
+    freeze: boolean;
 
     initializeAI(owner: GameNode, options: Record<string, any>){
         this.owner = owner;
@@ -44,30 +45,15 @@ export default class PlayerController extends StateMachineAI {
 
         this.tilemap = this.owner.getScene().getTilemap(options.tilemap) as OrthogonalTilemap;
 
-        this.slow = false;
-        //console.log("HELLOOOOOOOO");
-        // HOMEWORK 4 - TODO
-        /*
-            Use this coin sprite to perform an animation when the player hits a coin block.
-
-            The coin should move up from the block and fade out of view.
-
-            Additionally, you should edit the PlayerController and its states so that
-            when you collide with a coin block on the tilemap, it will perform this animation
-            and let the scene know that the player collided with a coin block.
-
-            The coin block that the player collides with should then be set to be a dark coin block.
-            Look at the tileset image for reference.
-        */
-        //this.coin = this.owner.getScene().add.sprite("coin", "coinLayer");
-        //this.coin.position.set(-100, -100);
-        //this.coin.scale.set(2, 2);
+        this.freeze = false;
         this.receiver.subscribe(
             [CC_EVENTS.SPRING_TRIGGERED,
                 CC_EVENTS.SPRING_TRIGGERED_DOWN,
                 CC_EVENTS.SPRING_TRIGGERED_LEFT,
                 CC_EVENTS.SPRING_TRIGGERED_RIGHT,
                 CC_EVENTS.SPRING_TRIGGERED_TOP,
+                CC_EVENTS.PAUSE_GAME,
+                CC_EVENTS.UNPAUSE_GAME
         ]);
     }
 
@@ -113,4 +99,59 @@ export default class PlayerController extends StateMachineAI {
             Debug.log("playerstate", "Player State: Fall");
         }
 	}
+
+    handleEvent(event: GameEvent)
+    {
+        if(event.type === CC_EVENTS.PAUSE_GAME)
+        {
+            (<AnimatedSprite>this.owner).animation.pause();
+            this.freeze = true;
+        }
+        if(event.type === CC_EVENTS.UNPAUSE_GAME)
+        {
+            (<AnimatedSprite>this.owner).animation.resume();
+            this.freeze = false;
+        }
+            
+
+        let node = this.owner.getScene().getSceneGraph().getNode(event.data.get("node"));
+		let other = this.owner.getScene().getSceneGraph().getNode(event.data.get("other"));
+
+		if(node === this.owner || other === this.owner)
+		{
+			//node is springblock
+            this.changeState("jump");
+			//this.finished("jump");
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_DOWN)
+			{
+				this.velocity.y = 500;
+			}
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED || event.type === CC_EVENTS.SPRING_TRIGGERED_TOP)
+			{
+				this.velocity.y = -650;
+			}
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_LEFT)
+			{
+				this.velocity.y = -200;
+				this.velocity.x = -500;
+			}
+			if(event.type === CC_EVENTS.SPRING_TRIGGERED_RIGHT)
+			{
+				this.velocity.y = -200;
+				this.velocity.x = 500;
+			}
+			
+			this.owner.tweens.play("flip");
+			if(!(node === this.owner))
+			{
+				(<AnimatedSprite>node).animation.play("ACTIVATED", false);
+				(<AnimatedSprite>node).animation.queue("IDLE", true);
+			}
+			else
+			{
+				(<AnimatedSprite>other).animation.play("ACTIVATED", false);
+				(<AnimatedSprite>other).animation.queue("IDLE", true);
+			}
+		}
+    }
 }
