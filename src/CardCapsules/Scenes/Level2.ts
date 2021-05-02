@@ -34,6 +34,7 @@ export default class Level2 extends GameLevel {
         //this.load.audio("bunny_death", "hw4_assets/sounds/bunny_death.wav");
         //this.load.audio("hopper_death", "hw4_assets/sounds/hopper_death.wav");
        // this.load.audio("level_music", "hw4_assets/music/level_music.mp3");
+       this.load.audio("lava_level", "CardCapsules/dist/card-capsules_assets/Music");
     }
 
     // HOMEWORK 4 - TODO
@@ -81,7 +82,7 @@ export default class Level2 extends GameLevel {
         //     this.addEnemy("hopper", pos, {jumpy: true});
         // }
 
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lava_level", loop: true, holdReference: true});
     }
 
     updateScene(deltaT: number): void {
