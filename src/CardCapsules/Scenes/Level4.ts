@@ -15,7 +15,7 @@ export default class Level4 extends GameLevel {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
+        this.load.image("background", "card-capsules_assets/sprites/IceBackground1.png");
         this.load.tilemap("level4", "card-capsules_assets/tilemaps/level4.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
@@ -57,14 +57,14 @@ export default class Level4 extends GameLevel {
 
     startScene(): void {
         // Add a background layer and set the background image on it
-        // this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
-        // let bg = this.add.sprite("background", "bg");
-        // bg.scale.set(18, 16);
-        // bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
+        this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
+        let bg = this.add.sprite("background", "bg");
+        bg.scale.set(16, 16);
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
         // Add the level 4 tilemap
         this.add.tilemap("level4", new Vec2(2, 2));
-        this.viewport.setBounds(0, 0, 80*32, 48*32);
+        this.viewport.setBounds(0, 0, 64*32, 45*32);
 
         this.playerSpawn = new Vec2(5*32, 38*32);
 
