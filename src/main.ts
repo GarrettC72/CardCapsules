@@ -19,9 +19,13 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "mainmenu", keys:["m"]},
             {name: "cancelPlacement", keys:["e"]},
             {name: "giveBlock", keys:["k"]},
-            {name: "selectFirstCard", keys:["1"]},
-            {name: "selectSecondCard", keys:["2"]},
-            {name: "selectThirdCard", keys:["3"]},
+            // {name: "selectFirstCard", keys:["1"]},
+            // {name: "selectSecondCard", keys:["2"]},
+            // {name: "selectThirdCard", keys:["3"]},
+            {name: "changeLevel1", keys:["1"]},
+            {name: "changeLevel2", keys:["2"]},
+            {name: "changeLevel3", keys:["3"]},
+            {name: "changeLevel4", keys:["4"]},
             {name: "invincible", keys:["i"]}
             //{name: "run", keys: ["shift"]}
         ],
