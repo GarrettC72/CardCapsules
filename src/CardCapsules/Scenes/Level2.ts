@@ -50,7 +50,7 @@ export default class Level2 extends GameLevel {
      * not a lot of load time for such a small project).
      */
     unloadScene(){
-        
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "lava_level"});
     }
 
     startScene(): void {
