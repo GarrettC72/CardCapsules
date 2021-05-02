@@ -34,7 +34,7 @@ export default class Level2 extends GameLevel {
         //this.load.audio("bunny_death", "hw4_assets/sounds/bunny_death.wav");
         //this.load.audio("hopper_death", "hw4_assets/sounds/hopper_death.wav");
        // this.load.audio("level_music", "hw4_assets/music/level_music.mp3");
-       this.load.audio("lava_level", "CardCapsules/dist/card-capsules_assets/Music");
+       this.load.audio("lava_level", "card-capsules_assets/Music/lava_level.mp3");
     }
 
     // HOMEWORK 4 - TODO
