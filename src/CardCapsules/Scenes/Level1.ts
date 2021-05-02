@@ -36,7 +36,7 @@ export default class Level1 extends GameLevel {
         //this.load.audio("player_death", "hw4_assets/sounds/player_death.wav");
         //this.load.audio("bunny_death", "hw4_assets/sounds/bunny_death.wav");
         //this.load.audio("hopper_death", "hw4_assets/sounds/hopper_death.wav");
-       // this.load.audio("level_music", "hw4_assets/music/level_music.mp3");
+        this.load.audio("level_music", "card-capsules_assets/Music/grassland.mp3");
     }
 
     // HOMEWORK 4 - TODO
@@ -65,7 +65,7 @@ export default class Level1 extends GameLevel {
         // this.load.keepAudio("hopper_death");
         // this.load.keepAudio("level_music");
 
-        // this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
+         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
     }
 
     startScene(): void {

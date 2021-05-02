@@ -85,7 +85,7 @@ export default class Level3 extends GameLevel {
         //     this.addEnemy("hopper", pos, {jumpy: true});
         // }
 
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lava_level", loop: true, holdReference: true});
     }
 
     updateScene(deltaT: number): void {
