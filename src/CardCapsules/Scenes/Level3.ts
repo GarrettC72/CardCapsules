@@ -29,6 +29,7 @@ export default class Level3 extends GameLevel {
         this.load.image("spring_block_ui", "card-capsules_assets/sprites/spring_block_ui.png");
         this.load.image("drill_block_ui", "card-capsules_assets/sprites/drill_block_ui.png");
         this.load.image("pause_button", "card-capsules_assets/sprites/pause_button.png");
+        this.load.audio("lava_level", "card-capsules_assets/Music/lava_level.mp3");
         //this.load.spritesheet("hopper", "hw4_assets/spritesheets/hopper.json");
         //this.load.spritesheet("bunny", "hw4_assets/spritesheets/ghostBunny.json");
         //this.load.audio("jump", "hw4_assets/sounds/jump.wav");
@@ -52,7 +53,7 @@ export default class Level3 extends GameLevel {
      * not a lot of load time for such a small project).
      */
     unloadScene(){
-        
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "lava_level"});
     }
 
     startScene(): void {
