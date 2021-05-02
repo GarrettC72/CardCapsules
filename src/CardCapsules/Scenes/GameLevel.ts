@@ -548,8 +548,10 @@ export default class GameLevel extends Scene {
         //TODO: drill block
         if(Input.isJustPressed("selectThirdCard") && this.pause.isHidden())
         {
-            this.selectedBlock = "";
-            this.activateCardPlacement();
+            if(GameLevel.drillBlockCardCount > 0){
+                this.selectedBlock = "drill_block";
+                this.activateCardPlacement();
+            }
         }
 
         if(Input.isJustPressed("invincible") && this.pause.isHidden())
