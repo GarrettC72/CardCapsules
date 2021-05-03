@@ -29,7 +29,7 @@ export default class LevelSelect extends Scene {
 
     startScene(): void {
         //Add a background layer and set the background image on it
-        this.addParallaxLayer("bg", new Vec2(0.25, 0), -100);
+        this.addParallaxLayer("bg", new Vec2(0, 0), -100);
         let bg = this.add.sprite("splash_background", "bg");
         bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
