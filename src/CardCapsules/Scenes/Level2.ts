@@ -43,6 +43,7 @@ export default class Level2 extends GameLevel {
        this.load.audio("jump", "card-capsules_assets/Sounds/jump.mp3");
        this.load.audio("spin", "card-capsules_assets/Sounds/spin.mp3");
        this.load.audio("block_placement", "card-capsules_assets/Sounds/block_placement.mp3");
+       this.load.audio("Rock_Death", "card-capsules_assets/Sounds/Rock_Death.mp3");
     }
 
     // HOMEWORK 4 - TODO

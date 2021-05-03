@@ -1225,7 +1225,7 @@ export default class GameLevel extends Scene {
             if(direction.dot(Vec2.DOWN) > 0.5 && !(<EnemyController>enemy.ai).spiky){
                 enemy.disablePhysics();
                 enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
-                //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "bunny_death", loop: false, holdReference: false});
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Rock_Death", loop: false, holdReference: false});
 
                 let tempVelocity = (<PlayerController>player.ai).velocity;
                 if(tempVelocity.y < 0){
