@@ -81,7 +81,7 @@ export default class Level6 extends GameLevel {
             this.addEnemy("Rock_Monster", pos, {});
         }
 
-        for(let pos of [new Vec2(42.5, 13), new Vec2(2.5,19), new Vec2(1.5,19), new Vec2(53.5,14), new Vec2(54.5,14), new Vec2(55.5,14), new Vec2(56.5,14), new Vec2(57.5,14)]){
+        for(let pos of [new Vec2(42.5, 13), new Vec2(2.5,19), new Vec2(1.5,19), new Vec2(3.5,19), new Vec2(53.5,14), new Vec2(54.5,14), new Vec2(55.5,14), new Vec2(56.5,14), new Vec2(57.5,14)]){
             this.addEnemy("Cactus", pos, {spiky: true});
         }
 
