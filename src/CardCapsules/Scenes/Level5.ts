@@ -10,6 +10,9 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level6 from "./Level6";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Color from "../../Wolfie2D/Utils/Color";
 
 export default class Level5 extends GameLevel {
     
@@ -93,7 +96,17 @@ export default class Level5 extends GameLevel {
             this.addEnemy("Cactus", pos, {spiky: true});
         }
 
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(2.5*32, 27.5*32), text: "The drill can destroy"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(2.5*32, 28.5*32), text: "any block in your path."}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(42*32, 28.5*32), text: "Which path will you take?"}));
+
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+    }
+
+    private addPropertiesToLabel(label: Label):void
+    {
+        label.textColor = Color.WHITE;
+        label.font = "PixelSimple";
     }
 
     updateScene(deltaT: number): void {
