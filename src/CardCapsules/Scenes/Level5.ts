@@ -59,7 +59,7 @@ export default class Level5 extends GameLevel {
      */
     unloadScene(){
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
-        
+        this.load.keepAudio("button_click_sfx");
     }
 
     startScene(): void {

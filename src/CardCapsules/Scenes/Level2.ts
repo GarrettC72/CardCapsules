@@ -59,6 +59,7 @@ export default class Level2 extends GameLevel {
      */
     unloadScene(){
         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "lava_level"});
+        this.load.keepAudio("button_click_sfx");
     }
 
     startScene(): void {

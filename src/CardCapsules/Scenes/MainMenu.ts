@@ -288,6 +288,7 @@ export default class MainMenu extends Scene {
             this.load.keepAudio("menu");
         }
         this.load.keepImage("splash_background");
+        this.load.keepAudio("button_click_sfx");
     }
 
     updateScene(): void{

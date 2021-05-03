@@ -172,6 +172,7 @@ export default class LevelSelect extends Scene {
             this.load.keepAudio("menu");
         }
         this.load.keepImage("splash_background");
+        this.load.keepAudio("button_click_sfx");
     }
 
     updateScene(): void{
@@ -215,6 +216,7 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
             }
 
@@ -238,6 +240,7 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level2, {}, sceneOptions);
             }
 
@@ -261,6 +264,7 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level3, {}, sceneOptions);
             }
 
@@ -284,6 +288,7 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level4, {}, sceneOptions);
             }
 
@@ -307,6 +312,7 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level5, {}, sceneOptions);
             }
 
@@ -330,11 +336,13 @@ export default class LevelSelect extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level6, {}, sceneOptions);
             }
 
 
             if(event.type === "menu"){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(MainMenu);
             }
         }

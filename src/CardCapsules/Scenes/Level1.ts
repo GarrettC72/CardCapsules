@@ -72,7 +72,8 @@ export default class Level1 extends GameLevel {
         // this.load.keepAudio("hopper_death");
         // this.load.keepAudio("level_music");
 
-         this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "level_music"});
+        this.load.keepAudio("button_click_sfx");
     }
 
     startScene(): void {
