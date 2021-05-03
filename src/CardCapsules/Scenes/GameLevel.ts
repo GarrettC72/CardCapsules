@@ -101,7 +101,9 @@ export default class GameLevel extends Scene {
     loadScene()
     {
         this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
+        this.load.audio("block_placement_sfx", "card-capsules_assets/Sounds/block_placement.mp3");
     }
+    
 
     startScene(): void {
         // Do the game level standard initializations
@@ -385,6 +387,9 @@ export default class GameLevel extends Scene {
 
                             this.incPlayerDrillBlockCards(-1);
                         }
+
+                        //play block_placement_sfx
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "block_placement_sfx", loop: false});
 
                         //patch up work.
                         this.unfreezeGame(); //unfreeze player and enemy movement.
