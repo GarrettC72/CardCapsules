@@ -38,7 +38,8 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
     // Create a game with the options specified
     const game = new Game(options);
 
-
+    game.GAME_CANVAS.style.cursor = "url(card-capsules_assets/sprites/mouse_cursor_rocket.png), default";
+    
     // Start our game
     game.start(MainMenu, {});
 })();
