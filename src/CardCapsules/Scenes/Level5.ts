@@ -59,10 +59,10 @@ export default class level5 extends GameLevel {
 
     startScene(): void {
         // Add a background layer and set the background image on it
-        // this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
-        // let bg = this.add.sprite("background", "bg");
-        // bg.scale.set(18, 16);
-        // bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
+        this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
+        let bg = this.add.sprite("background", "bg");
+        bg.scale.set(16, 16);
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
 
         // Add the level 4 tilemap
         this.add.tilemap("level5", new Vec2(2, 2));
