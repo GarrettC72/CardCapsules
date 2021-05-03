@@ -279,6 +279,7 @@ export default class GameLevel extends Scene {
                         this.player.isCollidable = false;
                         //this.player.tweens.play("dying", false);
                         this.player.tweens.play("flip2", false);
+                        
                         //this.player.animation.play("DYING", false);
                         //setTimeout(() => { this.player.tweens.play("jump", false); }, 500);
                         setTimeout(() => { this.player.unfreeze(); }, 1000);
@@ -1164,6 +1165,7 @@ export default class GameLevel extends Scene {
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     
                     //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
@@ -1187,6 +1189,7 @@ export default class GameLevel extends Scene {
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
@@ -1218,6 +1221,7 @@ export default class GameLevel extends Scene {
                     this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
