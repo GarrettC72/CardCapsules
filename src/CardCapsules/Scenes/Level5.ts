@@ -5,9 +5,13 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameLevel from "./GameLevel";
+import Level1 from "./Level1";
+import Level2 from "./Level2";
+import Level3 from "./Level3";
+import Level4 from "./Level4";
 import Level6 from "./Level6";
 
-export default class level5 extends GameLevel {
+export default class Level5 extends GameLevel {
     
     loadScene(): void {
         // Load resources
@@ -99,6 +103,138 @@ export default class level5 extends GameLevel {
             this.restartlevel();
         }
 
+        if(Input.isJustPressed("changeLevel1"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level1, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel2"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level2, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel3"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level3, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel4"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level4, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel5"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level5, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel6"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level6, {}, sceneOptions);
+        }
+
         Debug.log("playerpos", this.player.position.toString());
     }
 
@@ -121,6 +257,6 @@ export default class level5 extends GameLevel {
                 drillBlocks: 0
             }
         }
-        this.sceneManager.changeToScene(level5, {}, sceneOptions);
+        this.sceneManager.changeToScene(Level5, {}, sceneOptions);
     }
 }

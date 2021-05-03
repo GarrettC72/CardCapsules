@@ -9,6 +9,7 @@ import Level1 from "./Level1";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level5 from "./Level5";
+import Level6 from "./Level6";
 
 export default class Level4 extends GameLevel {
     
@@ -180,6 +181,50 @@ export default class Level4 extends GameLevel {
                 }
             }
             this.sceneManager.changeToScene(Level4, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel5"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level5, {}, sceneOptions);
+        }
+
+        if(Input.isJustPressed("changeLevel6"))
+        {
+            let sceneOptions = {
+                physics: {
+                    groupNames: ["ground", "player", "enemy", "card"],
+                    collisions:
+                    [
+                        [0, 1, 1, 0],
+                        [1, 0, 0, 1],
+                        [1, 0, 0, 0],
+                        [0, 1, 0, 0]
+                    ]
+                },
+                inventory: {
+                    floatingBlocks: 0, 
+                    springBlocks: 0, 
+                    drillBlocks: 0
+                }
+            }
+            this.sceneManager.changeToScene(Level6, {}, sceneOptions);
         }
 
         Debug.log("playerpos", this.player.position.toString());

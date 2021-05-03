@@ -158,12 +158,19 @@ export default class LevelSelect extends Scene {
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
+        if(!MainMenu.onMainMenu){
+            MainMenu.onMainMenu = true;
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
+        }
     }
 
     unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
+        if(!MainMenu.onMainMenu){
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
+        }else{
+            this.load.keepAudio("menu");
+        }
         this.load.keepImage("splash_background");
     }
 
@@ -190,7 +197,7 @@ export default class LevelSelect extends Scene {
                     enemy:  self - 0100, collisions - 0001
                     coin:   self - 1000, collisions - 0010
                 */
-
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
@@ -213,6 +220,7 @@ export default class LevelSelect extends Scene {
 
             if(event.type === "level2")
             {
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
@@ -235,6 +243,7 @@ export default class LevelSelect extends Scene {
 
             if(event.type === "level3")
             {
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
@@ -257,6 +266,7 @@ export default class LevelSelect extends Scene {
 
             if(event.type === "level4")
             {
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
@@ -279,6 +289,7 @@ export default class LevelSelect extends Scene {
 
             if(event.type === "level5")
             {
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
@@ -301,6 +312,7 @@ export default class LevelSelect extends Scene {
 
             if(event.type === "level6")
             {
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],

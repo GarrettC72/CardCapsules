@@ -23,11 +23,13 @@ export default class MainMenu extends Scene {
     private help: Layer;
     private splash: Layer;
     private static start: boolean = false;
+    static onMainMenu: boolean = false;
 
     loadScene(): void {
         // Load the menu song
         //this.load.audio("menu", "card-capsules_assets/music/menu.mp3");
         this.load.image("splash_background", "card-capsules_assets/sprites/CardCapsuleSplashScreen.png");
+        this.load.audio("menu", "card-capsules_assets/Music/TitleScreen.mp3");
     }
 
     startScene(): void {
@@ -36,9 +38,9 @@ export default class MainMenu extends Scene {
         let bg = this.add.sprite("splash_background", "bg");
         bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y);
         
-
         this.mainMenu = this.addUILayer("Main");
         this.mainMenu.setHidden(!MainMenu.start);
+        
 
         // Center the viewport
         let size = this.viewport.getHalfSize();
@@ -271,12 +273,19 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
-        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
+        if(!MainMenu.onMainMenu){
+            MainMenu.onMainMenu = true;
+            this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "menu", loop: true, holdReference: true});
+        }
     }
 
     unloadScene(): void {
         // The scene is being destroyed, so we can stop playing the song
-        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
+        if(!MainMenu.onMainMenu){
+            this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: "menu"});
+        }else{
+            this.load.keepAudio("menu");
+        }
         this.load.keepImage("splash_background");
     }
 
@@ -303,7 +312,7 @@ export default class MainMenu extends Scene {
                     enemy:  self - 0100, collisions - 0001
                     coin:   self - 1000, collisions - 0010
                 */
-
+                MainMenu.onMainMenu = false;
                 let sceneOptions = {
                     physics: {
                         groupNames: ["ground", "player", "enemy", "card"],
