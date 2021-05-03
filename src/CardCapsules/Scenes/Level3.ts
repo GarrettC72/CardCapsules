@@ -93,6 +93,9 @@ export default class Level3 extends GameLevel {
         // for(let pos of [new Vec2(51, 17)]){
         //     this.addEnemy("hopper", pos, {jumpy: true});
         // }
+        for(let pos of [new Vec2(23, 34)]){
+            this.addEnemy("Rock_Monster", pos, {});
+        }
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lava_level", loop: true, holdReference: true});
     }

@@ -85,7 +85,9 @@ export default class Level4 extends GameLevel {
 
         this.nextLevel = Level5;
 
-        
+        for(let pos of [new Vec2(17, 44), new Vec2(29, 27)]){
+            this.addEnemy("Rock_Monster", pos, {});
+        }
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
     }
