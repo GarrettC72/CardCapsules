@@ -14,6 +14,7 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
+import Level6 from "./Level6";
 //import Level2 from "./Level2";
 
 export default class LevelSelect extends Scene {
@@ -125,9 +126,10 @@ export default class LevelSelect extends Scene {
         const level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y + 100), text: "6"});
         level6Btn.size.set(100, 100);
         level6Btn.borderWidth = 2;
-        level6Btn.borderColor = Color.RED;
+        level6Btn.borderColor = Color.BLACK;
         level6Btn.setTextColor(Color.WHITE);
         level6Btn.setBackgroundColor(buttonColor);
+        level6Btn.onClickEventId = "level6";
 
         const levelBack = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 250), text: "Back"});
         levelBack.size.set(200, 50);
@@ -152,6 +154,7 @@ export default class LevelSelect extends Scene {
         this.receiver.subscribe("level3");
         this.receiver.subscribe("level4");
         this.receiver.subscribe("level5");
+        this.receiver.subscribe("level6");
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
@@ -294,6 +297,28 @@ export default class LevelSelect extends Scene {
                     }
                 }
                 this.sceneManager.changeToScene(Level5, {}, sceneOptions);
+            }
+
+            if(event.type === "level6")
+            {
+                let sceneOptions = {
+                    physics: {
+                        groupNames: ["ground", "player", "enemy", "card"],
+                        collisions:
+                        [
+                            [0, 1, 1, 0],
+                            [1, 0, 0, 1],
+                            [1, 0, 0, 0],
+                            [0, 1, 0, 0]
+                        ]
+                    },
+                    inventory: {
+                        floatingBlocks: 0, 
+                        springBlocks: 0, 
+                        drillBlocks: 0
+                    }
+                }
+                this.sceneManager.changeToScene(Level6, {}, sceneOptions);
             }
 
 
