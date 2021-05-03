@@ -5,6 +5,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
 import GameLevel from "./GameLevel";
+import Level6 from "./Level6";
 
 export default class level5 extends GameLevel {
     
@@ -69,9 +70,10 @@ export default class level5 extends GameLevel {
         // Do generic setup for a GameLevel
         super.startScene();
 
-        this.addLevelEnd(new Vec2(58, 15), new Vec2(1, 1));
+        this.addLevelEnd(new Vec2(36, 4), new Vec2(1, 1));
+        //this.addLevelEnd(new Vec2(58, 15), new Vec2(1, 1));
 
-        //this.nextLevel = Level2;
+        this.nextLevel = Level6;
 
         //Add enemies of various types
         //Add enemies of various types
