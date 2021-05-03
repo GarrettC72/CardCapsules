@@ -18,6 +18,10 @@ export default class OnGround extends EnemyState {
 		if(!this.owner.onGround && this.parent.jumpy && this.owner.active){
 			this.finished(EnemyStates.JUMP);
 		}
+
+		if(!this.owner.onGround && this.parent.spiky && this.owner.active){
+			this.finished(EnemyStates.JUMP);
+		}
 	}
 
 	onExit(): Record<string, any> {
