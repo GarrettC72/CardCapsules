@@ -18,7 +18,7 @@ export default class Level6 extends GameLevel {
         super.loadScene();
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.image("background", "card-capsules_assets/sprites/IceBackground1.png");
+        this.load.image("background", "card-capsules_assets/sprites/IceBackground2.png");
         this.load.tilemap("level6", "card-capsules_assets/tilemaps/level6.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");

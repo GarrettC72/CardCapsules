@@ -17,7 +17,7 @@ export default class Level2 extends GameLevel {
         // Load resources
         super.loadScene();
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
-        this.load.image("background", "card-capsules_assets/sprites/GrassBackgroundTutorial.png");
+        this.load.image("background", "card-capsules_assets/sprites/GrassBackgroundTutorial2.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
         this.load.tilemap("level2", "card-capsules_assets/tilemaps/level2.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
