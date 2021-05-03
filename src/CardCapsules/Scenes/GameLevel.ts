@@ -459,7 +459,7 @@ export default class GameLevel extends Scene {
                     {
                         this.activateCardPlacement();
                     }
-                    
+
                 }
                 break;
 

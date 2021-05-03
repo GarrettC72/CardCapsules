@@ -14,7 +14,7 @@ export default class Level2 extends GameLevel {
     loadScene(): void {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
-        this.load.image("background", "card-capsules_assets/sprites/LavaBackground1.png");
+        this.load.image("background", "card-capsules_assets/sprites/GrassBackgroundTutorial.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
         this.load.tilemap("level2", "card-capsules_assets/tilemaps/level2.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
@@ -36,7 +36,7 @@ export default class Level2 extends GameLevel {
         //this.load.audio("bunny_death", "hw4_assets/sounds/bunny_death.wav");
         //this.load.audio("hopper_death", "hw4_assets/sounds/hopper_death.wav");
        // this.load.audio("level_music", "hw4_assets/music/level_music.mp3");
-       this.load.audio("lava_level", "card-capsules_assets/Music/lava_level.mp3");
+       this.load.audio("lava_level", "card-capsules_assets/Music/grassland.mp3");
     }
 
     // HOMEWORK 4 - TODO
@@ -66,7 +66,7 @@ export default class Level2 extends GameLevel {
         this.add.tilemap("level2", new Vec2(2, 2));
         this.viewport.setBounds(0, 0, 64*32, 36*32);
 
-        this.playerSpawn = new Vec2(3*32, 11*32);
+        this.playerSpawn = new Vec2(3*32, 27*32);
 
         // Do generic setup for a GameLevel
         super.startScene();
@@ -83,6 +83,10 @@ export default class Level2 extends GameLevel {
         // for(let pos of [new Vec2(51, 17)]){
         //     this.addEnemy("hopper", pos, {jumpy: true});
         // }
+
+        for(let pos of [new Vec2(51, 17)]){
+            this.addEnemy("Rock_Monster", pos, {});
+        }
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lava_level", loop: true, holdReference: true});
     }

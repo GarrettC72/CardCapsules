@@ -8,6 +8,7 @@ import GameLevel from "./GameLevel";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
+import Level5 from "./Level5";
 
 export default class Level4 extends GameLevel {
     
@@ -15,7 +16,7 @@ export default class Level4 extends GameLevel {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.image("background", "card-capsules_assets/sprites/IceBackground1.png");
+        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
         this.load.tilemap("level4", "card-capsules_assets/tilemaps/level4.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
@@ -36,7 +37,7 @@ export default class Level4 extends GameLevel {
         //this.load.audio("player_death", "hw4_assets/sounds/player_death.wav");
         //this.load.audio("bunny_death", "hw4_assets/sounds/bunny_death.wav");
         //this.load.audio("hopper_death", "hw4_assets/sounds/hopper_death.wav");
-        this.load.audio("level_music", "card-capsules_assets/Music/ice_level.mp3");
+        this.load.audio("level_music", "card-capsules_assets/Music/lava_level.mp3");
     }
 
     // HOMEWORK 4 - TODO
@@ -64,25 +65,18 @@ export default class Level4 extends GameLevel {
 
         // Add the level 4 tilemap
         this.add.tilemap("level4", new Vec2(2, 2));
-        this.viewport.setBounds(0, 0, 64*32, 45*32);
+        this.viewport.setBounds(0, 0, 80*32, 48*32);
 
-        this.playerSpawn = new Vec2(5*32, 38*32);
+        this.playerSpawn = new Vec2(5*32, 35*32);
 
         // Do generic setup for a GameLevel
         super.startScene();
 
         this.addLevelEnd(new Vec2(36, 4), new Vec2(1, 1));
 
-        //this.nextLevel = Level2;
+        this.nextLevel = Level5;
 
-        //Add enemies of various types
-        for(let pos of [new Vec2(29, 39), new Vec2(47,20), new Vec2(57,32)]){
-            this.addEnemy("Rock_Monster", pos, {});
-        }
-
-        for(let pos of [new Vec2(14.5, 29), new Vec2(8.5,29), new Vec2(29.5,21), new Vec2(30.5,17), new Vec2(35.5,15), new Vec2(46.5,20)]){
-            this.addEnemy("Cactus", pos, {spiky: true});
-        }
+        
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
     }

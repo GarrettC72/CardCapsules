@@ -16,7 +16,7 @@ export default class Level3 extends GameLevel {
         // Load resources
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
-        this.load.image("background", "card-capsules_assets/sprites/LavaBackground2.png");
+        this.load.image("background", "card-capsules_assets/sprites/LavaBackground1.png");
         this.load.tilemap("level3", "card-capsules_assets/tilemaps/level3.json");
         this.load.spritesheet("player", "card-capsules_assets/spritesheets/Spaceman.json");
         this.load.spritesheet("floating_block", "card-capsules_assets/spritesheets/floating_block.json");
@@ -65,11 +65,11 @@ export default class Level3 extends GameLevel {
 
         // Add the level 2 tilemap
         this.add.tilemap("level3", new Vec2(2, 2));
-        this.viewport.setBounds(0, 0, 80*32, 48*32);
+        this.viewport.setBounds(0, 0, 64*32, 36*32);
 
-        this.playerSpawn = new Vec2(3*32, 30*32);
+        this.playerSpawn = new Vec2(3*32, 15*32);
 
-        // Do generic setup for a GameLevel
+        // Do generic setup for a GameLevelda
         super.startScene();
 
         this.addLevelEnd(new Vec2(73, 8), new Vec2(1, 1));
