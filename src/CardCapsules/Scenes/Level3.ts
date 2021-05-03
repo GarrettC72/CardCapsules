@@ -60,8 +60,8 @@ export default class Level3 extends GameLevel {
         // Add a background layer and set the background image on it
         this.addParallaxLayer("bg", new Vec2(0.25, 0.1), -100);
         let bg = this.add.sprite("background", "bg");
-        bg.scale.set(18, 16);
-        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y + 20);
+        bg.scale.set(16, 16);
+        bg.position.set(bg.boundary.halfSize.x, bg.boundary.halfSize.y - 50);
 
         // Add the level 2 tilemap
         this.add.tilemap("level3", new Vec2(2, 2));
