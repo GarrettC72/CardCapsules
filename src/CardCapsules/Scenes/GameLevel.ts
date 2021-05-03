@@ -98,6 +98,11 @@ export default class GameLevel extends Scene {
         console.log("Drill Card cound" + GameLevel.drillBlockCardCount);
     }
 
+    loadScene()
+    {
+        this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
+    }
+
     startScene(): void {
         // Do the game level standard initializations
         this.initLayers();
@@ -458,6 +463,7 @@ export default class GameLevel extends Scene {
                     //runs when the player clicks on a card. Using game event mouse_up to prevent card from being selected on mouse press only.
                     if(this.selectedBlock !== "" && !this.grid.isShowGrid())
                     {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                         this.activateCardPlacement();
                     }
 
@@ -468,6 +474,7 @@ export default class GameLevel extends Scene {
                 {
                     this.pause.setHidden(false);
                     this.freezeGame();
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 }
                 break;
 
@@ -475,23 +482,29 @@ export default class GameLevel extends Scene {
                 {
                     this.pause.setHidden(true);
                     this.unfreezeGame();
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 }
                 break;
 
                 case "levelSelect":
                 {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                     this.sceneManager.changeToScene(LevelSelect);
+                    
                 }
                 break;
 
                 case "restart":
                 {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                     this.restartlevel();
+                    
                 }
                 break;
 
                 case "mainMenu":
                 {
+                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                     this.sceneManager.changeToScene(MainMenu);
                 }
                 break;

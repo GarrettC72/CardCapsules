@@ -28,6 +28,7 @@ export default class MainMenu extends Scene {
     loadScene(): void {
         // Load the menu song
         //this.load.audio("menu", "card-capsules_assets/music/menu.mp3");
+        this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
         this.load.image("splash_background", "card-capsules_assets/sprites/CardCapsuleSplashScreen.png");
         this.load.audio("menu", "card-capsules_assets/Music/TitleScreen.mp3");
     }
@@ -330,21 +331,25 @@ export default class MainMenu extends Scene {
                         drillBlocks: 0
                     }
                 }
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
             }
 
             if(event.type === "level" ){
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                 this.sceneManager.changeToScene(LevelSelect);
             }
 
             if(event.type == "controls"){
                 this.controls.setHidden(false);
                 this.mainMenu.setHidden(true);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
             }
 
             if(event.type === "help"){
                 this.help.setHidden(false);
                 this.mainMenu.setHidden(true);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
             }
 
             if(event.type === "menu"){
@@ -353,6 +358,7 @@ export default class MainMenu extends Scene {
                 this.help.setHidden(true);
                 this.splash.setHidden(true);
                 MainMenu.start = true;
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
             }
         }
     }

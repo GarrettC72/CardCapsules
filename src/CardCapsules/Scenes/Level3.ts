@@ -16,6 +16,7 @@ export default class Level3 extends GameLevel {
     
     loadScene(): void {
         // Load resources
+        super.loadScene();
         //this.load.image("background", "hw4_assets/sprites/2bitbackground.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
         this.load.image("background", "card-capsules_assets/sprites/LavaBackground1.png");

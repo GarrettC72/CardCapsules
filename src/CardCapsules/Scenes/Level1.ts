@@ -17,6 +17,7 @@ export default class Level1 extends GameLevel {
     
     loadScene(): void {
         // Load resources
+        super.loadScene();
         this.load.image("background", "card-capsules_assets/sprites/GrassBackgroundTutorial.png");
         //this.load.image("coin", "hw4_assets/sprites/coin.png");
         this.load.tilemap("level1", "card-capsules_assets/tilemaps/level1.json");
