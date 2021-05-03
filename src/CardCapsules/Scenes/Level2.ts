@@ -10,6 +10,10 @@ import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
 import Level6 from "./Level6";
+import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
+import Label from "../../Wolfie2D/Nodes/UIElements/Label";
+import Color from "../../Wolfie2D/Utils/Color";
+
 
 export default class Level2 extends GameLevel {
     
@@ -96,8 +100,19 @@ export default class Level2 extends GameLevel {
             this.addEnemy("Rock_Monster", pos, {});
         }
 
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(14*32, 31*32), text: "Spring blocks can be used to gain momentum in the direction that they are facing."}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(14*32, 32.5*32), text: "Try placing them on the blue tiles!"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(32.5*32, 29*32), text: "Blocks can be combined to reach new heights"}));
+        this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(50*32, 21*32), text: "Springs also affect enemies, try it on this rock monster!"}));
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "lava_level", loop: true, holdReference: true});
     }
+
+    private addPropertiesToLabel(label: Label):void
+    {
+        label.textColor = Color.WHITE;
+        label.font = "PixelSimple";
+    }
+
 
     updateScene(deltaT: number): void {
         super.updateScene(deltaT);
