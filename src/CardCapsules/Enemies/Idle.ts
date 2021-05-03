@@ -28,7 +28,7 @@ export default class Idle extends OnGround {
 				this.finished(EnemyStates.WALK);
 			}
 			if(this.owner.position.x - pos.x > (22*10) && (this.parent.spiky)){
-				this.finished(EnemyStates.IDLE);
+				this.finished(EnemyStates.WALK);
 			}
 		}
 	}

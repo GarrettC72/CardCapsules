@@ -24,7 +24,7 @@ export default class Walk extends OnGround {
 			this.finished(EnemyStates.JUMP);
 			this.parent.velocity.y = -300;
 		}
-		if(this.parent.spiky && (Date.now() - this.time > 500)){
+		if(this.parent.spiky){
 			this.finished(EnemyStates.JUMP);
 			this.parent.velocity.y = -300;
 		}
