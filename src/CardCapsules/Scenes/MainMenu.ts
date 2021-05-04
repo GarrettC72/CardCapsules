@@ -21,6 +21,7 @@ export default class MainMenu extends Scene {
     private levelSelect: Layer;
     private controls: Layer;
     private help: Layer;
+    private cheats: Layer;
     private splash: Layer;
     private static start: boolean = false;
     static onMainMenu: boolean = false;
@@ -139,20 +140,20 @@ export default class MainMenu extends Scene {
         const controlsBackground = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y), text: ""});
         controlsBackground.setBackgroundColor(new Color(247,222,146,0.8));
         controlsBackground.borderColor = buttonColor;
-        controlsBackground.size.set(550,600);
+        controlsBackground.size.set(675,600);
         controlsBackground.borderWidth = 5;
 
         const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 250), text: "Controls"});
         controlsHeader.setTextColor(Color.BLACK);
         controlsHeader.fontSize = 60;
 
-        const controlsText1 = "Press A to move left.";
-        const controlsText2 = "Press D to move right.";
-        const controlsText3 = "Press W or Space to jump.";
-        const controlsText4 = "Press R to restart a level.";
-        const controlsText5 = "Press M to return to the main menu.";
-        const controlsText6 = "Click on a card to start placing it. Then";
-        const controlsText7 = "click to place. Press E to cancel.";
+        const controlsText1 = "Press A to move left. Press D to move right.";
+        const controlsText2 = "Press W or Space to jump.";
+        const controlsText3 = "Press R to restart a level.";
+        const controlsText4 = "Press M to return to the main menu.";
+        const controlsText5 = "Click on a card to start placing it. Then";
+        const controlsText6 = "click to place. Press E to cancel.";
+        const controlsText7 = "Pressing Z, X, or C will also start placing the card.";
 
         const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 150), text: controlsText1});
         const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 100), text: controlsText2});
@@ -208,7 +209,7 @@ export default class MainMenu extends Scene {
         const helpText5 = "objective is to reach the wreckage of their ship and to repair";
         const helpText6 = "it with the card capsules that they find from the remnants that";
         const helpText7 = "scattered the planet when the ship crash landed.";
-        const helpText8 = "Cheat Code: Press K to add 10 floating blocks and 10 spring blocks"
+        //const helpText8 = "Cheat Code: Press K to add 10 floating blocks and 10 spring blocks"
 
         const helpLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 250), text: helpText1});
         const helpLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 175), text: helpText2});
@@ -217,7 +218,7 @@ export default class MainMenu extends Scene {
         const helpLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 25), text: helpText5});
         const helpLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 25), text: helpText6});
         const helpLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 75), text: helpText7});
-        const helpLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 150), text: helpText8});
+        //const helpLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 150), text: helpText8});
 
         helpLine1.setTextColor(Color.BLACK);
         helpLine2.setTextColor(Color.BLACK);
@@ -226,7 +227,14 @@ export default class MainMenu extends Scene {
         helpLine5.setTextColor(Color.BLACK);
         helpLine6.setTextColor(Color.BLACK);
         helpLine7.setTextColor(Color.BLACK);
-        helpLine8.setTextColor(Color.BLACK);
+        //helpLine8.setTextColor(Color.BLACK);
+
+        const cheatsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Help", {position: new Vec2(size.x, size.y + 150), text: "Cheat Codes"});
+        cheatsBtn.size.set(200, 50);
+        cheatsBtn.borderWidth = 2;
+        cheatsBtn.borderColor = Color.BLACK;
+        cheatsBtn.setBackgroundColor(buttonColor);
+        cheatsBtn.onClickEventId = "cheats";
 
         const helpBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Help", {position: new Vec2(size.x, size.y + 250), text: "Back"});
         helpBack.size.set(200, 50);
@@ -244,6 +252,45 @@ export default class MainMenu extends Scene {
         //     helpBack.setBackgroundColor(Color.TRANSPARENT);
         //     helpBack.setTextColor(Color.WHITE);
         // }
+
+        //Create a help screen
+        this.cheats = this.addUILayer("Cheats");
+        this.cheats.setHidden(true);
+
+        const cheatsBackground = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y), text: ""});
+        cheatsBackground.setBackgroundColor(new Color(247,222,146,0.8));
+        cheatsBackground.borderColor = buttonColor;
+        cheatsBackground.size.set(550,500);
+        cheatsBackground.borderWidth = 5;
+
+        const cheatsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y - 200), text: "Cheat Codes"});
+        cheatsHeader.setTextColor(Color.BLACK);
+        cheatsHeader.fontSize = 60;
+
+        const cheatsText1 = "Press K to add 10 floating blocks,";
+        const cheatsText2 = "10 spring blocks, and 10 drill blocks.";
+        const cheatsText3 = "Press I to make the player invincible.";
+        const cheatsText4 = "In any level, press 1, 2, 3, 4, 5, or 6";
+        const cheatsText5 = "to switch to that level.";
+
+        const cheatsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y - 100), text: cheatsText1});
+        const cheatsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y - 50), text: cheatsText2});
+        const cheatsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y), text: cheatsText3});
+        const cheatsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y + 50), text: cheatsText4});
+        const cheatsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Cheats", {position: new Vec2(size.x, size.y + 100), text: cheatsText5});
+
+        cheatsLine1.setTextColor(Color.BLACK);
+        cheatsLine2.setTextColor(Color.BLACK);
+        cheatsLine3.setTextColor(Color.BLACK);
+        cheatsLine4.setTextColor(Color.BLACK);
+        cheatsLine5.setTextColor(Color.BLACK);
+
+        const cheatsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Cheats", {position: new Vec2(size.x, size.y + 200), text: "Help"});
+        cheatsBack.size.set(200, 50);
+        cheatsBack.borderWidth = 2;
+        cheatsBack.borderColor = Color.BLACK;
+        cheatsBack.setBackgroundColor(buttonColor);
+        cheatsBack.onClickEventId = "help";
 
         //Set up splash screen
         this.splash = this.addUILayer("Splash");
@@ -271,6 +318,7 @@ export default class MainMenu extends Scene {
         this.receiver.subscribe("level");
         this.receiver.subscribe("controls");
         this.receiver.subscribe("help");
+        this.receiver.subscribe("cheats");
         this.receiver.subscribe("menu");
 
         // Scene has started, so start playing music
@@ -350,6 +398,13 @@ export default class MainMenu extends Scene {
             if(event.type === "help"){
                 this.help.setHidden(false);
                 this.mainMenu.setHidden(true);
+                this.cheats.setHidden(true);
+                this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
+            }
+
+            if(event.type === "cheats"){
+                this.cheats.setHidden(false);
+                this.help.setHidden(true);
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
             }
 
