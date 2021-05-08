@@ -83,6 +83,8 @@ export default class Level4 extends GameLevel {
         this.addLevelEnd(new Vec2(73, 8), new Vec2(1, 1));
         //this.addLevelEnd(new Vec2(36, 4), new Vec2(1, 1));
 
+        this.updateUnlockedLevel(4);
+
         this.nextLevel = Level5;
 
         for(let pos of [new Vec2(17, 44), new Vec2(29, 27)]){

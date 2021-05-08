@@ -9,6 +9,7 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 
 import MainMenu from "./MainMenu";
+import GameLevel from "./GameLevel";
 import Level1 from "./Level1";
 import Level2 from "./Level2";
 import Level3 from "./Level3";
@@ -76,7 +77,7 @@ export default class LevelSelect extends Scene {
         level2Btn.borderWidth = 2;
         level2Btn.borderColor = Color.BLACK;
         level2Btn.setTextColor(Color.WHITE);
-        level2Btn.setBackgroundColor(buttonColor);
+        level2Btn.setBackgroundColor(GameLevel.unlockedLevel >= 2 ? buttonColor : Color.RED);
         // level2Btn.onEnter = () => {
         //     level2Btn.borderColor = Color.BLACK;
         //     level2Btn.setBackgroundColor(Color.WHITE);
@@ -94,7 +95,7 @@ export default class LevelSelect extends Scene {
         level3Btn.borderWidth = 2;
         level3Btn.borderColor = Color.BLACK;
         level3Btn.setTextColor(Color.WHITE);
-        level3Btn.setBackgroundColor(buttonColor);
+        level3Btn.setBackgroundColor(GameLevel.unlockedLevel >= 3 ? buttonColor : Color.RED);
         // level3Btn.onEnter = () => {
         //     level3Btn.borderColor = Color.BLACK;
         //     level3Btn.setBackgroundColor(Color.WHITE);
@@ -112,7 +113,7 @@ export default class LevelSelect extends Scene {
         level4Btn.borderWidth = 2;
         level4Btn.borderColor = Color.BLACK;
         level4Btn.setTextColor(Color.WHITE);
-        level4Btn.setBackgroundColor(buttonColor);
+        level4Btn.setBackgroundColor(GameLevel.unlockedLevel >= 4 ? buttonColor : Color.RED);
         level4Btn.onClickEventId = "level4";
 
         const level5Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 100), text: "5"});
@@ -120,7 +121,7 @@ export default class LevelSelect extends Scene {
         level5Btn.borderWidth = 2;
         level5Btn.borderColor = Color.BLACK;
         level5Btn.setTextColor(Color.WHITE);
-        level5Btn.setBackgroundColor(buttonColor);
+        level5Btn.setBackgroundColor(GameLevel.unlockedLevel >= 5 ? buttonColor : Color.RED);
         level5Btn.onClickEventId = "level5";
 
         const level6Btn = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x + 300, size.y + 100), text: "6"});
@@ -128,7 +129,7 @@ export default class LevelSelect extends Scene {
         level6Btn.borderWidth = 2;
         level6Btn.borderColor = Color.BLACK;
         level6Btn.setTextColor(Color.WHITE);
-        level6Btn.setBackgroundColor(buttonColor);
+        level6Btn.setBackgroundColor(GameLevel.unlockedLevel >= 6 ? buttonColor : Color.RED);
         level6Btn.onClickEventId = "level6";
 
         const levelBack = <Button>this.add.uiElement(UIElementType.BUTTON, "LevelSelect", {position: new Vec2(size.x, size.y + 250), text: "Back"});
@@ -220,7 +221,7 @@ export default class LevelSelect extends Scene {
                 this.sceneManager.changeToScene(Level1, {}, sceneOptions);
             }
 
-            if(event.type === "level2")
+            if(event.type === "level2" && GameLevel.unlockedLevel >= 2)
             {
                 MainMenu.onMainMenu = false;
                 let sceneOptions = {
@@ -244,7 +245,7 @@ export default class LevelSelect extends Scene {
                 this.sceneManager.changeToScene(Level2, {}, sceneOptions);
             }
 
-            if(event.type === "level3")
+            if(event.type === "level3" && GameLevel.unlockedLevel >= 3)
             {
                 MainMenu.onMainMenu = false;
                 let sceneOptions = {
@@ -268,7 +269,7 @@ export default class LevelSelect extends Scene {
                 this.sceneManager.changeToScene(Level3, {}, sceneOptions);
             }
 
-            if(event.type === "level4")
+            if(event.type === "level4" && GameLevel.unlockedLevel >= 4)
             {
                 MainMenu.onMainMenu = false;
                 let sceneOptions = {
@@ -292,7 +293,7 @@ export default class LevelSelect extends Scene {
                 this.sceneManager.changeToScene(Level4, {}, sceneOptions);
             }
 
-            if(event.type === "level5")
+            if(event.type === "level5" && GameLevel.unlockedLevel >= 5)
             {
                 MainMenu.onMainMenu = false;
                 let sceneOptions = {
@@ -316,7 +317,7 @@ export default class LevelSelect extends Scene {
                 this.sceneManager.changeToScene(Level5, {}, sceneOptions);
             }
 
-            if(event.type === "level6")
+            if(event.type === "level6" && GameLevel.unlockedLevel >= 6)
             {
                 MainMenu.onMainMenu = false;
                 let sceneOptions = {

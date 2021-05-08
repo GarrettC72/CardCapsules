@@ -85,6 +85,8 @@ export default class Level2 extends GameLevel {
 
         this.addLevelEnd(new Vec2(58, 15), new Vec2(1, 1));
 
+        this.updateUnlockedLevel(2);
+
         this.nextLevel = Level3;
 
         //Add enemies of various types

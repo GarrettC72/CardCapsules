@@ -84,6 +84,9 @@ export default class GameLevel extends Scene {
 
     protected pause: Layer;
 
+    // Track which levels are unlocked
+    static unlockedLevel: number = 1;
+
 
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
@@ -1338,10 +1341,15 @@ export default class GameLevel extends Scene {
             this.drillBlockCardUI.alpha = 1;
     }
 
+    protected updateUnlockedLevel(level: number): void{
+        GameLevel.unlockedLevel = Math.max(GameLevel.unlockedLevel, level);
+    }
+
     /**
      * Returns the player to spawn
      */
     protected respawnPlayer(): void {
         this.player.position.copy(this.playerSpawn);
     }
+
 }
