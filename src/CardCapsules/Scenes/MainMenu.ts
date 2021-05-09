@@ -154,14 +154,16 @@ export default class MainMenu extends Scene {
         const controlsText5 = "Click on a card to start placing it. Then";
         const controlsText6 = "click to place. Press E to cancel.";
         const controlsText7 = "Pressing Z, X, or C will also start placing the card.";
+        const controlsText8 = "Press V to undo the last block placed.";
 
-        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 150), text: controlsText1});
-        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 100), text: controlsText2});
-        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 50), text: controlsText3});
-        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y), text: controlsText4});
-        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 50), text: controlsText5});
-        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 100), text: controlsText6});
-        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 150), text: controlsText7});
+        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 175), text: controlsText1});
+        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 125), text: controlsText2});
+        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 75), text: controlsText3});
+        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 25), text: controlsText4});
+        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 25), text: controlsText5});
+        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 75), text: controlsText6});
+        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 125), text: controlsText7});
+        const controlsLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 175), text: controlsText8});
 
         controlsLine1.setTextColor(Color.BLACK);
         controlsLine2.setTextColor(Color.BLACK);
@@ -170,6 +172,7 @@ export default class MainMenu extends Scene {
         controlsLine5.setTextColor(Color.BLACK);
         controlsLine6.setTextColor(Color.BLACK);
         controlsLine7.setTextColor(Color.BLACK);
+        controlsLine8.setTextColor(Color.BLACK);
 
         const controlsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Controls", {position: new Vec2(size.x, size.y + 250), text: "Back"});
         controlsBack.size.set(200, 50);

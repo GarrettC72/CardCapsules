@@ -172,6 +172,7 @@ export default class GridNode extends CanvasNode
         //let blockHere = this.isThereBlockAt(new Vec2(row, col));
         let faceDirection = SPRING_BLOCK_ENUMS.FACING_TOP;
         let blockId = -1; //id used to know which blocks to destory for the drill block. -1 means a tilemap block, > 0 means floating_block, spring_block, etc.
+        let blockName = ""; //name of block that was destroyed by block
 
 
         if(this.blockName === "floating_block")
@@ -215,6 +216,7 @@ export default class GridNode extends CanvasNode
             {
                 canPlace = true;
                 blockId = this.getBlockIdAt(new Vec2(row, col));
+                blockName = this.getBlockAt(new Vec2(row, col));
             }
                 
         }
@@ -237,7 +239,7 @@ export default class GridNode extends CanvasNode
             if(canPlace)
             {
                 this.emitter.fireEvent(CC_EVENTS.TIME_RESUME);
-                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col, orientation: faceDirection, blockId: blockId});
+                this.emitter.fireEvent(CC_EVENTS.PLACE_BLOCK, {row: row, col: col, orientation: faceDirection, blockId: blockId, blockName: blockName});
             }
             else
             {

@@ -87,9 +87,30 @@ export default class GameLevel extends Scene {
     // Track which levels are unlocked
     static unlockedLevel: number = 1;
 
-
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
+
+    //Track properties that will be reverted to with undo
+    protected previousState: {
+        previousPlayerPosition: Vec2, // position of the player when the block was placed
+        previousBlockRow: number, // row of the block that was placed
+        previousBlockCol: number, // col of the block that was placed
+        previousBlockId: number, // id of the original block before new block was placed
+        previousBlockType: number, // blockType = 0 for Main tilemap, blockType = 1 for GridNodes (used for undoing drill)
+        previousBlockName: string, //name of block that was destroyed
+        previousBlockRotation: SPRING_BLOCK_ENUMS,
+        blockPlaced: string // string representing the block that was placed
+    } = {
+        previousPlayerPosition : new Vec2(0,0),
+        previousBlockRow : 0,
+        previousBlockCol : 0,
+        previousBlockId : 0,
+        previousBlockType : 0,
+        previousBlockName : "",
+        previousBlockRotation: SPRING_BLOCK_ENUMS.FACING_TOP,
+        blockPlaced : ""
+    }
+    protected hasUndo: boolean = false;
 
     initScene(): void{
         // if(GameLevel.livesCount === 0){
@@ -357,13 +378,20 @@ export default class GameLevel extends Scene {
                         //this.selectedBlock stores the card name that is currectly selected.
                         let row = event.data.get("row");
                         let col = event.data.get("col");
-                            
+
+                        // Initialize previous state data
+                        this.hasUndo = true;
+                        this.previousState.previousPlayerPosition = this.player.position.clone();
+                        this.previousState.previousBlockRow = row;
+                        this.previousState.previousBlockCol = col;
+                        this.previousState.blockPlaced = this.selectedBlock;
                         
                         if(this.selectedBlock === "floating_block")
                         {
                             //places floating block.
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
                             this.incPlayerFloatingBlockCards(-1);
+                            this.previousState.previousBlockType = 0;
                         }
                         else if(this.selectedBlock === "spring_block")
                         {
@@ -371,6 +399,7 @@ export default class GameLevel extends Scene {
                             let orientation = event.data.get("orientation");
                             this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
                             this.incPlayerSpringBlockCards(-1);
+                            this.previousState.previousBlockType = 0;
                         }
                         else if(this.selectedBlock === "drill_block")
                         {
@@ -387,6 +416,8 @@ export default class GameLevel extends Scene {
                             this.drillDestroyRowNum.push(row);
                             this.drillDestroyBlockId.push(event.data.get("blockId"));
                             this.drillDestroyId.push(block.id);
+
+                            this.previousState.previousBlockName = event.data.get("blockName");
 
                             this.incPlayerDrillBlockCards(-1);
                         }
@@ -412,11 +443,32 @@ export default class GameLevel extends Scene {
                         if(blockId >= 0)
                         {
                             //destorys block with given id, and remove it from grid's list of current blocks.
+                            let node = this.sceneGraph.getNode(blockId);
+                            switch((<AnimatedSprite>node).rotation){
+                                case 0:
+                                    this.previousState.previousBlockRotation = SPRING_BLOCK_ENUMS.FACING_TOP;
+                                break;
+
+                                case Math.PI * 0.5:
+                                    this.previousState.previousBlockRotation = SPRING_BLOCK_ENUMS.FACING_LEFT;
+                                break;
+
+                                case Math.PI:
+                                    this.previousState.previousBlockRotation = SPRING_BLOCK_ENUMS.FACING_BOTTOM;
+                                break;
+
+                                case Math.PI * 1.5:
+                                    this.previousState.previousBlockRotation = SPRING_BLOCK_ENUMS.FACING_RIGHT;
+                                break;
+                            }
                             this.sceneGraph.getNode(blockId).destroy();
                             this.grid.removeBlockLocation(blockId);
+                            this.previousState.previousBlockType = 1;
                         }
                         else
                         {
+                            this.previousState.previousBlockId = (this.getTilemap("Main") as OrthogonalTilemap).getTileAtRowCol(new Vec2(row, col));
+                            this.previousState.previousBlockType = 0;
                             (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
                         }
                     }
@@ -581,6 +633,43 @@ export default class GameLevel extends Scene {
             GameLevel.invincible = !GameLevel.invincible;
         }
 
+        if(Input.isJustPressed("undo") && this.hasUndo)
+        {
+            this.player.position.set(this.previousState.previousPlayerPosition.x, this.previousState.previousPlayerPosition.y);
+            this.selectedBlock = this.previousState.blockPlaced;
+            switch(this.previousState.blockPlaced){
+                case "floating_block":
+                    this.incPlayerFloatingBlockCards(1);
+                    this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
+                    this.grid.removeBlockLocation(this.previousState.previousBlockId);
+                break;
+
+                case "spring_block":
+                    this.incPlayerSpringBlockCards(1);
+                    this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
+                    this.grid.removeBlockLocation(this.previousState.previousBlockId);
+                break;
+
+                case "drill_block":
+                    this.incPlayerDrillBlockCards(1);
+                    if(this.previousState.previousBlockType === 0){
+                        (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(
+                            new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), this.previousState.previousBlockId);
+                    }else if(this.previousState.previousBlockType === 1){
+                        if(this.previousState.previousBlockName === "floating_block"){
+                            this.addBlock(this.previousState.previousBlockName, 
+                                new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol));
+                        }else if(this.previousState.previousBlockName === "spring_block"){
+                            this.addBlock(this.previousState.previousBlockName, 
+                                new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), {orientation: this.previousState.previousBlockRotation});
+                        }
+                    }
+                break;
+            }
+            this.activateCardPlacement();
+
+            this.hasUndo = false;
+        }
         
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
@@ -1094,6 +1183,8 @@ export default class GameLevel extends Scene {
         block.scale.set(2, 2);
         block.animation.play("SPAWN", false);
         block.animation.queue("IDLE", true);
+
+        this.previousState.previousBlockId = block.id;
         
         if(spriteKey == "floating_block")
         {
