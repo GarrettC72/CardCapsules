@@ -112,6 +112,7 @@ export default class GameLevel extends Scene {
         blockPlaced : ""
     }
     protected hasUndo: boolean = false;
+    protected undoClicked: boolean = false;
 
     initScene(): void{
         // if(GameLevel.livesCount === 0){
@@ -530,7 +531,11 @@ export default class GameLevel extends Scene {
                         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                         this.activateCardPlacement();
                     }
-
+                    //otherwise the player clicked the undo button and the undo function will now occur
+                    else if(this.undoClicked){
+                        this.undoClicked = false;
+                        this.undoBlockPlacement();
+                    }
                 }
                 break;
 
@@ -554,7 +559,14 @@ export default class GameLevel extends Scene {
                 {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                     this.sceneManager.changeToScene(LevelSelect);
-                    
+                }
+                break;
+
+                case "undo":
+                {
+                    if(this.hasUndo){
+                        this.undoClicked = true;
+                    }
                 }
                 break;
 
@@ -562,7 +574,6 @@ export default class GameLevel extends Scene {
                 {
                     this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "button_click_sfx", loop:false});
                     this.restartlevel();
-                    
                 }
                 break;
 
@@ -639,40 +650,7 @@ export default class GameLevel extends Scene {
 
         if(Input.isJustPressed("undo") && this.hasUndo)
         {
-            this.player.position.set(this.previousState.previousPlayerPosition.x, this.previousState.previousPlayerPosition.y);
-            this.selectedBlock = this.previousState.blockPlaced;
-            switch(this.previousState.blockPlaced){
-                case "floating_block":
-                    this.incPlayerFloatingBlockCards(1);
-                    this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
-                    this.grid.removeBlockLocation(this.previousState.previousBlockId);
-                break;
-
-                case "spring_block":
-                    this.incPlayerSpringBlockCards(1);
-                    this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
-                    this.grid.removeBlockLocation(this.previousState.previousBlockId);
-                break;
-
-                case "drill_block":
-                    this.incPlayerDrillBlockCards(1);
-                    if(this.previousState.previousBlockType === 0){
-                        (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(
-                            new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), this.previousState.previousBlockId);
-                    }else if(this.previousState.previousBlockType === 1){
-                        if(this.previousState.previousBlockName === "floating_block"){
-                            this.addBlock(this.previousState.previousBlockName, 
-                                new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol));
-                        }else if(this.previousState.previousBlockName === "spring_block"){
-                            this.addBlock(this.previousState.previousBlockName, 
-                                new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), {orientation: this.previousState.previousBlockRotation});
-                        }
-                    }
-                break;
-            }
-            this.activateCardPlacement();
-
-            this.hasUndo = false;
+            this.undoBlockPlacement();
         }
 
         ///if()
@@ -707,6 +685,43 @@ export default class GameLevel extends Scene {
     {
         //restart level is implemented in the level subclasses.
         console.log("Restart level not overridden");
+    }
+
+    protected undoBlockPlacement(): void {
+        this.player.position.set(this.previousState.previousPlayerPosition.x, this.previousState.previousPlayerPosition.y);
+        this.selectedBlock = this.previousState.blockPlaced;
+        switch(this.previousState.blockPlaced){
+            case "floating_block":
+                this.incPlayerFloatingBlockCards(1);
+                this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
+                this.grid.removeBlockLocation(this.previousState.previousBlockId);
+            break;
+
+            case "spring_block":
+                this.incPlayerSpringBlockCards(1);
+                this.sceneGraph.getNode(this.previousState.previousBlockId).destroy();
+                this.grid.removeBlockLocation(this.previousState.previousBlockId);
+            break;
+
+            case "drill_block":
+                this.incPlayerDrillBlockCards(1);
+                if(this.previousState.previousBlockType === 0){
+                    (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(
+                        new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), this.previousState.previousBlockId);
+                }else if(this.previousState.previousBlockType === 1){
+                    if(this.previousState.previousBlockName === "floating_block"){
+                        this.addBlock(this.previousState.previousBlockName, 
+                            new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol));
+                    }else if(this.previousState.previousBlockName === "spring_block"){
+                        this.addBlock(this.previousState.previousBlockName, 
+                            new Vec2(this.previousState.previousBlockRow, this.previousState.previousBlockCol), {orientation: this.previousState.previousBlockRotation});
+                    }
+                }
+            break;
+        }
+        this.activateCardPlacement();
+
+        this.hasUndo = false;
     }
 
     /**
@@ -787,6 +802,7 @@ export default class GameLevel extends Scene {
             GameEventType.MOUSE_UP,
             "pause",
             "unpause",
+            "undo",
             "restart",
             "levelSelect",
             "mainMenu"
@@ -967,7 +983,7 @@ export default class GameLevel extends Scene {
         undoUI.position = undoButton.position;
         undoUI.scale = new Vec2(2, 2);
 
-        undoButton.onClickEventId = "pause";
+        undoButton.onClickEventId = "undo";
 
         //add restart button
         const restartButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 235, size.y - 175), text: ""});
