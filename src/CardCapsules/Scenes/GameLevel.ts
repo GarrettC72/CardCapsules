@@ -127,6 +127,8 @@ export default class GameLevel extends Scene {
     {
         this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
         this.load.audio("block_placement_sfx", "card-capsules_assets/Sounds/block_placement.mp3");
+        this.load.image("undo_button", "card-capsules_assets/sprites/undo_button.png");
+        this.load.image("restart_button", "card-capsules_assets/sprites/restart_button.png");
     }
     
 
@@ -951,6 +953,35 @@ export default class GameLevel extends Scene {
         mainMenuButton.setPadding(new Vec2(50, 10));
         mainMenuButton.scale.set(0.5,0.5);
         mainMenuButton.onClickEventId = "mainMenu";
+
+
+        //add undo button
+        const undoButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 195, size.y - 175), text: ""});
+        undoButton.backgroundColor = new Color(21, 163, 121, 0);
+        undoButton.borderColor = new Color(230, 200, 11, 0);
+        undoButton.borderRadius = 1;
+        undoButton.borderWidth = 5;
+        undoButton.size = new Vec2(32, 32);
+
+        let undoUI = this.add.sprite("undo_button", "UI");
+        undoUI.position = undoButton.position;
+        undoUI.scale = new Vec2(2, 2);
+
+        undoButton.onClickEventId = "pause";
+
+        //add restart button
+        const restartButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 235, size.y - 175), text: ""});
+        restartButton2.backgroundColor = new Color(247, 222, 146);
+        restartButton2.borderColor = new Color(230, 200, 11, 0);
+        restartButton2.borderRadius = 1;
+        restartButton2.borderWidth = 5;
+        restartButton2.size = new Vec2(32, 32);
+
+        let restartUI = this.add.sprite("restart_button", "UI");
+        restartUI.position = restartButton2.position;
+        restartUI.scale = new Vec2(2, 2);
+
+        restartButton2.onClickEventId = "restart";
     }
 
     protected addCardGUI(): void {
