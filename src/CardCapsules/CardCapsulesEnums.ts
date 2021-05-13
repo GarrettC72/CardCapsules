@@ -26,5 +26,8 @@ export enum CC_EVENTS {
     PAUSE_GAME = "Pause_game",
     UNPAUSE_GAME = "Unpause_game",
     DRILL_BLOCK = "drill_block",
-    DESTROY_BLOCK = "destroy_block"
+    DESTROY_BLOCK = "destroy_block",
+    ACTIVATE_BINOCULARS = "activate_binoculars",
+    DEACTIVATE_BINOCULARS = "deactivate_binoculars",
+    TOGGLE_BINOCULARS = "toggle_binoculars"
 }

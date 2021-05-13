@@ -25,6 +25,7 @@ import LevelSelect from "./LevelSelect";
 import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyController from "../Enemies/EnemyController";
 import Layer from "../../Wolfie2D/Scene/Layer";
+import Binoculars from "../GameObjects/Binoculars";
 //import Level1 from "./Level1";
 
 // HOMEWORK 4 - TODO
@@ -135,6 +136,7 @@ export default class GameLevel extends Scene {
         this.initViewport();
         this.initPlayer();
         this.initGrid();
+        this.initBinoculars();
         this.subscribeToEvents();
         this.addUI();
         this.addCardGUI(); //add the card buttons on the bottom.
@@ -670,6 +672,8 @@ export default class GameLevel extends Scene {
 
             this.hasUndo = false;
         }
+
+        ///if()
         
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
@@ -729,6 +733,13 @@ export default class GameLevel extends Scene {
     {
         this.grid = new GridNode(this.getLayer("grid"), 32, 32, this.viewport, this.getTilemap("Main") as OrthogonalTilemap);
         this.sceneGraph.addNode(this.grid);
+    }
+
+    protected initBinoculars():void
+    {
+        let bin = new Binoculars(this.viewport, this.player);
+        this.layers.get("primary").addNode(bin);
+        this.sceneGraph.addNode(bin);
     }
 
     /**
@@ -1134,6 +1145,7 @@ export default class GameLevel extends Scene {
         });
 
         this.viewport.follow(this.player);
+        //this.viewport.follow
     }
 
     /**
