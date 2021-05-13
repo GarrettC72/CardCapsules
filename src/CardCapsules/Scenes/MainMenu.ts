@@ -11,14 +11,10 @@ import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import Level1 from "./Level1";
 
-
-//import Level2 from "./Level2";
-
 export default class MainMenu extends Scene {
 
     animatedSprite: AnimatedSprite;
     private mainMenu: Layer;
-    private levelSelect: Layer;
     private controls: Layer;
     private help: Layer;
     private cheats: Layer;
@@ -28,7 +24,6 @@ export default class MainMenu extends Scene {
 
     loadScene(): void {
         // Load the menu song
-        //this.load.audio("menu", "card-capsules_assets/music/menu.mp3");
         this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
         this.load.image("splash_background", "card-capsules_assets/sprites/CardCapsuleSplashScreen.png");
         this.load.audio("menu", "card-capsules_assets/Music/TitleScreen.mp3");
@@ -65,16 +60,6 @@ export default class MainMenu extends Scene {
         playBtn.setPadding(new Vec2(50, 10));
         //playBtn.font = "PixelSimple";
         playBtn.onClickEventId = "play";
-        // playBtn.onEnter = () => {
-        //     playBtn.borderColor = Color.BLACK;
-        //     playBtn.setBackgroundColor(Color.WHITE);
-        //     playBtn.setTextColor(Color.BLACK);
-        // }
-        // playBtn.onLeave = () => {
-        //     playBtn.borderColor = Color.WHITE;
-        //     playBtn.setBackgroundColor(Color.TRANSPARENT);
-        //     playBtn.setTextColor(Color.WHITE);
-        // }
 
         //Create a level select button
         const levelBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y - 50), text: "Level Select"});
@@ -84,16 +69,6 @@ export default class MainMenu extends Scene {
         levelBtn.setPadding(new Vec2(50, 10));
         //levelBtn.font = "PixelSimple";
         levelBtn.onClickEventId = "level";
-        // levelBtn.onEnter = () => {
-        //     levelBtn.borderColor = Color.BLACK;
-        //     levelBtn.setBackgroundColor(Color.WHITE);
-        //     levelBtn.setTextColor(Color.BLACK);
-        // }
-        // levelBtn.onLeave = () => {
-        //     levelBtn.borderColor = Color.WHITE;
-        //     levelBtn.setBackgroundColor(Color.TRANSPARENT);
-        //     levelBtn.setTextColor(Color.WHITE);
-        // }
 
         //Create a controls button
         const controlsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y + 50), text: "Controls"});
@@ -103,16 +78,6 @@ export default class MainMenu extends Scene {
         controlsBtn.setPadding(new Vec2(50, 10));
         //controlsBtn.font = "PixelSimple";
         controlsBtn.onClickEventId = "controls";
-        // controlsBtn.onEnter = () => {
-        //     controlsBtn.borderColor = Color.BLACK;
-        //     controlsBtn.setBackgroundColor(Color.WHITE);
-        //     controlsBtn.setTextColor(Color.BLACK);
-        // }
-        // controlsBtn.onLeave = () => {
-        //     controlsBtn.borderColor = Color.WHITE;
-        //     controlsBtn.setBackgroundColor(Color.TRANSPARENT);
-        //     controlsBtn.setTextColor(Color.WHITE);
-        // }
 
         //Create a help button
         const helpBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Main", {position: new Vec2(size.x, size.y + 150), text: "Help"});
@@ -122,16 +87,6 @@ export default class MainMenu extends Scene {
         helpBtn.setPadding(new Vec2(50, 10));
         //helpBtn.font = "PixelSimple";
         helpBtn.onClickEventId = "help";
-        // helpBtn.onEnter = () => {
-        //     helpBtn.borderColor = Color.BLACK;
-        //     helpBtn.setBackgroundColor(Color.WHITE);
-        //     helpBtn.setTextColor(Color.BLACK);
-        // }
-        // helpBtn.onLeave = () => {
-        //     helpBtn.borderColor = Color.WHITE;
-        //     helpBtn.setBackgroundColor(Color.TRANSPARENT);
-        //     helpBtn.setTextColor(Color.WHITE);
-        // }
 
         //Create a controls screen
         this.controls = this.addUILayer("Controls");
@@ -140,10 +95,10 @@ export default class MainMenu extends Scene {
         const controlsBackground = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y), text: ""});
         controlsBackground.setBackgroundColor(new Color(247,222,146,0.8));
         controlsBackground.borderColor = buttonColor;
-        controlsBackground.size.set(675,600);
+        controlsBackground.size.set(750,650);
         controlsBackground.borderWidth = 5;
 
-        const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 250), text: "Controls"});
+        const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 275), text: "Controls"});
         controlsHeader.setTextColor(Color.BLACK);
         controlsHeader.fontSize = 60;
 
@@ -155,15 +110,17 @@ export default class MainMenu extends Scene {
         const controlsText6 = "click to place. Press E to cancel.";
         const controlsText7 = "Pressing Z, X, or C will also start placing the card.";
         const controlsText8 = "Press V to undo the last block placed.";
+        const controlsText9 = "Move mouse while holding Shift to move the camera."
 
-        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 175), text: controlsText1});
-        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 125), text: controlsText2});
-        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 75), text: controlsText3});
-        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 25), text: controlsText4});
-        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 25), text: controlsText5});
-        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 75), text: controlsText6});
-        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 125), text: controlsText7});
-        const controlsLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 175), text: controlsText8});
+        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 200), text: controlsText1});
+        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 150), text: controlsText2});
+        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 100), text: controlsText3});
+        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 50), text: controlsText4});
+        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y ), text: controlsText5});
+        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 50), text: controlsText6});
+        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 100), text: controlsText7});
+        const controlsLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 150), text: controlsText8});
+        const controlsLine9 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 200), text: controlsText9});
 
         controlsLine1.setTextColor(Color.BLACK);
         controlsLine2.setTextColor(Color.BLACK);
@@ -173,23 +130,14 @@ export default class MainMenu extends Scene {
         controlsLine6.setTextColor(Color.BLACK);
         controlsLine7.setTextColor(Color.BLACK);
         controlsLine8.setTextColor(Color.BLACK);
+        controlsLine9.setTextColor(Color.BLACK);
 
-        const controlsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Controls", {position: new Vec2(size.x, size.y + 250), text: "Back"});
+        const controlsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Controls", {position: new Vec2(size.x, size.y + 275), text: "Back"});
         controlsBack.size.set(200, 50);
         controlsBack.borderWidth = 2;
         controlsBack.borderColor = Color.BLACK;
         controlsBack.setBackgroundColor(buttonColor);
         controlsBack.onClickEventId = "menu";
-        // controlsBack.onEnter = () => {
-        //     controlsBack.borderColor = Color.BLACK;
-        //     controlsBack.setBackgroundColor(Color.WHITE);
-        //     controlsBack.setTextColor(Color.BLACK);
-        // }
-        // controlsBack.onLeave = () => {
-        //     controlsBack.borderColor = Color.WHITE;
-        //     controlsBack.setBackgroundColor(Color.TRANSPARENT);
-        //     controlsBack.setTextColor(Color.WHITE);
-        // }
 
         //Create a help screen
         this.help = this.addUILayer("Help");
@@ -212,7 +160,6 @@ export default class MainMenu extends Scene {
         const helpText5 = "objective is to reach the wreckage of their ship and to repair";
         const helpText6 = "it with the card capsules that they find from the remnants that";
         const helpText7 = "scattered the planet when the ship crash landed.";
-        //const helpText8 = "Cheat Code: Press K to add 10 floating blocks and 10 spring blocks"
 
         const helpLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 250), text: helpText1});
         const helpLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 175), text: helpText2});
@@ -221,7 +168,6 @@ export default class MainMenu extends Scene {
         const helpLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y - 25), text: helpText5});
         const helpLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 25), text: helpText6});
         const helpLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 75), text: helpText7});
-        //const helpLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Help", {position: new Vec2(size.x, size.y + 150), text: helpText8});
 
         helpLine1.setTextColor(Color.BLACK);
         helpLine2.setTextColor(Color.BLACK);
@@ -230,7 +176,6 @@ export default class MainMenu extends Scene {
         helpLine5.setTextColor(Color.BLACK);
         helpLine6.setTextColor(Color.BLACK);
         helpLine7.setTextColor(Color.BLACK);
-        //helpLine8.setTextColor(Color.BLACK);
 
         const cheatsBtn = <Button>this.add.uiElement(UIElementType.BUTTON, "Help", {position: new Vec2(size.x, size.y + 150), text: "Cheat Codes"});
         cheatsBtn.size.set(200, 50);
@@ -245,16 +190,6 @@ export default class MainMenu extends Scene {
         helpBack.borderColor = Color.BLACK;
         helpBack.setBackgroundColor(buttonColor);
         helpBack.onClickEventId = "menu";
-        // helpBack.onEnter = () => {
-        //     helpBack.borderColor = Color.BLACK;
-        //     helpBack.setBackgroundColor(Color.WHITE);
-        //     helpBack.setTextColor(Color.BLACK);
-        // }
-        // helpBack.onLeave = () => {
-        //     helpBack.borderColor = Color.WHITE;
-        //     helpBack.setBackgroundColor(Color.TRANSPARENT);
-        //     helpBack.setTextColor(Color.WHITE);
-        // }
 
         //Create a help screen
         this.cheats = this.addUILayer("Cheats");
@@ -305,16 +240,6 @@ export default class MainMenu extends Scene {
         splashEnter.borderColor = Color.BLACK;
         splashEnter.setBackgroundColor(buttonColor);
         splashEnter.onClickEventId = "menu";
-        // splashEnter.onEnter = () => {
-        //     splashEnter.borderColor = Color.BLACK;
-        //     splashEnter.setBackgroundColor(Color.WHITE);
-        //     splashEnter.setTextColor(Color.BLACK);
-        // }
-        // splashEnter.onLeave = () => {
-        //     splashEnter.borderColor = Color.WHITE;
-        //     splashEnter.setBackgroundColor(Color.TRANSPARENT);
-        //     splashEnter.setTextColor(Color.WHITE);
-        // }
 
         //Subscribe to button events
         this.receiver.subscribe("play");
