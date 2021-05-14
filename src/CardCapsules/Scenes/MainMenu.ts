@@ -10,6 +10,9 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import Level1 from "./Level1";
+import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import { CC_EVENTS } from "../CardCapsulesEnums";
 
 export default class MainMenu extends Scene {
 
@@ -234,12 +237,38 @@ export default class MainMenu extends Scene {
         this.splash = this.addUILayer("Splash");
         this.splash.setHidden(MainMenu.start);
 
-        const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Click to Start"});
-        splashEnter.size.set(250, 50);
+        
+        //TODO: whole screen clickable to get to the main menu.
+        const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y), text: ""});
+        splashEnter.size.set(1200, 800);
         splashEnter.borderWidth = 2;
-        splashEnter.borderColor = Color.BLACK;
-        splashEnter.setBackgroundColor(buttonColor);
+        splashEnter.borderColor = Color.TRANSPARENT;
+        splashEnter.setBackgroundColor(Color.TRANSPARENT);
         splashEnter.onClickEventId = "menu";
+
+        //TODO: change the label of the splash screen.
+        const splashLabel = <Label>this.add.uiElement(UIElementType.LABEL, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Press Anywhere to Start"});
+        splashLabel.size.set(600, 60);
+        //splashLabel.borderColor = Color.BLACK;
+        //splashLabel.borderWidth = 3;
+        splashLabel.setBackgroundColor(new Color(0, 0, 0, 0.8));
+        splashLabel.textColor = Color.WHITE;
+        splashLabel.fontSize = 50;
+        splashLabel.tweens.add("move", {
+            startDelay: 0,
+            duration: 1500,
+            reverseOnComplete: true,
+            effects: [
+                {
+                    property: TweenableProperties.posY,
+                    start: size.y + 250,
+                    end: size.y + 260,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+        });
+        splashLabel.tweens.play("move", true);
+
 
         //Subscribe to button events
         this.receiver.subscribe("play");
