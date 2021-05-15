@@ -186,6 +186,7 @@ export default class GameLevel extends Scene {
             switch(event.type){
                 case CC_EVENTS.PLAYER_HIT_FLOATING_BLOCK_CARD:
                     {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Card_Pickup", loop: false, holdReference: false});
                         console.log("card");
                         // Hit a card
                         let card;
@@ -211,6 +212,7 @@ export default class GameLevel extends Scene {
 
                     case CC_EVENTS.PLAYER_HIT_SPRING_BLOCK_CARD:
                     {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Card_Pickup", loop: false, holdReference: false});
                         console.log("card");
                         // Hit a card
                         let card;
@@ -236,6 +238,7 @@ export default class GameLevel extends Scene {
 
                     case CC_EVENTS.PLAYER_HIT_CIRCULAR_ROCK_CARD:
                     {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Card_Pickup", loop: false, holdReference: false});
                         console.log("card");
                         // Hit a card
                         let card;
@@ -261,6 +264,7 @@ export default class GameLevel extends Scene {
 
                     case CC_EVENTS.PLAYER_HIT_DRILL_BLOCK_CARD:
                     {
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Card_Pickup", loop: false, holdReference: false});
                         console.log("card");
                         // Hit a card
                         let card;
