@@ -130,6 +130,8 @@ export default class GameLevel extends Scene {
         this.load.audio("block_placement_sfx", "card-capsules_assets/Sounds/block_placement.mp3");
         this.load.image("undo_button", "card-capsules_assets/sprites/undo_button.png");
         this.load.image("restart_button", "card-capsules_assets/sprites/restart_button.png");
+        this.load.image("binoculars_button", "card-capsules_assets/sprites/binoculars_button.png");
+        this.load.image("binoculars_cancel_button", "card-capsules_assets/sprites/binoculars_cancel_button.png");
     }
     
 
@@ -1002,6 +1004,34 @@ export default class GameLevel extends Scene {
         restartUI.scale = new Vec2(2, 2);
 
         restartButton2.onClickEventId = "restart";
+
+        //add binoculars button.
+
+        const binocularsButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 155, size.y - 175), text: ""});
+        binocularsButton.backgroundColor = new Color(247, 222, 146);
+        binocularsButton.borderColor = new Color(230, 200, 11, 0);
+        binocularsButton.borderRadius = 1;
+        binocularsButton.borderWidth = 5;
+        binocularsButton.size = new Vec2(32, 32);
+
+        let binocularsUI = this.add.sprite("binoculars_button", "UI");
+        binocularsUI.position = binocularsButton.position;
+        binocularsUI.scale = new Vec2(2, 2);
+
+        binocularsButton.onClickEventId = CC_EVENTS.ACTIVATE_BINOCULARS;
+
+        const binocularsCancelButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 115, size.y - 175), text: ""});
+        binocularsCancelButton.backgroundColor = new Color(247, 222, 146);
+        binocularsCancelButton.borderColor = new Color(230, 200, 11, 0);
+        binocularsCancelButton.borderRadius = 1;
+        binocularsCancelButton.borderWidth = 5;
+        binocularsCancelButton.size = new Vec2(32, 32);
+
+        let binocularsCancelUI = this.add.sprite("binoculars_cancel_button", "UI");
+        binocularsCancelUI.position = binocularsCancelButton.position;
+        binocularsCancelUI.scale = new Vec2(2, 2);
+
+        binocularsCancelButton.onClickEventId = CC_EVENTS.DEACTIVATE_BINOCULARS;
     }
 
     protected addCardGUI(): void {

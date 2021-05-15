@@ -10,6 +10,9 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Color from "../../Wolfie2D/Utils/Color";
 import LevelSelect from "./LevelSelect";
 import Level1 from "./Level1";
+import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
+import { CC_EVENTS } from "../CardCapsulesEnums";
 
 export default class MainMenu extends Scene {
 
@@ -95,10 +98,10 @@ export default class MainMenu extends Scene {
         const controlsBackground = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y), text: ""});
         controlsBackground.setBackgroundColor(new Color(247,222,146,0.8));
         controlsBackground.borderColor = buttonColor;
-        controlsBackground.size.set(750,650);
+        controlsBackground.size.set(700,700);
         controlsBackground.borderWidth = 5;
 
-        const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 275), text: "Controls"});
+        const controlsHeader = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 300), text: "Controls"});
         controlsHeader.setTextColor(Color.BLACK);
         controlsHeader.fontSize = 60;
 
@@ -110,17 +113,19 @@ export default class MainMenu extends Scene {
         const controlsText6 = "click to place. Press E to cancel.";
         const controlsText7 = "Pressing Z, X, or C will also start placing the card.";
         const controlsText8 = "Press V to undo the last block placed.";
-        const controlsText9 = "Move mouse while holding Shift to move the camera."
+        const controlsText9 = "Click on the binoculars to move"
+        const controlsText10 = "the camera with the mouse.";
 
-        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 200), text: controlsText1});
-        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 150), text: controlsText2});
-        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 100), text: controlsText3});
-        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 50), text: controlsText4});
-        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y ), text: controlsText5});
-        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 50), text: controlsText6});
-        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 100), text: controlsText7});
-        const controlsLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 150), text: controlsText8});
-        const controlsLine9 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 200), text: controlsText9});
+        const controlsLine1 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 225), text: controlsText1});
+        const controlsLine2 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 175), text: controlsText2});
+        const controlsLine3 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 125), text: controlsText3});
+        const controlsLine4 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 75), text: controlsText4});
+        const controlsLine5 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y - 25), text: controlsText5});
+        const controlsLine6 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 25), text: controlsText6});
+        const controlsLine7 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 75), text: controlsText7});
+        const controlsLine8 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 125), text: controlsText8});
+        const controlsLine9 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 175), text: controlsText9});
+        const controlsLine10 = <Label>this.add.uiElement(UIElementType.LABEL, "Controls", {position: new Vec2(size.x, size.y + 225), text: controlsText10});
 
         controlsLine1.setTextColor(Color.BLACK);
         controlsLine2.setTextColor(Color.BLACK);
@@ -131,8 +136,9 @@ export default class MainMenu extends Scene {
         controlsLine7.setTextColor(Color.BLACK);
         controlsLine8.setTextColor(Color.BLACK);
         controlsLine9.setTextColor(Color.BLACK);
+        controlsLine10.setTextColor(Color.BLACK);
 
-        const controlsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Controls", {position: new Vec2(size.x, size.y + 275), text: "Back"});
+        const controlsBack = <Button>this.add.uiElement(UIElementType.BUTTON, "Controls", {position: new Vec2(size.x, size.y + 300), text: "Back"});
         controlsBack.size.set(200, 50);
         controlsBack.borderWidth = 2;
         controlsBack.borderColor = Color.BLACK;
@@ -234,12 +240,38 @@ export default class MainMenu extends Scene {
         this.splash = this.addUILayer("Splash");
         this.splash.setHidden(MainMenu.start);
 
-        const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Click to Start"});
-        splashEnter.size.set(250, 50);
+        
+        //TODO: whole screen clickable to get to the main menu.
+        const splashEnter = <Button>this.add.uiElement(UIElementType.BUTTON, "Splash", {position: new Vec2(size.x, size.y), text: ""});
+        splashEnter.size.set(1200, 800);
         splashEnter.borderWidth = 2;
-        splashEnter.borderColor = Color.BLACK;
-        splashEnter.setBackgroundColor(buttonColor);
+        splashEnter.borderColor = Color.TRANSPARENT;
+        splashEnter.setBackgroundColor(Color.TRANSPARENT);
         splashEnter.onClickEventId = "menu";
+
+        //TODO: change the label of the splash screen.
+        const splashLabel = <Label>this.add.uiElement(UIElementType.LABEL, "Splash", {position: new Vec2(size.x, size.y + 250), text: "Press Anywhere to Start"});
+        splashLabel.size.set(600, 60);
+        //splashLabel.borderColor = Color.BLACK;
+        //splashLabel.borderWidth = 3;
+        splashLabel.setBackgroundColor(new Color(0, 0, 0, 0.8));
+        splashLabel.textColor = Color.WHITE;
+        splashLabel.fontSize = 50;
+        splashLabel.tweens.add("move", {
+            startDelay: 0,
+            duration: 1500,
+            reverseOnComplete: true,
+            effects: [
+                {
+                    property: TweenableProperties.posY,
+                    start: size.y + 250,
+                    end: size.y + 260,
+                    ease: EaseFunctionType.IN_OUT_QUAD
+                }
+            ],
+        });
+        splashLabel.tweens.play("move", true);
+
 
         //Subscribe to button events
         this.receiver.subscribe("play");

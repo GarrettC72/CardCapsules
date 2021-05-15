@@ -37,6 +37,7 @@ export default class Binoculars extends CanvasNode
             this.currentXOffset = 0;
             this.currentYOffset = 0;
             this.viewport.follow(this);
+            this.emitter.fireEvent(CC_EVENTS.PAUSE_GAME);
             //this.player.freeze();
         }
         
@@ -48,6 +49,7 @@ export default class Binoculars extends CanvasNode
         {
             this.isActive = false;
             this.viewport.follow(this.player);
+            this.emitter.fireEvent(CC_EVENTS.UNPAUSE_GAME);
             //this.player.unfreeze();
         }
         
@@ -61,8 +63,8 @@ export default class Binoculars extends CanvasNode
             switch(event.type){
                 case CC_EVENTS.ACTIVATE_BINOCULARS:
                 {
-                    
                     this.activateBin();
+                    
                 }
                 break;
 
@@ -83,14 +85,14 @@ export default class Binoculars extends CanvasNode
             }
         }
 
-        if(Input.isKeyPressed("shift"))
-        {
-            this.activateBin();
-        }
-        else
-        {
-            this.deactivateBin();
-        }
+        // if(Input.isKeyPressed("shift"))
+        // {
+        //     this.activateBin();
+        // }
+        // else
+        // {
+        //     this.deactivateBin();
+        // }
 
         if(this.isActive)
         {
