@@ -26,6 +26,7 @@ import Sprite from "../../Wolfie2D/Nodes/Sprites/Sprite";
 import EnemyController from "../Enemies/EnemyController";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Binoculars from "../GameObjects/Binoculars";
+import MyButton from "../GameObjects/MyButton";
 //import Level1 from "./Level1";
 
 // HOMEWORK 4 - TODO
@@ -91,6 +92,13 @@ export default class GameLevel extends Scene {
     // Every level will have a goal card, which will be an animated sprite
     protected goal: AnimatedSprite;
 
+    //Some buttons for the UI
+    protected restartBtn: MyButton;
+    protected undoBtn: MyButton;
+    protected binocularsBtn: MyButton;
+    protected binocularsCancelBtn: MyButton;
+    protected pauseBtn: MyButton;
+
     //Track properties that will be reverted to with undo
     protected previousState: {
         previousPlayerPosition: Vec2, // position of the player when the block was placed
@@ -129,9 +137,14 @@ export default class GameLevel extends Scene {
         this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
         this.load.audio("block_placement_sfx", "card-capsules_assets/Sounds/block_placement.mp3");
         this.load.image("undo_button", "card-capsules_assets/sprites/undo_button.png");
+        this.load.image("undo_button_hover", "card-capsules_assets/sprites/undo_button_hover.png");
         this.load.image("restart_button", "card-capsules_assets/sprites/restart_button.png");
+        this.load.image("restart_button_hover", "card-capsules_assets/sprites/restart_button_hover.png");
         this.load.image("binoculars_button", "card-capsules_assets/sprites/binoculars_button.png");
+        this.load.image("binoculars_button_hover", "card-capsules_assets/sprites/binoculars_button_hover.png");
         this.load.image("binoculars_cancel_button", "card-capsules_assets/sprites/binoculars_cancel_button.png");
+        this.load.image("binoculars_cancel_button_hover", "card-capsules_assets/sprites/binoculars_cancel_button_hover.png");
+        this.load.image("pause_button_hover", "card-capsules_assets/sprites/pause_button_hover.png");
     }
     
 
@@ -934,7 +947,15 @@ export default class GameLevel extends Scene {
         pauseUI.position = pauseButton.position;
         pauseUI.scale = new Vec2(2, 2);
 
+        let pauseHoverUI = this.add.sprite("pause_button_hover", "UI");
+        pauseHoverUI.position = pauseButton.position;
+        pauseHoverUI.scale = new Vec2(2, 2);
+
         pauseButton.onClickEventId = "pause";
+
+        //pause button effects.
+        this.pauseBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, pauseButton, pauseUI);
+        this.pauseBtn.setHoverSprite(pauseHoverUI);
 
         //Add elements to pause popup layer
         let buttonColor = new Color(157,85,17,1);
@@ -989,7 +1010,15 @@ export default class GameLevel extends Scene {
         undoUI.position = undoButton.position;
         undoUI.scale = new Vec2(2, 2);
 
+        let undoHoverUI = this.add.sprite("undo_button_hover", "UI");
+        undoHoverUI.position = undoButton.position;
+        undoHoverUI.scale = new Vec2(2, 2);
+
         undoButton.onClickEventId = "undo";
+
+        //undo button effects.
+        this.undoBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, undoButton, undoUI);
+        this.undoBtn.setHoverSprite(undoHoverUI);
 
         //add restart button
         const restartButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 235, size.y - 175), text: ""});
@@ -1003,7 +1032,15 @@ export default class GameLevel extends Scene {
         restartUI.position = restartButton2.position;
         restartUI.scale = new Vec2(2, 2);
 
+        let restartHoverUI = this.add.sprite("restart_button_hover", "UI");
+        restartHoverUI.position = restartButton2.position;
+        restartHoverUI.scale = new Vec2(2, 2);
+
         restartButton2.onClickEventId = "restart";
+
+        //restart button effects.
+        this.restartBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, restartButton2, restartUI);
+        this.restartBtn.setHoverSprite(restartHoverUI);
 
         //add binoculars button.
 
@@ -1018,6 +1055,14 @@ export default class GameLevel extends Scene {
         binocularsUI.position = binocularsButton.position;
         binocularsUI.scale = new Vec2(2, 2);
 
+        let binocularsHoverUI = this.add.sprite("binoculars_button_hover", "UI");
+        binocularsHoverUI.position = binocularsButton.position;
+        binocularsHoverUI.scale = new Vec2(2, 2);
+
+        //binocular button effects.
+        this.binocularsBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, binocularsButton, binocularsUI);
+        this.binocularsBtn.setHoverSprite(binocularsHoverUI);
+
         binocularsButton.onClickEventId = CC_EVENTS.ACTIVATE_BINOCULARS;
 
         const binocularsCancelButton = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 115, size.y - 175), text: ""});
@@ -1031,7 +1076,15 @@ export default class GameLevel extends Scene {
         binocularsCancelUI.position = binocularsCancelButton.position;
         binocularsCancelUI.scale = new Vec2(2, 2);
 
+        let binocularsCancelHoverUI = this.add.sprite("binoculars_cancel_button_hover", "UI");
+        binocularsCancelHoverUI.position = binocularsCancelButton.position;
+        binocularsCancelHoverUI.scale = new Vec2(2, 2);
+
         binocularsCancelButton.onClickEventId = CC_EVENTS.DEACTIVATE_BINOCULARS;
+
+        //binocular cancel button effects.
+        this.binocularsCancelBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, binocularsCancelButton, binocularsCancelUI);
+        this.binocularsCancelBtn.setHoverSprite(binocularsCancelHoverUI);
     }
 
     protected addCardGUI(): void {
