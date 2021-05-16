@@ -1217,7 +1217,7 @@ export default class GameLevel extends Scene {
             this.playerSpawn = Vec2.ZERO;
         }
         this.player.position.copy(this.playerSpawn);
-        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 28)));
+        this.player.addPhysics(new AABB(Vec2.ZERO, new Vec2(12, 26)));
         this.player.colliderOffset.set(0, 2);
         this.player.addAI(PlayerController, {playerType: "platformer", tilemap: "Main"});
 

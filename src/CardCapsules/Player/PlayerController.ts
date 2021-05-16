@@ -98,6 +98,8 @@ export default class PlayerController extends StateMachineAI {
 		} else if(this.currentState instanceof Fall){
             Debug.log("playerstate", "Player State: Fall");
         }
+
+        this.owner.position = new Vec2(Math.round(this.owner.position.x), this.owner.position.y);
 	}
 
     handleEvent(event: GameEvent)
