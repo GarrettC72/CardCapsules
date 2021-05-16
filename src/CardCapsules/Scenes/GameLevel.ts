@@ -441,6 +441,7 @@ export default class GameLevel extends Scene {
                         }
                         else if(this.selectedBlock === "drill_block")
                         {
+                            this.hasUndo = false;
                             //this.addBlock(this.selectedBlock, new Vec2(row, col));
                             let block = this.add.animatedSprite("drill_block", "primary");
                             //block.rotation = Math.PI;
