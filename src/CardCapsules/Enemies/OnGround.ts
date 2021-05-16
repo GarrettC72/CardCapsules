@@ -15,13 +15,18 @@ export default class OnGround extends EnemyState {
 		}
 		super.update(deltaT);
 
-		if(!this.owner.onGround && this.parent.jumpy && this.owner.active){
-			this.finished(EnemyStates.JUMP);
-		}
+		// if(!this.owner.onGround && this.parent.jumpy && this.owner.active){
+		// 	this.finished(EnemyStates.JUMP);
+		// }
 
-		if(!this.owner.onGround && this.parent.spiky && this.owner.active){
-			this.finished(EnemyStates.JUMP);
-		}
+		// if(!this.owner.onGround && this.parent.spiky && this.owner.active){
+		// 	this.finished(EnemyStates.JUMP);
+		// }
+
+		// if(this.owner.onGround && this.parent.spiky && this.owner.active){
+		// 	this.finished(EnemyStates.JUMP);
+		// 	//console.log("I wonder why", this.owner.position.x);
+		// }
 	}
 
 	onExit(): Record<string, any> {

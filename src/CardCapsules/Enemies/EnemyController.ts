@@ -97,7 +97,7 @@ export default class EnemyController extends StateMachineAI {
 		let spikejump2 = new Jump(this, owner);
 		this.addState(EnemyStates.SPIKEJUMP, jump);
 
-		this.initialize(EnemyStates.IDLE);
+		this.initialize(EnemyStates.WALK);
 
 		this.receiver.subscribe(
             [CC_EVENTS.SPRING_TRIGGERED,

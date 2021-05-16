@@ -7,8 +7,8 @@ import GameEvent from "../../Wolfie2D/Events/GameEvent";
 export default class Jump extends EnemyState {
 
 	onEnter(): void {
-		(<AnimatedSprite>this.owner).animation.play("JUMP", true);
-		(<AnimatedSprite>this.owner).tweens.play("jump", true);
+		//(<AnimatedSprite>this.owner).animation.play("JUMP", true);
+		//(<AnimatedSprite>this.owner).tweens.play("jump", true);
 		this.gravity = 500;
 		if(this.parent.spiky){
 			this.gravity = 200

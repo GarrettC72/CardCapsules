@@ -21,8 +21,11 @@ export default abstract class EnemyState extends State {
 
 		if(event.type === CC_EVENTS.PAUSE_GAME)
 		{
-			(<AnimatedSprite>this.owner).animation.pause();
-			this.parent.freeze = true;
+			if(!this.parent.spiky)
+			{
+				(<AnimatedSprite>this.owner).animation.pause();
+				this.parent.freeze = true;
+			}	
 		}
 			
 		if(event.type === CC_EVENTS.UNPAUSE_GAME)
@@ -73,9 +76,12 @@ export default abstract class EnemyState extends State {
 
 	update(deltaT: number): void {
 		// Do gravity
+		// if(this.parent.spiky)
+		// 	this.parent.freeze = false;
 		if(!this.parent.freeze)
 		{
 			this.parent.velocity.y += this.gravity*deltaT;
+
 
 			if(this.owner.onWall){
 				// Flip around
@@ -83,6 +89,6 @@ export default abstract class EnemyState extends State {
 				(<AnimatedSprite>this.owner).invertX = !(<AnimatedSprite>this.owner).invertX;
 			}
 		}
-		
+	
 	}
 }
