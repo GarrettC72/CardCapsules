@@ -78,6 +78,8 @@ export default class GameLevel extends Scene {
     protected selectedBlock: string = ""; //The current block that the player clicked on.
     protected showGridTimer: Timer; //Timer to delay the show grid event.
 
+    protected binoculars: Binoculars; //class used to move the camera
+
     protected cancelLabel: Label;
 
     protected timeSlowFilterScreen: Rect;
@@ -138,12 +140,15 @@ export default class GameLevel extends Scene {
         this.load.audio("block_placement_sfx", "card-capsules_assets/Sounds/block_placement.mp3");
         this.load.image("undo_button", "card-capsules_assets/sprites/undo_button.png");
         this.load.image("undo_button_hover", "card-capsules_assets/sprites/undo_button_hover.png");
+        this.load.image("undo_button_disabled", "card-capsules_assets/sprites/undo_button_disabled.png");
         this.load.image("restart_button", "card-capsules_assets/sprites/restart_button.png");
         this.load.image("restart_button_hover", "card-capsules_assets/sprites/restart_button_hover.png");
         this.load.image("binoculars_button", "card-capsules_assets/sprites/binoculars_button.png");
         this.load.image("binoculars_button_hover", "card-capsules_assets/sprites/binoculars_button_hover.png");
+        this.load.image("binoculars_button_disabled", "card-capsules_assets/sprites/binoculars_button_disabled.png");
         this.load.image("binoculars_cancel_button", "card-capsules_assets/sprites/binoculars_cancel_button.png");
         this.load.image("binoculars_cancel_button_hover", "card-capsules_assets/sprites/binoculars_cancel_button_hover.png");
+        this.load.image("binoculars_cancel_button_disabled", "card-capsules_assets/sprites/binoculars_cancel_button_disabled.png");
         this.load.image("pause_button_hover", "card-capsules_assets/sprites/pause_button_hover.png");
     }
     
@@ -680,7 +685,26 @@ export default class GameLevel extends Scene {
             this.undoBlockPlacement();
         }
 
-        ///if()
+        //updates the button UI images.
+        if(this.binoculars.isBinActive())
+        {
+            this.binocularsBtn.deactivateButton();
+            this.binocularsCancelBtn.activateButton();
+        }
+        else
+        {
+            this.binocularsBtn.activateButton();
+            this.binocularsCancelBtn.deactivateButton();
+        }
+
+        if(this.hasUndo)
+        {
+            this.undoBtn.activateButton();
+        }
+        else
+        {
+            this.undoBtn.deactivateButton();
+        }
         
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
@@ -781,9 +805,9 @@ export default class GameLevel extends Scene {
 
     protected initBinoculars():void
     {
-        let bin = new Binoculars(this.viewport, this.player);
-        this.layers.get("primary").addNode(bin);
-        this.sceneGraph.addNode(bin);
+        this.binoculars = new Binoculars(this.viewport, this.player);
+        this.layers.get("primary").addNode(this.binoculars);
+        this.sceneGraph.addNode(this.binoculars);
     }
 
     /**
@@ -1022,11 +1046,16 @@ export default class GameLevel extends Scene {
         undoHoverUI.position = undoButton.position;
         undoHoverUI.scale = new Vec2(2, 2);
 
+        let undoDisabledUI = this.add.sprite("undo_button_disabled", "UI");
+        undoDisabledUI.position = undoButton.position;
+        undoDisabledUI.scale = new Vec2(2, 2);
+
         undoButton.onClickEventId = "undo";
 
         //undo button effects.
         this.undoBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, undoButton, undoUI);
         this.undoBtn.setHoverSprite(undoHoverUI);
+        this.undoBtn.setToggleOffSprite(undoDisabledUI);
 
         //add restart button
         const restartButton2 = <Button>this.add.uiElement(UIElementType.BUTTON, "UI", {position: new Vec2(size.x + 235, size.y - 175), text: ""});
@@ -1067,9 +1096,14 @@ export default class GameLevel extends Scene {
         binocularsHoverUI.position = binocularsButton.position;
         binocularsHoverUI.scale = new Vec2(2, 2);
 
+        let binocularsDisabledUI = this.add.sprite("binoculars_button_disabled", "UI");
+        binocularsDisabledUI.position = binocularsButton.position;
+        binocularsDisabledUI.scale = new Vec2(2, 2);
+
         //binocular button effects.
         this.binocularsBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, binocularsButton, binocularsUI);
         this.binocularsBtn.setHoverSprite(binocularsHoverUI);
+        this.binocularsBtn.setToggleOffSprite(binocularsDisabledUI);
 
         binocularsButton.onClickEventId = CC_EVENTS.ACTIVATE_BINOCULARS;
 
@@ -1088,11 +1122,20 @@ export default class GameLevel extends Scene {
         binocularsCancelHoverUI.position = binocularsCancelButton.position;
         binocularsCancelHoverUI.scale = new Vec2(2, 2);
 
+        let binocularsCancelDisabledUI = this.add.sprite("binoculars_cancel_button_disabled", "UI");
+        binocularsCancelDisabledUI.position = binocularsCancelButton.position;
+        binocularsCancelDisabledUI.scale = new Vec2(2, 2);
+
         binocularsCancelButton.onClickEventId = CC_EVENTS.DEACTIVATE_BINOCULARS;
 
         //binocular cancel button effects.
         this.binocularsCancelBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, binocularsCancelButton, binocularsCancelUI);
         this.binocularsCancelBtn.setHoverSprite(binocularsCancelHoverUI);
+        this.binocularsCancelBtn.setToggleOffSprite(binocularsCancelDisabledUI);
+
+        // //sets the correct UI images for the buttons.
+        // this.binocularsBtn.activateButton();
+        // this.binocularsCancelBtn.deactivateButton();
     }
 
     protected addCardGUI(): void {

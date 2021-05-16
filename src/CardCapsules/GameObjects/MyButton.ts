@@ -6,7 +6,9 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import SceneGraph from "../../Wolfie2D/SceneGraph/SceneGraph";
 
 
-
+/**
+ * A class that allows easy switching between different button sprite images. This class supports hover and disabled images.
+ */
 export default class MyButton extends CanvasNode
 {
     private button: Button;
@@ -32,7 +34,7 @@ export default class MyButton extends CanvasNode
             {
                 this.showHoverSprite();
                 this.entered = true;
-                //console.log("Enter");
+                //console.log("Enter", this.isActive);
             }
         };
 
@@ -56,26 +58,49 @@ export default class MyButton extends CanvasNode
     public setToggleOffSprite(toggleOffSprite: Sprite): void
     {
         this.toggleOffSprite = toggleOffSprite;
+        this.showCorrectSprite();
     }
 
+    /**
+     * Show's the default sprite.
+     */
     public activateButton():void
     {
         if(!this.isActive)
         {
-            this.button.active = true;
+            //this.button.active = true;
             this.isActive = true;
-            this.showDefaultSprite();
+            if(this.entered)
+                this.showHoverSprite();
+            else
+                this.showDefaultSprite();
         }
     }
 
+    /**
+     * Shows the disabled sprite. The sprite is set with setToggleOffSprite()
+     */
     public deactivateButton(): void
     {
-        if(this.active)
+        if(this.isActive)
         {
-            this.button.active = false;
+            //this.button.active = false;
             this.isActive = false;
-            this.showToggleOffSprite();
+            this.showCorrectSprite();
         }
+    }
+
+    private showCorrectSprite(): void
+    {
+        if(this.isActive)
+        {
+            if(this.entered)
+                this.showHoverSprite();
+            else
+                this.showDefaultSprite();
+        }
+        else
+            this.showToggleOffSprite();
     }
 
     private showToggleOffSprite(): void

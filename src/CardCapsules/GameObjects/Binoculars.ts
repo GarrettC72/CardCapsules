@@ -29,6 +29,11 @@ export default class Binoculars extends CanvasNode
             CC_EVENTS.TOGGLE_BINOCULARS]);
     }
 
+    public isBinActive(): boolean
+    {
+        return this.isActive;
+    }
+
     private activateBin(): void
     {
         if(!this.isActive)
