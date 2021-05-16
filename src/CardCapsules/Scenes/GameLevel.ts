@@ -220,6 +220,8 @@ export default class GameLevel extends Scene {
                         // Increment our number of cards
                         this.incPlayerFloatingBlockCards(1);
 
+                        this.hasUndo = false;
+
                         // Play a card sound
                         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
                     }
@@ -245,6 +247,8 @@ export default class GameLevel extends Scene {
 
                         // Increment our number of cards
                         this.incPlayerSpringBlockCards(1);
+
+                        this.hasUndo = false;
 
                         // Play a card sound
                         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
@@ -272,6 +276,8 @@ export default class GameLevel extends Scene {
                         // Increment our number of cards
                         this.incPlayerCircularRockCards(1);
 
+                        this.hasUndo = false;
+
                         // Play a card sound
                         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
                     }
@@ -297,6 +303,8 @@ export default class GameLevel extends Scene {
 
                         // Increment our number of cards
                         this.incPlayerDrillBlockCards(1);
+
+                        this.hasUndo = false;
 
                         // Play a card sound
                         //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "coin", loop: false, holdReference: false});
