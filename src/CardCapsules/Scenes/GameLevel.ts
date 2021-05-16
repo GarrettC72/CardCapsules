@@ -417,7 +417,6 @@ export default class GameLevel extends Scene {
                         let col = event.data.get("col");
 
                         // Initialize previous state data
-                        this.hasUndo = true;
                         this.previousState.previousPlayerPosition = this.player.position.clone();
                         this.previousState.previousBlockRow = row;
                         this.previousState.previousBlockCol = col;
@@ -429,6 +428,7 @@ export default class GameLevel extends Scene {
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
                             this.incPlayerFloatingBlockCards(-1);
                             this.previousState.previousBlockType = 0;
+                            this.hasUndo = true;
                         }
                         else if(this.selectedBlock === "spring_block")
                         {
@@ -437,6 +437,7 @@ export default class GameLevel extends Scene {
                             this.addBlock(this.selectedBlock, new Vec2(row, col), {orientation: orientation});
                             this.incPlayerSpringBlockCards(-1);
                             this.previousState.previousBlockType = 0;
+                            this.hasUndo = true;
                         }
                         else if(this.selectedBlock === "drill_block")
                         {
@@ -508,6 +509,7 @@ export default class GameLevel extends Scene {
                             this.previousState.previousBlockType = 0;
                             (this.getTilemap("Main") as OrthogonalTilemap).setTileAtRowCol(new Vec2(row, col), 0);
                         }
+                        this.hasUndo = true;
                     }
                     break;
 
