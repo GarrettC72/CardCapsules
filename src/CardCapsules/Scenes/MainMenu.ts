@@ -25,6 +25,8 @@ export default class MainMenu extends Scene {
     private static start: boolean = false;
     static onMainMenu: boolean = false;
 
+    private versionNumber: string = "V 1.0";
+
     loadScene(): void {
         // Load the menu song
         this.load.audio("button_click_sfx", "card-capsules_assets/Sounds/button_press.mp3");
@@ -90,6 +92,11 @@ export default class MainMenu extends Scene {
         helpBtn.setPadding(new Vec2(50, 10));
         //helpBtn.font = "PixelSimple";
         helpBtn.onClickEventId = "help";
+
+        const versionNumberLabel = <Label>this.add.uiElement(UIElementType.LABEL, "Main", {position: new Vec2(size.x + 500, size.y + 350), text: this.versionNumber});
+        versionNumberLabel.setTextColor(Color.WHITE);
+        versionNumberLabel.fontSize = 36;
+        versionNumberLabel.backgroundColor = new Color(0, 0, 0, 1);
 
         //Create a controls screen
         this.controls = this.addUILayer("Controls");
