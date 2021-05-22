@@ -30,23 +30,12 @@ export default class MyButton extends CanvasNode
         this.isActive = true;
 
         this.button.onEnter = () => {
-            if(this.hoverSprite && !this.entered && this.isActive)
-            {
-                this.showHoverSprite();
-                this.entered = true;
-                //console.log("Enter", this.isActive);
-            }
+            this.entered = true;
         };
 
         this.button.onLeave = () => {
-            if(this.hoverSprite && this.entered && this.isActive)
-            {
-                this.showDefaultSprite();
-                this.entered = false;
-            }
+            this.entered = false;
         }
-
-        this.showDefaultSprite();
     }
 
     public setHoverSprite(hoverSprite: Sprite): void
@@ -58,7 +47,6 @@ export default class MyButton extends CanvasNode
     public setToggleOffSprite(toggleOffSprite: Sprite): void
     {
         this.toggleOffSprite = toggleOffSprite;
-        this.showCorrectSprite();
     }
 
     /**
@@ -70,10 +58,6 @@ export default class MyButton extends CanvasNode
         {
             //this.button.active = true;
             this.isActive = true;
-            if(this.entered)
-                this.showHoverSprite();
-            else
-                this.showDefaultSprite();
         }
     }
 
@@ -86,10 +70,12 @@ export default class MyButton extends CanvasNode
         {
             //this.button.active = false;
             this.isActive = false;
-            this.showCorrectSprite();
         }
     }
 
+    /**
+     * Called by the updated function below to update the appearance of the button.
+     */
     private showCorrectSprite(): void
     {
         if(this.isActive)
@@ -132,6 +118,11 @@ export default class MyButton extends CanvasNode
             this.hoverSprite.visible = true;
             this.defaultSprite.visible = false;
         }
+    }
+
+    update(deltaT: number): void
+    {
+        this.showCorrectSprite();
     }
 
 }
