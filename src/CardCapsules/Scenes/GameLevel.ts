@@ -1334,7 +1334,7 @@ export default class GameLevel extends Scene {
         let enemy = this.add.animatedSprite(spriteKey, "primary");
         enemy.position.set(tilePos.x*32, tilePos.y*32);
         enemy.scale.set(2, 2);
-        enemy.addPhysics();
+        enemy.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 14)));
         enemy.addAI(EnemyController, aiOptions);
         enemy.setGroup("enemy");
         enemy.setTrigger("player", CC_EVENTS.PLAYER_HIT_ENEMY, null);
