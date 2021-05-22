@@ -12,6 +12,7 @@ import Level6 from "./Level6";
 import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
+import { CC_GAME_CONST } from "../CardCapsulesEnums";
 
 export default class Level1 extends GameLevel {
     
@@ -48,18 +49,6 @@ export default class Level1 extends GameLevel {
 
     }
 
-    // HOMEWORK 4 - TODO
-    /**
-     * Decide which resource to keep and which to cull.
-     * 
-     * Check out the resource manager class.
-     * 
-     * Figure out how to save resources from being unloaded, and save the ones that are needed
-     * for level 2.
-     * 
-     * This will let us cut down on load time for the game (although there is admittedly
-     * not a lot of load time for such a small project).
-     */
     unloadScene(){
         // Keep resources - this is up to you
         // this.load.keepImage("background");
@@ -132,160 +121,26 @@ export default class Level1 extends GameLevel {
         {
             this.restartlevel();
         }
+
         if(Input.isJustPressed("changeLevel1"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level1, {}, sceneOptions);
-        }
-
+            this.sceneManager.changeToScene(Level1, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel2"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level2, {}, sceneOptions);
-        }
-
+            this.sceneManager.changeToScene(Level2, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel3"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level3, {}, sceneOptions);
-        }
-
+            this.sceneManager.changeToScene(Level3, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel4"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level4, {}, sceneOptions);
-        }
-
+            this.sceneManager.changeToScene(Level4, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel5"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level5, {}, sceneOptions);
-        }
-
+            this.sceneManager.changeToScene(Level5, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel6"))
-        {
-            let sceneOptions = {
-                physics: {
-                    groupNames: ["ground", "player", "enemy", "card"],
-                    collisions:
-                    [
-                        [0, 1, 1, 0],
-                        [1, 0, 0, 1],
-                        [1, 0, 0, 0],
-                        [0, 1, 0, 0]
-                    ]
-                },
-                inventory: {
-                    floatingBlocks: 0, 
-                    springBlocks: 0, 
-                    drillBlocks: 0
-                }
-            }
-            this.sceneManager.changeToScene(Level6, {}, sceneOptions);
-        }
+            this.sceneManager.changeToScene(Level6, {}, CC_GAME_CONST.SCENE_OPTIONS);
 
         Debug.log("playerpos", this.player.position.toString());
     }
 
     protected restartlevel()
     {
-        let sceneOptions = {
-            physics: {
-                groupNames: ["ground", "player", "enemy", "card"],
-                collisions:
-                [
-                    [0, 1, 1, 0],
-                    [1, 0, 0, 1],
-                    [1, 0, 0, 0],
-                    [0, 1, 0, 0]
-                ]
-            },
-            inventory: {
-                floatingBlocks: 0, 
-                springBlocks: 0, 
-                drillBlocks: 0
-            }
-        }
+        let sceneOptions = CC_GAME_CONST.SCENE_OPTIONS;
         this.sceneManager.changeToScene(Level1, {}, sceneOptions);
     }
 }

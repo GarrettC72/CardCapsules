@@ -31,3 +31,23 @@ export enum CC_EVENTS {
     DEACTIVATE_BINOCULARS = "deactivate_binoculars",
     TOGGLE_BINOCULARS = "toggle_binoculars"
 }
+
+export class CC_GAME_CONST {
+    public static SCENE_OPTIONS = {
+        physics: {
+            groupNames: ["ground", "player", "enemy", "card"],
+            collisions:
+            [
+                [0, 1, 1, 0],
+                [1, 0, 0, 1],
+                [1, 0, 0, 0],
+                [0, 1, 0, 0]
+            ]
+        },
+        inventory: {
+            floatingBlocks: 0, 
+            springBlocks: 0, 
+            drillBlocks: 0
+        }
+    }
+}

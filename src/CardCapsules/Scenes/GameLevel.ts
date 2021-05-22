@@ -14,11 +14,9 @@ import Scene from "../../Wolfie2D/Scene/Scene";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Color from "../../Wolfie2D/Utils/Color";
 import { EaseFunctionType } from "../../Wolfie2D/Utils/EaseFunctions";
-import { CC_EVENTS } from "../CardCapsulesEnums";
+import { CC_EVENTS, CC_GAME_CONST } from "../CardCapsulesEnums";
 import GridNode from "../GameObjects/GridNode";
 import SpringBlock, { SPRING_BLOCK_ENUMS } from "../GameObjects/SpringBlock";
-//import EnemyController from "../Enemies/EnemyController";
-//import { HW4_Events } from "../hw4_enums";
 import PlayerController from "../Player/PlayerController";
 import MainMenu from "./MainMenu";
 import LevelSelect from "./LevelSelect";
@@ -27,14 +25,9 @@ import EnemyController from "../Enemies/EnemyController";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Binoculars from "../GameObjects/Binoculars";
 import MyButton from "../GameObjects/MyButton";
-//import Level1 from "./Level1";
 
-// HOMEWORK 4 - TODO
 /**
- * Add in some level music.
- * 
- * You can choose whether to add and play music in the generic GameLevel class,
- * in the MainMenu when leaving, or play separate songs in each of the 2 levels.
+ * GameLevel is the main scene class that gets extended by level subclasses.
  */
 export default class GameLevel extends Scene {
     // Every level will have a player, which will be an animated sprite
@@ -131,7 +124,7 @@ export default class GameLevel extends Scene {
         GameLevel.floatingBlockCardCount = this.sceneOptions.inventory.floatingBlocks;
         GameLevel.springBlockCardCount = this.sceneOptions.inventory.springBlocks;
         GameLevel.drillBlockCardCount = this.sceneOptions.inventory.drillBlocks;
-        console.log("Drill Card cound" + GameLevel.drillBlockCardCount);
+        //console.log("Drill Card cound" + GameLevel.drillBlockCardCount);
     }
 
     loadScene()
@@ -169,14 +162,7 @@ export default class GameLevel extends Scene {
             this.emitter.fireEvent(CC_EVENTS.SHOW_PLACEMENT_GRID);
         });
         this.respawnTimer = new Timer(1000, () => {
-            // if(GameLevel.livesCount === 0){
-            //     this.sceneManager.changeToScene(MainMenu);
-            // } else {
-                // this.respawnPlayer();
-                // this.player.enablePhysics();
-                // this.player.unfreeze();
-                this.restartlevel();
-            //}
+            this.restartlevel();
         });
         this.levelTransitionTimer = new Timer(500);
         this.levelEndTimer = new Timer(3000, () => {
@@ -191,12 +177,8 @@ export default class GameLevel extends Scene {
         Input.disableInput();
     }
 
-    // HOMEWORK 4 - TODO
     /**
-     * Provide a proper death animation for the player character.
-     * Use tweens to achieve this goal.
-     * You are also welcome to edit the spritesheet to make a new animation,
-     * however tweens MUST also be used.
+     * Main Scene loop
      */
     updateScene(deltaT: number){
         // Handle events and update the UI if needed
@@ -385,23 +367,7 @@ export default class GameLevel extends Scene {
                     {
                         // Go to the next level
                         if(this.nextLevel){
-                            let sceneOptions = {
-                                physics: {
-                                    groupNames: ["ground", "player", "enemy", "card"],
-                                    collisions:
-                                    [
-                                        [0, 1, 1, 0],
-                                        [1, 0, 0, 1],
-                                        [1, 0, 0, 0],
-                                        [0, 1, 0, 0]
-                                    ],
-                                    inventory: {
-                                        floatingBlocks: 0, 
-                                        springBlocks: 0, 
-                                        drillBlocks: 0
-                                    }
-                                }
-                            }
+                            let sceneOptions = CC_GAME_CONST.SCENE_OPTIONS;
                             this.sceneManager.changeToScene(this.nextLevel, {}, sceneOptions);
                         }else{
                             this.sceneManager.changeToScene(LevelSelect);
@@ -708,7 +674,7 @@ export default class GameLevel extends Scene {
         {
             this.undoBtn.deactivateButton();
         }
-        
+
         // If player falls into a pit, kill them off and reset their position
         if(this.player.position.y > 25*64){
             //this.incPlayerLife(-1);
