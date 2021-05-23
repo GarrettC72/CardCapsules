@@ -4,6 +4,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 //import Level2 from "./Level2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
+import Timer from "../../Wolfie2D/Timing/Timer";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
 import GameLevel from "./GameLevel";
 import Level1 from "./Level1";
@@ -74,6 +75,14 @@ export default class Level6 extends GameLevel {
         this.updateUnlockedLevel(6);
 
         //this.nextLevel = Level2;
+
+         //play the level start text.
+         this.levelEndLabel.text = "Level 6: Cactus Cave";
+         this.levelEndLabel.tweens.play("slideIn");
+         new Timer(2200, () => {
+             this.levelEndLabel.tweens.play("slideOut");
+         }).start();
+ 
 
         //Add enemies of various types
         for(let pos of [new Vec2(15, 1)]){

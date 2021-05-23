@@ -4,6 +4,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 //import Level2 from "./Level2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
+import Timer from "../../Wolfie2D/Timing/Timer";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
 import GameLevel from "./GameLevel";
 import Level1 from "./Level1";
@@ -76,6 +77,13 @@ export default class Level4 extends GameLevel {
         this.updateUnlockedLevel(4);
 
         this.nextLevel = Level5;
+
+        //play the level start text.
+        this.levelEndLabel.text = "Level 4: Burning Cave";
+        this.levelEndLabel.tweens.play("slideIn");
+        new Timer(2200, () => {
+            this.levelEndLabel.tweens.play("slideOut");
+        }).start();
 
         for(let pos of [new Vec2(17, 44), new Vec2(29, 27)]){
             this.addEnemy("Rock_Monster", pos, {});

@@ -360,6 +360,7 @@ export default class GameLevel extends Scene {
                     {
                         if(!this.levelEndTimer.hasRun() && this.levelEndTimer.isStopped()){
                             // The player has reached the end of the level
+                            this.levelEndLabel.text = "Level Complete";
                             this.levelEndTimer.start();
                             this.levelEndLabel.tweens.play("slideIn");
                         }
@@ -869,6 +870,19 @@ export default class GameLevel extends Scene {
                     property: TweenableProperties.posX,
                     start: -300,
                     end: 300,
+                    ease: EaseFunctionType.OUT_SINE
+                }
+            ]
+        });
+
+        this.levelEndLabel.tweens.add("slideOut", {
+            startDelay: 0,
+            duration: 1000,
+            effects: [
+                {
+                    property: TweenableProperties.posX,
+                    start: 300,
+                    end: -300,
                     ease: EaseFunctionType.OUT_SINE
                 }
             ]

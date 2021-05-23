@@ -13,6 +13,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 export default class Level1 extends GameLevel {
     
@@ -87,6 +88,13 @@ export default class Level1 extends GameLevel {
         this.addLevelEnd(new Vec2(57, 6), new Vec2(1, 1));
 
         this.nextLevel = Level2;
+
+        //play the level start text.
+        this.levelEndLabel.text = "Level 1: Crash Site";
+        this.levelEndLabel.tweens.play("slideIn");
+        new Timer(2200, () => {
+            this.levelEndLabel.tweens.play("slideOut");
+        }).start();
 
         //Add enemies of various types
         for(let pos of [new Vec2(19, 11), new Vec2(41,7)]){

@@ -14,6 +14,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 
 export default class Level2 extends GameLevel {
@@ -78,6 +79,13 @@ export default class Level2 extends GameLevel {
         this.updateUnlockedLevel(2);
 
         this.nextLevel = Level3;
+
+        //play the level start text.
+        this.levelEndLabel.text = "Level 2: Ravine";
+        this.levelEndLabel.tweens.play("slideIn");
+        new Timer(2200, () => {
+            this.levelEndLabel.tweens.play("slideOut");
+        }).start();
 
         //Add enemies of various types
         // for(let pos of [new Vec2(24, 18)]){

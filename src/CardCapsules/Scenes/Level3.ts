@@ -4,6 +4,7 @@ import Debug from "../../Wolfie2D/Debug/Debug";
 //import Level2 from "./Level2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
+import Timer from "../../Wolfie2D/Timing/Timer";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
 import GameLevel from "./GameLevel";
 import Level1 from "./Level1";
@@ -77,14 +78,14 @@ export default class Level3 extends GameLevel {
 
         this.nextLevel = Level4;
 
-        //Add enemies of various types
-        // for(let pos of [new Vec2(24, 18)]){
-        //     this.addEnemy("Rock_Monster", pos, {});
-        // }
+        //play the level start text.
+        this.levelEndLabel.text = "Level 3: Double Loop";
+        this.levelEndLabel.tweens.play("slideIn");
+        new Timer(2200, () => {
+            this.levelEndLabel.tweens.play("slideOut");
+        }).start();
 
-        // for(let pos of [new Vec2(51, 17)]){
-        //     this.addEnemy("hopper", pos, {jumpy: true});
-        // }
+        //add enemies
         for(let pos of [new Vec2(23, 34)]){
             this.addEnemy("Rock_Monster", pos, {});
         }

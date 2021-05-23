@@ -14,6 +14,7 @@ import { UIElementType } from "../../Wolfie2D/Nodes/UIElements/UIElementTypes";
 import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
+import Timer from "../../Wolfie2D/Timing/Timer";
 
 export default class Level5 extends GameLevel {
     
@@ -79,6 +80,14 @@ export default class Level5 extends GameLevel {
         this.updateUnlockedLevel(5);
 
         this.nextLevel = Level6;
+
+
+        //play the level start text.
+        this.levelEndLabel.text = "Level 5: Fork Road";
+        this.levelEndLabel.tweens.play("slideIn");
+        new Timer(2200, () => {
+            this.levelEndLabel.tweens.play("slideOut");
+        }).start();
 
         //Add enemies of various types
         //Add enemies of various types
