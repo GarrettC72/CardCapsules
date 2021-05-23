@@ -94,6 +94,10 @@ export default class GameLevel extends Scene {
     protected binocularsCancelBtn: MyButton;
     protected pauseBtn: MyButton;
 
+    protected floatingBlockBtn: MyButton;
+    protected springBlockBtn: MyButton;
+    protected drillBlockBtn: MyButton;
+
     //Track properties that will be reverted to with undo
     protected previousState: {
         previousPlayerPosition: Vec2, // position of the player when the block was placed
@@ -143,6 +147,12 @@ export default class GameLevel extends Scene {
         this.load.image("binoculars_cancel_button_hover", "card-capsules_assets/sprites/binoculars_cancel_button_hover.png");
         this.load.image("binoculars_cancel_button_disabled", "card-capsules_assets/sprites/binoculars_cancel_button_disabled.png");
         this.load.image("pause_button_hover", "card-capsules_assets/sprites/pause_button_hover.png");
+        this.load.image("floating_block_ui_hover", "card-capsules_assets/sprites/floating_block_ui_hover.png");
+        this.load.image("floating_block_ui_disabled", "card-capsules_assets/sprites/floating_block_ui_disabled.png");
+        this.load.image("spring_block_ui_hover", "card-capsules_assets/sprites/spring_block_ui_hover.png");
+        this.load.image("spring_block_ui_disabled", "card-capsules_assets/sprites/spring_block_ui_disabled.png");
+        this.load.image("drill_block_ui_hover", "card-capsules_assets/sprites/drill_block_ui_hover.png");
+        this.load.image("drill_block_ui_disabled", "card-capsules_assets/sprites/drill_block_ui_disabled.png");
     }
     
 
@@ -1125,9 +1135,23 @@ export default class GameLevel extends Scene {
         fbui.scale = new Vec2(5, 5);
         this.floatingBlockCardUI = fbui;
 
+        let fbui_hover = this.add.sprite("floating_block_ui_hover", "UI");
+        fbui_hover.position = c1Pos;
+        fbui_hover.scale = new Vec2(5, 5);
+
+        let fbui_disabled = this.add.sprite("floating_block_ui_disabled", "UI");
+        fbui_disabled.position = c1Pos;
+        fbui_disabled.scale = new Vec2(5, 5);
+
+
+        this.floatingBlockBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, c1, fbui);
+        this.floatingBlockBtn.setHoverSprite(fbui_hover);
+        this.floatingBlockBtn.setToggleOffSprite(fbui_disabled);
+
 
         if(GameLevel.floatingBlockCardCount === 0)
-            this.floatingBlockCardUI.alpha = 0.5;
+            this.floatingBlockBtn.deactivateButton();
+            //this.floatingBlockCardUI.alpha = 0.5;
         //fbui.alpha = 0.5;
         
         
@@ -1164,8 +1188,24 @@ export default class GameLevel extends Scene {
         sbui.position = c2Pos;
         sbui.scale = new Vec2(5, 5);
         this.springBlockCardUI = sbui;
+
+
+        let sbui_hover = this.add.sprite("spring_block_ui_hover", "UI");
+        sbui_hover.position = c2Pos;
+        sbui_hover.scale = new Vec2(5, 5);
+
+        let sbui_disabled = this.add.sprite("spring_block_ui_disabled", "UI");
+        sbui_disabled.position = c2Pos;
+        sbui_disabled.scale = new Vec2(5, 5);
+
+
+        this.springBlockBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, c2, sbui);
+        this.springBlockBtn.setHoverSprite(sbui_hover);
+        this.springBlockBtn.setToggleOffSprite(sbui_disabled);
+
         if(GameLevel.springBlockCardCount === 0)
-            this.springBlockCardUI.alpha = 0.5;
+            this.springBlockBtn.deactivateButton();//this.springBlockCardUI.alpha = 0.5;
+
 
 
 
@@ -1189,8 +1229,22 @@ export default class GameLevel extends Scene {
         dbui.position = c3Pos;
         dbui.scale = new Vec2(5, 5);
         this.drillBlockCardUI = dbui;
+
+        let dbui_hover = this.add.sprite("drill_block_ui_hover", "UI");
+        dbui_hover.position = c3Pos;
+        dbui_hover.scale = new Vec2(5, 5);
+
+        let dbui_disabled = this.add.sprite("drill_block_ui_disabled", "UI");
+        dbui_disabled.position = c3Pos;
+        dbui_disabled.scale = new Vec2(5, 5);
+
+        this.drillBlockBtn = new MyButton(this.getLayer("UI"), this.sceneGraph, c3, dbui);
+        this.drillBlockBtn.setHoverSprite(dbui_hover);
+        this.drillBlockBtn.setToggleOffSprite(dbui_disabled);
+
+
         if(GameLevel.drillBlockCardCount === 0)
-            this.drillBlockCardUI.alpha = 0.5;
+            this.drillBlockBtn.deactivateButton();//this.drillBlockCardUI.alpha = 0.5;
 
 
      
@@ -1537,9 +1591,9 @@ export default class GameLevel extends Scene {
         GameLevel.floatingBlockCardCount += amt;
         this.floatingBlockCountLabel.setText("" + GameLevel.floatingBlockCardCount);
         if(GameLevel.floatingBlockCardCount === 0)
-            this.floatingBlockCardUI.alpha = 0.5;
+            this.floatingBlockBtn.deactivateButton();//this.floatingBlockCardUI.alpha = 0.5;
         else
-            this.floatingBlockCardUI.alpha = 1;
+            this.floatingBlockBtn.activateButton();//this.floatingBlockCardUI.alpha = 1;
     }
 
     /**
@@ -1571,9 +1625,9 @@ export default class GameLevel extends Scene {
         GameLevel.springBlockCardCount += amt;
         this.springBlockCountLabel.setText("" + GameLevel.springBlockCardCount);
         if(GameLevel.springBlockCardCount === 0)
-            this.springBlockCardUI.alpha = 0.5;
+            this.springBlockBtn.deactivateButton();//this.springBlockCardUI.alpha = 0.5;
         else
-            this.springBlockCardUI.alpha = 1;
+            this.springBlockBtn.activateButton();//this.springBlockCardUI.alpha = 1;
     }
 
     /**
@@ -1593,9 +1647,9 @@ export default class GameLevel extends Scene {
         GameLevel.drillBlockCardCount += amt;
         this.drillBlockCountLabel.setText("" + GameLevel.drillBlockCardCount);
         if(GameLevel.drillBlockCardCount === 0)
-            this.drillBlockCardUI.alpha = 0.5;
+            this.drillBlockBtn.deactivateButton();//this.drillBlockCardUI.alpha = 0.5;
         else
-            this.drillBlockCardUI.alpha = 1;
+            this.drillBlockBtn.activateButton();//this.drillBlockCardUI.alpha = 1;
     }
 
     protected updateUnlockedLevel(level: number): void{

@@ -19,6 +19,13 @@ export default class MyButton extends CanvasNode
     private entered: boolean;
     private isActive: boolean;
 
+    /**
+     * 
+     * @param layer The layer that the button belongs in
+     * @param sceneGraph The scene graph of the game
+     * @param button The button gamenode
+     * @param defaultSprite The button default image.
+     */
     constructor(layer: Layer, sceneGraph: SceneGraph, button: Button, defaultSprite: Sprite)
     {
         super();
