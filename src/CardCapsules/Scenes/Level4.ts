@@ -12,6 +12,7 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level5 from "./Level5";
 import Level6 from "./Level6";
+import Level7 from "./Level7";
 
 export default class Level4 extends GameLevel {
     
@@ -112,6 +113,9 @@ export default class Level4 extends GameLevel {
             this.sceneManager.changeToScene(Level5, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel6"))
             this.sceneManager.changeToScene(Level6, {}, CC_GAME_CONST.SCENE_OPTIONS);
+        if(Input.isJustPressed("changeLevel7"))
+            this.sceneManager.changeToScene(Level7, {}, CC_GAME_CONST.SCENE_OPTIONS);
+
 
         Debug.log("playerpos", this.player.position.toString());
     }

@@ -12,6 +12,7 @@ import Level2 from "./Level2";
 import Level3 from "./Level3";
 import Level4 from "./Level4";
 import Level5 from "./Level5";
+import Level7 from "./Level7";
 
 export default class Level6 extends GameLevel {
     
@@ -74,7 +75,7 @@ export default class Level6 extends GameLevel {
 
         this.updateUnlockedLevel(6);
 
-        //this.nextLevel = Level2;
+        this.nextLevel = Level7;
 
          //play the level start text.
          this.levelEndLabel.text = "Level 6: Cactus Cave";
@@ -116,6 +117,9 @@ export default class Level6 extends GameLevel {
             this.sceneManager.changeToScene(Level5, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel6"))
             this.sceneManager.changeToScene(Level6, {}, CC_GAME_CONST.SCENE_OPTIONS);
+        if(Input.isJustPressed("changeLevel7"))
+            this.sceneManager.changeToScene(Level7, {}, CC_GAME_CONST.SCENE_OPTIONS);
+
 
         Debug.log("playerpos", this.player.position.toString());
     }

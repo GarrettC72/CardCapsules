@@ -14,6 +14,7 @@ import Label from "../../Wolfie2D/Nodes/UIElements/Label";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
 import Timer from "../../Wolfie2D/Timing/Timer";
+import Level7 from "./Level7";
 
 export default class Level1 extends GameLevel {
     
@@ -142,6 +143,8 @@ export default class Level1 extends GameLevel {
             this.sceneManager.changeToScene(Level5, {}, CC_GAME_CONST.SCENE_OPTIONS);
         if(Input.isJustPressed("changeLevel6"))
             this.sceneManager.changeToScene(Level6, {}, CC_GAME_CONST.SCENE_OPTIONS);
+        if(Input.isJustPressed("changeLevel7"))
+            this.sceneManager.changeToScene(Level7, {}, CC_GAME_CONST.SCENE_OPTIONS);
 
         Debug.log("playerpos", this.player.position.toString());
     }

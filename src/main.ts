@@ -29,6 +29,7 @@ import MainMenu from "./CardCapsules/Scenes/MainMenu";
             {name: "changeLevel4", keys:["4"]},
             {name: "changeLevel5", keys:["5"]},
             {name: "changeLevel6", keys:["6"]},
+            {name: "changeLevel7", keys:["7"]},
             {name: "invincible", keys:["i"]},
             //{name: "run", keys: ["shift"]}
         ],
