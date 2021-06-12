@@ -2,7 +2,7 @@ import AABB from "../../Wolfie2D/DataTypes/Shapes/AABB";
 import Vec2 from "../../Wolfie2D/DataTypes/Vec2";
 import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
 import Input from "../../Wolfie2D/Input/Input";
-import { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
+import GameNode, { TweenableProperties } from "../../Wolfie2D/Nodes/GameNode";
 import { GraphicType } from "../../Wolfie2D/Nodes/Graphics/GraphicTypes";
 import Rect from "../../Wolfie2D/Nodes/Graphics/Rect";
 import AnimatedSprite from "../../Wolfie2D/Nodes/Sprites/AnimatedSprite";
@@ -25,6 +25,8 @@ import EnemyController from "../Enemies/EnemyController";
 import Layer from "../../Wolfie2D/Scene/Layer";
 import Binoculars from "../GameObjects/Binoculars";
 import MyButton from "../GameObjects/MyButton";
+import ObjectStorage from "../GameObjects/ObjectStorage";
+import LavaController, { LavaType } from "../GameObjects/LavaController";
 
 /**
  * GameLevel is the main scene class that gets extended by level subclasses.
@@ -73,6 +75,8 @@ export default class GameLevel extends Scene {
 
     protected binoculars: Binoculars; //class used to move the camera
 
+    protected lavaController: LavaController; //class used to manage the lava flows.
+
     protected cancelLabel: Label;
 
     protected timeSlowFilterScreen: Rect;
@@ -97,6 +101,8 @@ export default class GameLevel extends Scene {
     protected floatingBlockBtn: MyButton;
     protected springBlockBtn: MyButton;
     protected drillBlockBtn: MyButton;
+
+    protected objectStorage: ObjectStorage;
 
     //Track properties that will be reverted to with undo
     protected previousState: {
@@ -153,11 +159,16 @@ export default class GameLevel extends Scene {
         this.load.image("spring_block_ui_disabled", "card-capsules_assets/sprites/spring_block_ui_disabled.png");
         this.load.image("drill_block_ui_hover", "card-capsules_assets/sprites/drill_block_ui_hover.png");
         this.load.image("drill_block_ui_disabled", "card-capsules_assets/sprites/drill_block_ui_disabled.png");
+        this.load.spritesheet("lava", "card-capsules_assets/spritesheets/lava.json");
     }
     
 
     startScene(): void {
-        // Do the game level standard initializations
+        // get the object storage singleton.
+        this.objectStorage = ObjectStorage.getObjectStorage();
+        this.objectStorage.clearAll();
+
+        // Do the game level standard initialization
         this.initLayers();
         this.initViewport();
         this.initPlayer();
@@ -166,6 +177,9 @@ export default class GameLevel extends Scene {
         this.subscribeToEvents();
         this.addUI();
         this.addCardGUI(); //add the card buttons on the bottom.
+        this.initLava();
+
+        
 
         // Initialize the timers
         this.showGridTimer = new Timer(500, ()=> {
@@ -331,20 +345,49 @@ export default class GameLevel extends Scene {
                     }
                     break;
                 
+                case CC_EVENTS.PLAYER_HIT_LAVA:
+                    {
+                        this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
+                    }
+                    break;
+
+                case CC_EVENTS.ENEMY_HIT_LAVA:
+                {
+                    let node = this.sceneGraph.getNode(event.data.get("node"));
+                    let other = this.sceneGraph.getNode(event.data.get("other"));
+                    //console.log("Enemy hit lava");
+                    if(node.getLayer().getName() == "lava")
+                    {
+                        other.disablePhysics();
+                        (<AnimatedSprite>other).animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Rock_Death", loop: false, holdReference: false});
+                    }
+                    else
+                    {
+                        node.disablePhysics();
+                        (<AnimatedSprite>node).animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Rock_Death", loop: false, holdReference: false});
+                    }
+                        
+                }
+                break;
+                
                 case CC_EVENTS.PLAYER_DIED:
                     {
                         
                         //this.player.freeze();
-                        
+                        this.player.disablePhysics();
                         this.player.isCollidable = false;
                         //this.player.tweens.play("dying", false);
                         this.player.tweens.play("flip2", false);
+                        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                         
                         //this.player.animation.play("DYING", false);
                         //setTimeout(() => { this.player.tweens.play("jump", false); }, 500);
                         setTimeout(() => { this.player.unfreeze(); }, 1000);
                         setTimeout(() => { this.player.isCollidable = true; }, 1000);
                         
+                        this.respawnTimer.start();
                     }
                     break;
                 case CC_EVENTS.ENEMY_DIED:
@@ -386,6 +429,19 @@ export default class GameLevel extends Scene {
                     }
                     break;
 
+                case CC_EVENTS.PLACE_LAVA:
+                    {
+                        let location = event.data.get("location");
+                        let type = event.data.get("type");
+                        let parent = event.data.get("parent");
+                        
+                        let lava = this.addLava(location);
+                        this.lavaController.addLavaLocation(location, lava, type, parent);
+
+                        console.log("Placing new lava");
+                    }
+                    break;
+
                 case CC_EVENTS.PLACE_BLOCK:
                     {
                         //The code to run when the block has been placed.
@@ -402,7 +458,14 @@ export default class GameLevel extends Scene {
                         if(this.selectedBlock === "floating_block")
                         {
                             //places floating block.
+                            let item = this.objectStorage.getItem(new Vec2(row, col));
+                            console.log("item in place block", item);
+                            if(item && item.data && item.data.gamenode)
+                                this.lavaController.removeLava(item.data.gamenode);
                             this.addBlock(this.selectedBlock, new Vec2(row, col));
+                            //remove lava if there are any.
+                            
+                            
                             this.incPlayerFloatingBlockCards(-1);
                             this.previousState.previousBlockType = 0;
                             this.hasUndo = true;
@@ -534,6 +597,8 @@ export default class GameLevel extends Scene {
                     }
                 }
                 break;
+
+                
 
                 case GameEventType.MOUSE_UP:
                 {
@@ -768,6 +833,9 @@ export default class GameLevel extends Scene {
         // Add a layer for players and enemies
         this.addLayer("primary", 1);
 
+        // Add a layer for the lava
+        this.addLayer("lava", 2);
+
         // Add grid layer.
         this.addUILayer("grid");
 
@@ -788,6 +856,41 @@ export default class GameLevel extends Scene {
         this.binoculars = new Binoculars(this.viewport, this.player);
         this.layers.get("primary").addNode(this.binoculars);
         this.sceneGraph.addNode(this.binoculars);
+    }
+
+    /**
+     * Replaces the lava tile on the lavamap with source lava blocks.
+     */
+    protected initLava(): void
+    {
+        let tilemap = this.getTilemap("Main") as OrthogonalTilemap;
+        //first create the object that manages all the lava.
+        this.lavaController = new LavaController(tilemap);
+        this.layers.get("primary").addNode(this.lavaController);
+        this.sceneGraph.addNode(this.lavaController);
+
+        
+        
+        let rolCol = tilemap.getDimensions();
+        //console.log("************************ Row col in the tilemap:", rolCol);
+        
+        for(let x = 0; x < rolCol.x; x++)
+        {
+            for(let y = 0; y < rolCol.y; y++)
+            {
+                let tilenum = tilemap.getTileAtRowCol(new Vec2(x, y));
+                //console.log("(" ,x, ",",y,  ")", tilenum);
+                //Note the lava source tile is tile number 47.
+                if(tilenum == 47)
+                {
+                    //spawn lava block at row col.
+                    let location = new Vec2(x, y);
+                    let lava = this.addLava(new Vec2(x, y));
+                    tilemap.setTileAtRowCol(location, 0);
+                    this.lavaController.addLavaSource(location, lava, LavaType.SOURCE_BLOCK);
+                }
+            }
+        }
     }
 
     /**
@@ -830,6 +933,9 @@ export default class GameLevel extends Scene {
             CC_EVENTS.PLAYER_DIED,
             CC_EVENTS.DRILL_BLOCK,
             CC_EVENTS.DESTROY_BLOCK,
+            CC_EVENTS.PLACE_LAVA,
+            CC_EVENTS.PLAYER_HIT_LAVA,
+            CC_EVENTS.ENEMY_HIT_LAVA,
             GameEventType.MOUSE_UP,
             "pause",
             "unpause",
@@ -1409,6 +1515,12 @@ export default class GameLevel extends Scene {
 
     }
 
+    /**
+     * 
+     * @param spriteKey The key of the sprite of this block
+     * @param tilePos The position this block will be place
+     * @param data Data for the block.
+     */
     protected addBlock(spriteKey: string, tilePos: Vec2, data: Record<string, any> = null)
     {
         let block = this.add.animatedSprite(spriteKey, "primary");
@@ -1461,6 +1573,23 @@ export default class GameLevel extends Scene {
         this.grid.addBlockLocation(spriteKey, tilePos.clone(), block.id); //used to keep track of locations where blocks can be placed.
     }
 
+    /**
+     * 
+     * @param tilePos The location of the lava.
+     * @returns The created lava
+     */
+    protected addLava(tilePos: Vec2): GameNode
+    {
+        let lava = this.add.animatedSprite("lava", "lava");
+        lava.position.set(tilePos.x*32 + 16, tilePos.y*32 + 16);
+        lava.scale.set(2, 2);
+        lava.addPhysics(new AABB(Vec2.ZERO, new Vec2(14, 14)));
+        lava.setGroup("enemy");
+        lava.setTrigger("player", CC_EVENTS.PLAYER_HIT_LAVA, null);
+        lava.setTrigger("enemy", CC_EVENTS.ENEMY_HIT_LAVA, null);
+        return lava;
+    }
+
     // HOMEWORK 4 - TODO
     /**
      * You must implement this method.
@@ -1497,7 +1626,9 @@ export default class GameLevel extends Scene {
         let livenum = 3;
 
         if((<EnemyController>enemy.ai).jumpy && !(<EnemyController>enemy.ai).spiky){
+            //d console.log("dir up", direction.dot(Vec2.UP));
             if(direction.dot(Vec2.UP) > 0.5){
+                
                 enemy.disablePhysics();
                 enemy.tweens.stopAll();
                 enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
@@ -1532,15 +1663,15 @@ export default class GameLevel extends Scene {
             if((<EnemyController>enemy.ai).spiky){
                 //if(GameLevel.livesCount > 1){
                     if(!GameLevel.invincible){
-                    this.player.disablePhysics();
+                    //this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
+                    //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 1000);
-                    this.respawnTimer.start();
+                    //this.respawnTimer.start();
                     }
                 //}
                 // else{
@@ -1550,7 +1681,8 @@ export default class GameLevel extends Scene {
                 //     setTimeout(() => { this.sceneManager.changeToScene(MainMenu); }, 600);
                 // }
             }
-            if(direction.dot(Vec2.DOWN) > 0.5 && !(<EnemyController>enemy.ai).spiky){
+            if(direction.dot(Vec2.DOWN) > 0.65 && !(<EnemyController>enemy.ai).spiky){
+                //console.log("dir down", direction.dot(Vec2.DOWN));
                 enemy.disablePhysics();
                 enemy.animation.play("DYING", false, CC_EVENTS.ENEMY_DIED);
                 this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "Rock_Death", loop: false, holdReference: false});
@@ -1564,15 +1696,15 @@ export default class GameLevel extends Scene {
             } else {
                 //if(GameLevel.livesCount > 1){
                     if(!GameLevel.invincible){
-                    this.player.disablePhysics();
+                    //this.player.disablePhysics();
                     //this.incPlayerLife(-1);
                     //this.player.animation.play("DYING", false);
-                    this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
+                    //this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "spin", loop: false, holdReference: true});
                     this.emitter.fireEvent(CC_EVENTS.PLAYER_DIED);
                     // this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "player_death", loop: false, holdReference: false});
                     // setTimeout(() => { this.respawnPlayer(); }, 500);
                     // setTimeout(() => { this.player.enablePhysics(); }, 500);
-                    this.respawnTimer.start();
+                    //this.respawnTimer.start();
                     }
                 // }
                 // else{

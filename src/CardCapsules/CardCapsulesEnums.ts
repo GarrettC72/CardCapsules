@@ -29,7 +29,11 @@ export enum CC_EVENTS {
     DESTROY_BLOCK = "destroy_block",
     ACTIVATE_BINOCULARS = "activate_binoculars",
     DEACTIVATE_BINOCULARS = "deactivate_binoculars",
-    TOGGLE_BINOCULARS = "toggle_binoculars"
+    TOGGLE_BINOCULARS = "toggle_binoculars",
+    PLACE_LAVA = "place_lava",
+    PLAYER_HIT_LAVA = "player_hit_lava",
+    ENEMY_HIT_LAVA = "enemy_hit_lava",
+    
 }
 
 export class CC_GAME_CONST {

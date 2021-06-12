@@ -15,6 +15,7 @@ import Color from "../../Wolfie2D/Utils/Color";
 import { CC_GAME_CONST } from "../CardCapsulesEnums";
 import Timer from "../../Wolfie2D/Timing/Timer";
 import Level7 from "./Level7";
+import { LavaType } from "../GameObjects/LavaController";
 
 export default class Level1 extends GameLevel {
     
@@ -115,6 +116,12 @@ export default class Level1 extends GameLevel {
         this.addPropertiesToLabel(<Label>this.add.uiElement(UIElementType.LABEL, "primary", {position: new Vec2(58*32, 7.6*32), text: "Collect goal card to complete level. Congrats."}));
 
         this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: "level_music", loop: true, holdReference: true});
+
+
+
+        // let location = new Vec2(7, 5);
+        // let lava = this.addLava(new Vec2(7, 5));
+        // this.lavaController.addLavaSource(location, lava, LavaType.SOURCE_BLOCK);
     }
 
     private addPropertiesToLabel(label: Label):void

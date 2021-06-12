@@ -7,6 +7,7 @@ import Layer from "../../Wolfie2D/Scene/Layer";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import Color from "../../Wolfie2D/Utils/Color";
 import { CC_EVENTS } from "../CardCapsulesEnums";
+import ObjectStorage from "./ObjectStorage";
 import { SPRING_BLOCK_ENUMS } from "./SpringBlock";
 
 
@@ -28,6 +29,7 @@ export default class GridNode extends CanvasNode
     colorGreen: Color = new Color(0, 255, 0, 0.3);
     colorRed: Color = new Color(191, 25, 78, 0.3);
 
+    objectstorage: ObjectStorage;
     blockLocations: Array<BlockData> = new Array<BlockData>(); //an array of row cols used to represent block locations.
 
     public constructor(layer: Layer, gridWidth: number, gridHeight: number, viewport: Viewport, tilemap:OrthogonalTilemap)
@@ -42,6 +44,7 @@ export default class GridNode extends CanvasNode
         this.defaultViewportOrigin = new Vec2();
         this.viewport = viewport;
         this.tilemap = tilemap;
+        this.objectstorage = ObjectStorage.getObjectStorage();
         this.initVlines();
         this.initHlines();
         this.initSectionRect();
@@ -127,8 +130,9 @@ export default class GridNode extends CanvasNode
      */
      public addBlockLocation(blockName:string, location:Vec2, id:number)
      {
-         this.blockLocations.push(new BlockData(blockName, location, id));
- 
+        let blockData = new BlockData(blockName, location, id);
+        this.blockLocations.push(blockData);
+        this.objectstorage.setItem(location, {data: blockData});
         //  this.blockLocations.forEach((block) =>
         //  {  
         //      console.log(block.name);
@@ -142,6 +146,8 @@ export default class GridNode extends CanvasNode
             if(block.id == id)
             {
                 index = idx;
+                //remove the block from the object storage.
+                this.objectstorage.clearItem(block.location);
             }
         });
         if(index != -1)
@@ -271,7 +277,7 @@ export default class GridNode extends CanvasNode
      * @param rowCol specify the row col of the block.
      * @returns is there a card block or tilemap block at the given location.
      */
-    private isThereBlockAt(rowCol: Vec2): boolean
+    public isThereBlockAt(rowCol: Vec2): boolean
     {
         if(this.tilemap.getTileAtRowCol(rowCol) === 0)
         {
